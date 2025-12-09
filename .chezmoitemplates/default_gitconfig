@@ -1,0 +1,26 @@
+[user]
+  name = {{ .user.name | quote }}
+  email = {{ .user.email | quote }}
+[init]
+  defaultBranch = main
+[core]
+  editor = nvim
+{{- if eq .chezmoi.os "windows" }}
+  # On windows, keep committed files with a LF.
+  autocrlf = true
+{{- else }}
+  # On linux, if a CRLF is in the repo convert it to LF.
+  autocrlf = input
+{{- end }}
+  eol = lf
+  longpaths = true
+  pager = "diff-so-fancy | less --tabs=4 -RFX"
+[pull]
+  rebase = false
+[filter "lfs"]
+  clean = {{ .chezmoi.config.git.command }}-lfs clean -- %f
+  smudge = {{ .chezmoi.config.git.command }}-lfs smudge -- %f
+  process = {{ .chezmoi.config.git.command }}-lfs filter-process
+  required = true
+[commit]
+  template = ~/.gitmessage

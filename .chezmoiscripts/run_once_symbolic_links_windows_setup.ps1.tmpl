@@ -1,0 +1,55 @@
+##Requires -Version 7
+# Only populated if windows.
+
+{{- if eq .chezmoi.os "windows" }}
+
+function Create-SymbolicLink {
+  param (
+    [string]$Source,
+    [string]$Destination
+  )
+
+  Write-Host "Source and Destination!"
+  Write-Host $Source
+  Write-Host $Destination
+
+  if (!(Test-Path -Path $Destination)) {
+    Write-Host "Creating the SymbolicLink!";
+    New-Item -ItemType SymbolicLink -Path $Destination -Target $Source;
+  }
+  else {
+    $item = Get-Item -LiteralPath $Destination -Force
+    if ($item.Attributes.ToString() -match "ReparsePoint") {
+      Write-Host "Reparse point exists!";
+    }
+    else {
+      Write-Host "Creating the SymbolicLink!";
+      New-Item -ItemType SymbolicLink -Path $Destination -Target $Source;
+    }
+  }
+
+  Write-Host "Creating symbolic link directory, source: " + $Source + " destination: " + $Destination
+}
+
+# .clangd
+
+$source = Join-Path -Path $env:USERPROFILE -ChildPath ".config" -AdditionalChildPath "clangd"
+$destination = Join-Path -Path $env:LOCALAPPDATA -ChildPath "clangd"
+
+Create-SymbolicLink -Source $source -Destination $destination
+
+# rustup stuff
+# This is going to be the .cargo directory in the scoop folder.
+
+$path = (which rustup).Source
+$source = ($path).Substring(0, $path.IndexOf(".cargo") + ".cargo".Length)
+
+# $destination="C:\Users\Zacha\.cargo"
+$destination = Join-Path -Path $env:USERPROFILE -ChildPath ".cargo"
+
+Create-SymbolicLink -Source $source -Destination $destination
+
+# Install nightly toolchain
+rustup toolchain install nightly
+
+{{- end }}

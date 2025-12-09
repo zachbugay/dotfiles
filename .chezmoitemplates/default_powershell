@@ -1,0 +1,119 @@
+{{- if eq .chezmoi.os "windows" -}}
+Import-Module posh-git
+Import-Module Terminal-Icons
+Import-Module PSReadLine
+
+# Kubernetes Defaults
+$env:KUBE_EDITOR = "nvim"
+$env:EDITOR = "nvim"
+
+$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine("$env:USERPROFILE", ".config")
+$env:XDG_DATA_HOME   = [System.IO.Path]::Combine("$env:USERPROFILE", ".local", "share")
+$env:XDG_STATE_HOME  = [System.IO.Path]::Combine("$env:USERPROFILE", ".local", "state")
+$env:XDG_CACHE_HOME  = [System.IO.Path]::Combine("$env:USERPROFILE", ".cache")
+
+# Using XDG variables. 
+$env:NVIM_LOG_FILE       = [System.IO.Path]::Combine("$env:XDG_STATE_HOME", "nvim")
+$env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine("$env:XDG_CONFIG_HOME", "starship")
+$env:STARSHIP_CACHE      = [System.IO.Path]::Combine("$env:XDG_CACHE_HOME", "starship")
+
+$directories = @(
+    $env:XDG_CONFIG_HOME,
+    $env:XDG_DATA_HOME,
+    $env:XDG_STATE_HOME,
+    $env:XDG_CACHE_HOME,
+    $env:NVIM_LOG_FILE,
+    $env:STARSHIP_CONFIG_DIR,
+    $env:STARSHIP_CACHE
+)
+
+foreach ($dir in $directories) 
+{
+    if (-not ([System.IO.Directory]::Exists($dir)))
+    {
+        [System.IO.Directory]::CreateDirectory($dir)
+    }
+}
+
+# Functions
+function touch
+{
+  Set-Content -Path ($args[0]) -Value ($null) 
+}
+
+function Get-ScriptDirectory
+{
+  Split-Path $MyInvocation.ScriptName 
+}
+
+function Remove-AllAzureResourceGroups
+{
+  az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % { az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y } 
+}
+
+function Update-Scoop
+{
+  scoop update | scoop update * | scoop cleanup * | scoop cache rm * 
+}
+
+function Update-Winget
+{
+  winget upgrade --all --force --purge 
+}
+
+function Decode-Base64
+{
+  param (
+    [string]$Base64String
+  )
+  $bytes = [System.Convert]::FromBase64String($Base64String);
+  $text = [System.Text.Encoding]::UTF8.GetString($bytes);
+  Write-Host $text;
+}
+
+function Remove-AllKubeConfigContexts 
+{
+  kubectl config get-users | % { if ($_ -ne "NAME") { kubectl config delete-user $_ } };  
+  kubectl config get-contexts | % { if(!$_.Contains("NAME")) { $contextArray = ($_.Replace("*","").Trim().Split(" ")); kubectl config delete-context $contextArray[0]; kubectl config delete-cluster $contextArray[3]}};
+}
+
+# If a Dev Drive, or D drive exists.
+$devDriveSourcePath = [System.IO.Path]::Combine("D:", "$env:USERNAME", "source")
+$usingDevDrive = ([System.IO.Directory]::Exists($devDriveSourcePath))
+if ($usingDevDrive) 
+{
+    function cds { Set-Location ($devDriveSourcePath) }
+}
+
+#PSReadLine
+Set-PSReadLineOption -EditMode vi
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+Set-PSReadLineOption -PredictionViewStyle ListView
+
+# Aliases are slow. Replace with functions.
+
+function open { ii . }
+function l { Get-ChildItem -Force $args }
+function ll {Get-ChildItem -Force $args}
+function vi { nvim $args }
+function which { param($item) Get-Command $item }
+
+# Check if Code Insiders is installed, and map code => code-insiders.
+if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue)) 
+{
+    Set-Alias -Name code  -Value code-insiders
+}
+
+# Developer Setup
+if ($usingDevDrive)
+{
+    # Set the NUGET_PACKAGES environment variable
+    # This path has a symlink to ~\.nuget\packages
+    $env:NUGET_PACKAGES = "D:\$Env:USERNAME\.nuget\packages"
+    $env:npm_config_cache = "D:\$Env:USERNAME\packages\npm"
+}
+
+$env:STARSHIP_CONFIG = [System.IO.Path]::Combine("$env:STARSHIP_CONFIG_DIR", "starship.toml")
+Invoke-Expression (&starship init powershell)
+
+{{- end -}}

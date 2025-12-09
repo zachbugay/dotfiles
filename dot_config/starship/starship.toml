@@ -1,0 +1,93 @@
+#:schema https://starship.rs/config-schema.json
+
+format = """
+${custom.segment_separator}\
+$os\
+${custom.segment_separator_inverse}\
+$directory\
+${custom.trailing_directory}\
+${git_branch}\
+[](fg:green bg:background)\
+${git_status}\
+${custom.segment_separator_ending}\
+$time\
+[](fg:background)\
+\n$character"""
+add_newline = false
+palette = "dracula"
+
+[os]
+disabled = false
+style = "bg:foreground fg:background"
+
+[os.symbols]
+Windows = " "
+
+[directory]
+style = "fg:background bg:cyan"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:green fg:background"
+format = "[$symbol $branch(:$remote_branch)]($style)"
+
+[git_status]
+style = "bg:background fg:orange"
+format = "[ $all_status$ahead_behind]($style)"
+
+[time]
+disabled = false
+use_12hr = true
+time_format = "%I:%M %p"  # Hour:Minute Format
+style = "bg:background"
+format = "[  $time ]($style)"
+
+[custom.segment_separator]
+description = "Output a styled separator right after the segment when outside a git repository."
+command = ""
+format = "[]($style)"
+style = "bg:foreground fg:background"
+when = true  # always show
+
+[custom.segment_separator_inverse]
+description = "Output a styled separator right after the segment when outside a git repository."
+command = ""
+format = "[]($style)"
+style = "bg:background fg:foreground"
+when = true  # always show
+
+[custom.segment_separator_ending]
+description = "Output a styled separator right after the segment when outside a git repository."
+command = ""
+format = "[]($style)"
+style = "bg:background fg:background"
+when = true  # always show
+
+[custom.trailing_directory]
+description = "Output a styled separator right after the directory."
+command = ""
+format = "[]($style)"
+style = "bg:background fg:cyan"
+when = true
+
+[palettes.dracula]
+background = "#282a36"
+current_line = "#44475a"
+foreground = "#f8f8f2"
+comment = "#6272a4"
+cyan = "#8be9fd"
+green = "#50fa7b"
+orange = "#ffb86c"
+pink = "#ff79c6"
+purple = "#bd93f9"
+red = "#ff5555"
+yellow = "#f1fa8c"
