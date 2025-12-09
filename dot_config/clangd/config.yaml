@@ -1,0 +1,19 @@
+CompileFlags:
+  Add:
+    - -DLOCAL
+    - -Wall
+    - -O2
+    - -Wextra
+    - -Wshadow
+    - -Wconversion
+    - -Wfloat-equal
+    - -Wno-unused-const-variable
+    - -Wno-sign-conversion
+    - -std=c23
+    - -IC:/Users/Zacha/scoop/apps/mingw/15.2.0-rt_v13-rev0/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include/c++
+    - -IC:/Users/Zacha/scoop/apps/mingw/15.2.0-rt_v13-rev0/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include/c++/x86_64-w64-mingw32
+    - -IC:/Users/Zacha/scoop/apps/mingw/15.2.0-rt_v13-rev0/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include/c++/backward
+    - -IC:/Users/Zacha/scoop/apps/mingw/15.2.0-rt_v13-rev0/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include
+    - -IC:/Users/Zacha/scoop/apps/mingw/15.2.0-rt_v13-rev0/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed
+    - -IC:/Users/Zacha/scoop/apps/mingw/15.2.0-rt_v13-rev0/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/include
+

@@ -1,0 +1,30 @@
+##Requires -Version 7
+# Only populated if windows.
+{{- if eq .chezmoi.os "windows" }}
+
+$source = Join-Path -Path $env:USERPROFILE -ChildPath ".config" -AdditionalChildPath "clangd"
+$destination = Join-Path -Path $env:LOCALAPPDATA -ChildPath "clangd"
+
+Write-Host "Creating symbolic link directory, source: " + $source + " destination: " + $destination
+
+if (!(Test-Path -Path $destination))
+{
+  Write-Host "Creating the SymbolicLink!";
+  New-Item -ItemType SymbolicLink -Path $destination -Target $source;
+}
+else
+{
+  $item = Get-Item -LiteralPath $destination -Force
+  if ($item.Attributes.ToString() -match "ReparsePoint")
+  {
+    Write-Host "Reparse point exists!";
+  }
+  else
+  {
+    Write-Host "Creating the SymbolicLink!";
+    New-Item -ItemType SymbolicLink -Path $destination -Target $source;
+  }
+}
+
+Write-Host "Done!"
+{{- end}}
