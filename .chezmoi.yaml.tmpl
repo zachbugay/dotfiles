@@ -1,0 +1,32 @@
+{{- $email := promptStringOnce . "email" "Enter your email address" -}}
+{{- $name := promptStringOnce . "name" "Enter your name" -}}
+{{- if eq .chezmoi.os "windows" -}}
+cd:
+  command: "pwsh"
+interpreters:
+  ps1:
+    args:
+      - "-NoLogo"
+    command: "pwsh"
+  cmd:
+    args:
+      - "-NoLogo"
+    command: "pwsh"
+{{- end }}
+data:
+  user: 
+    email: {{ $email | quote }}
+    name: {{ $name | quote }}
+git:
+  autoCommit: true
+  autoPush: true
+edit:
+  command: "nvim"
+merge:
+  command: "nvim"
+  args: 
+    - "-d" 
+    - "{{ "{{ .Source }}" }}"
+    - "{{ "{{ .Destination }}" }}"
+    - "{{ "{{ .Target }}" }}"
+  

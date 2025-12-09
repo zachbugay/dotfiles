@@ -1,0 +1,17 @@
+[user]
+	name = {{ .user.name | quote }}
+	email = {{ .user.email | quote }}
+[init]
+	defaultBranch = main
+[core]
+	editor = nvim
+	autocrlf = true
+	eol = lf
+	longpaths = true
+[pull]
+	rebase = false
+[filter "lfs"]
+	clean = {{ .chezmoi.config.git.command }}-lfs clean -- %f
+	smudge = {{ .chezmoi.config.git.command }}-lfs smudge -- %f
+	process = {{ .chezmoi.config.git.command }}-lfs filter-process
+	required = true
