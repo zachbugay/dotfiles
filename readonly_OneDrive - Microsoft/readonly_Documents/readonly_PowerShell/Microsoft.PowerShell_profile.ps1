@@ -19,8 +19,10 @@ if (-not (Test-Path -Path $nvimConfigDirectory)) {
 # Posh Prompt
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\$myTheme" | Invoke-Expression
 
+# Functions
 function touch { set-content -Path ($args[0]) -Value ($null) }
 function Get-ScriptDirectory { Split-Path $MyInvocation.ScriptName }
+function Cleanup-AzureResourceGroups { az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % {az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y} }
 
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = Join-Path -Path "D:" -ChildPath $Env:USERNAME -AdditionalChildPath "source"
