@@ -11,6 +11,10 @@ vim.opt.ttyfast         = true -- Speed up scrolling
 vim.opt.wrap            = false -- Disable linewrap
 vim.opt.cursorline      = true -- Highlight the current line
 vim.opt.list            = true -- Show White Space
+vim.opt.syntax          = "on"
+vim.opt.autoindent      = true
+vim.opt.cursorline      = true
+vim.opt.autowrite       = true
 vim.opt.listchars       = {
   space = "·",     -- Middle dot for spaces
   tab = "→ ",      -- Arrow for tabs (must be at least 2 chars)
@@ -19,7 +23,6 @@ vim.opt.listchars       = {
   precedes = "⟨",  -- Character for text that precedes the screen
   nbsp = "␣"       -- Non-breaking space
 }
-vim.opt.syntax          = "on"
 
 vim.cmd('syntax enable')
 vim.cmd('filetype plugin indent on')
