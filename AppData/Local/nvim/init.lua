@@ -7,7 +7,6 @@ vim.opt.tabstop 	= 4
 vim.opt.softtabstop 	= 4
 vim.opt.expandtab 	= true -- Convert tabs to spaces
 vim.opt.smartindent 	= true -- Automatically indent new lines
-vim.opt.cc 		= 100  -- Show a vertical bar
 vim.opt.ttyfast 	= true -- Speed up scrolling
 vim.opt.wrap 		= false -- Disable linewrap
 vim.opt.cursorline 	= true -- Highlight the current line
