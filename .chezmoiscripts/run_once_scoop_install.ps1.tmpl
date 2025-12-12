@@ -13,7 +13,7 @@ if ($null -eq $scoop) {
     # Add extras, nerd-fonts, and tilt-dev sources.
     scoop bucket add extras
     scoop bucket add nerd-fonts
-    scoop bucket add tilt-dev
+    scoop bucket add tilt-dev https://github.com/tilt-dev/scoop-bucket
 }
 
 {{ range .packages.windows.scoops -}}
