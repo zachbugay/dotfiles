@@ -13,7 +13,7 @@ $env:EDITOR="nvim"
 $nvimConfigDirectory = Join-Path -Path $env:LOCALAPPDATA -ChildPath "nvim"
 
 if (-not (Test-Path -Path $nvimConfigDirectory)) {
-        New-Item -Type Directory $nvimConfigDirectory
+    New-Item -Type Directory $nvimConfigDirectory
 }
 
 # Posh Prompt
