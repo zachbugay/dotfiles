@@ -13,7 +13,7 @@ $env:EDITOR="nvim"
 $nvimConfigDirectory = Join-Path -Path $env:LOCALAPPDATA -ChildPath "nvim"
 
 if (-not (Test-Path -Path $nvimConfigDirectory)) {
-	New-Item -Type Directory $nvimConfigDirectory
+        New-Item -Type Directory $nvimConfigDirectory
 }
 
 # Posh Prompt
@@ -26,7 +26,7 @@ function Get-ScriptDirectory { Split-Path $MyInvocation.ScriptName }
 $devDriveSourcePath = Join-Path -Path "D:" -ChildPath $Env:USERNAME -AdditionalChildPath "source"
 $usingDevDrive = ((Get-PSDrive -Name "D") -and (Test-Path $devDriveSourcePath))
 if ($usingDevDrive)
-{ 
+{
     function cds { Set-Location ($devDriveSourcePath)}
 }
 
