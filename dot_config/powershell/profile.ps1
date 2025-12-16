@@ -33,10 +33,11 @@ foreach ($dir in $directories) {
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\$myTheme" | Invoke-Expression
 
 # Functions
-function touch { set-content -Path ($args[0]) -Value ($null) }
+function touch { Set-Content -Path ($args[0]) -Value ($null) }
 function Get-ScriptDirectory { Split-Path $MyInvocation.ScriptName }
 function Cleanup-AzureResourceGroups { az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % { az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y } }
 function Update-Scoop { scoop update | scoop update * | scoop cleanup * | scoop cache rm * }
+function Update-Winget { winget upgrade --all --force --purge }
 
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = Join-Path -Path "D:" -ChildPath $Env:USERNAME -AdditionalChildPath "source"
@@ -59,14 +60,17 @@ Set-Alias -Name grep  -Value findstr
 Set-Alias -Name which -Value gcm
 
 # Check if Code Insiders is installed, and map code => code-insiders.
-if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue)) {
+if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue)) 
+{
     Set-Alias -Name code  -Value code-insiders
 }
 
 # Developer Setup
-if ($usingDevDrive) {
+if ($usingDevDrive)
+{
     # Set the NUGET_PACKAGES environment variable
     # This path has a symlink to ~\.nuget\packages
     $env:NUGET_PACKAGES = "D:\$Env:USERNAME\.nuget\packages"
     $env:npm_config_cache = "D:\$Env:USERNAME\packages\npm"
 }
+
