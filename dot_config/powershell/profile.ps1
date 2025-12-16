@@ -36,6 +36,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\$myTheme" | Invoke-Expressi
 function touch { set-content -Path ($args[0]) -Value ($null) }
 function Get-ScriptDirectory { Split-Path $MyInvocation.ScriptName }
 function Cleanup-AzureResourceGroups { az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % { az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y } }
+function Update-Scoop { scoop update | scoop update * | scoop cleanup * | scoop cache rm * }
 
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = Join-Path -Path "D:" -ChildPath $Env:USERNAME -AdditionalChildPath "source"
@@ -56,7 +57,6 @@ Set-Alias -Name vi    -value nvim
 Set-Alias -Name ll    -Value ls
 Set-Alias -Name grep  -Value findstr
 Set-Alias -Name which -Value gcm
-Set-Alias -Name sup   -Value scoop update | scoop update * | scoop cleanup * | scoop cache rm *
 
 # Check if Code Insiders is installed, and map code => code-insiders.
 if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue)) {
