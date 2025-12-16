@@ -56,6 +56,7 @@ Set-Alias -Name vi    -value nvim
 Set-Alias -Name ll    -Value ls
 Set-Alias -Name grep  -Value findstr
 Set-Alias -Name which -Value gcm
+Set-Alias -Name sup   -Value scoop update | scoop update * | scoop cleanup * | scoop cache rm *
 
 # Check if Code Insiders is installed, and map code => code-insiders.
 if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue)) {
