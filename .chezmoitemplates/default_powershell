@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "windows" -}}
 Import-Module posh-git
 Import-Module Terminal-Icons
 Import-Module PSReadLine
@@ -23,8 +24,10 @@ $directories = @(
     $env:NVIM_LOG_FILE
 )
 
-foreach ($dir in $directories) {
-    if (-not (Test-Path -Path $dir)) {
+foreach ($dir in $directories) 
+{
+    if (-not (Test-Path -Path $dir)) 
+    {
         New-Item -Type Directory $dir
     }
 }
@@ -42,7 +45,8 @@ function Update-Winget { winget upgrade --all --force --purge }
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = Join-Path -Path "D:" -ChildPath $Env:USERNAME -AdditionalChildPath "source"
 $usingDevDrive = ((Get-PSDrive -Name "D") -and (Test-Path $devDriveSourcePath))
-if ($usingDevDrive) {
+if ($usingDevDrive) 
+{
     function cds { Set-Location ($devDriveSourcePath) }
 }
 
@@ -74,3 +78,4 @@ if ($usingDevDrive)
     $env:npm_config_cache = "D:\$Env:USERNAME\packages\npm"
 }
 
+{{- end -}}
