@@ -26,6 +26,7 @@ packages:
       - "psreadline"
       - "rcedit"
       - "ripgrep"
+      - "sed"
       - "scons"
       - "sqlite"
       - "terminal-icons"
