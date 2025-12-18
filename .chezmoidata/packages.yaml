@@ -6,6 +6,7 @@ packages:
       - "bruno"
       - "chezmoi"
       - "dark"
+      - "diff-so-fancy"
       - "dos2unix"
       - "fd"
       - "gcc"
