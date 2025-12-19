@@ -41,6 +41,14 @@ function Get-ScriptDirectory { Split-Path $MyInvocation.ScriptName }
 function Cleanup-AzureResourceGroups { az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % { az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y } }
 function Update-Scoop { scoop update | scoop update * | scoop cleanup * | scoop cache rm * }
 function Update-Winget { winget upgrade --all --force --purge }
+function Decode-Base64 {
+  param (
+    [string]$Base64String
+  )
+  $bytes = [System.Convert]::FromBase64String($Base64String);
+  $text = [System.Text.Encoding]::UTF8.GetString($bytes);
+  Write-Host $text;
+}
 
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = Join-Path -Path "D:" -ChildPath $Env:USERNAME -AdditionalChildPath "source"
