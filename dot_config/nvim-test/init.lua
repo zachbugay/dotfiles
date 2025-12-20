@@ -34,12 +34,12 @@ vim.opt.autoindent = true -- Copy indent from current line when starting a new l
 vim.opt.cursorline = true
 vim.opt.autowrite = true
 vim.opt.listchars = {
-	space = "·", -- Middle dot for spaces
-	tab = "→ ", -- Arrow for tabs (must be at least 2 chars)
-	trail = "•", -- Bullet for trailing spaces
-	extends = "⟩", -- Character for text that extends beyond the screen
-	precedes = "⟨", -- Character for text that precedes the screen
-	nbsp = "␣", -- Non-breaking space
+  space = "·", -- Middle dot for spaces
+  tab = "→ ", -- Arrow for tabs (must be at least 2 chars)
+  trail = "•", -- Bullet for trailing spaces
+  extends = "⟩", -- Character for text that extends beyond the screen
+  precedes = "⟨", -- Character for text that precedes the screen
+  nbsp = "␣", -- Non-breaking space
 }
 
 vim.opt.colorcolumn = "120"
@@ -47,13 +47,13 @@ vim.opt.ff = "unix"
 local sysName = vim.loop.os_uname().sysname
 
 if sysName == "Windows_NT" then
-	vim.opt.shell = "pwsh.exe"
-	vim.opt.shellcmdflag =
-		"-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
-	vim.opt.shellredir = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-	vim.opt.shellpipe = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
-	vim.opt.shellquote = ""
-	vim.opt.shellxquote = ""
+  vim.opt.shell = "pwsh.exe"
+  vim.opt.shellcmdflag =
+    "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;$PSStyle.Formatting.Error = '';$PSStyle.Formatting.ErrorAccent = '';$PSStyle.Formatting.Warning = '';$PSStyle.OutputRendering = 'PlainText';"
+  vim.opt.shellredir = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+  vim.opt.shellpipe = "2>&1 | Out-File -Encoding utf8 %s; exit $LastExitCode"
+  vim.opt.shellquote = ""
+  vim.opt.shellxquote = ""
 end
 
 print("Loaded custom options.")
