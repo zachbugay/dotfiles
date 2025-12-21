@@ -36,12 +36,33 @@ foreach ($dir in $directories)
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\$myTheme" | Invoke-Expression
 
 # Functions
-function touch { Set-Content -Path ($args[0]) -Value ($null) }
-function Get-ScriptDirectory { Split-Path $MyInvocation.ScriptName }
-function Remove-AllAzureResourceGroups { az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % { az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y } }
-function Update-Scoop { scoop update | scoop update * | scoop cleanup * | scoop cache rm * }
-function Update-Winget { winget upgrade --all --force --purge }
-function Decode-Base64 {
+function touch
+{
+  Set-Content -Path ($args[0]) -Value ($null) 
+}
+
+function Get-ScriptDirectory
+{
+  Split-Path $MyInvocation.ScriptName 
+}
+
+function Remove-AllAzureResourceGroups
+{
+  az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json | % { az group delete --name $_ -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces -y } 
+}
+
+function Update-Scoop
+{
+  scoop update | scoop update * | scoop cleanup * | scoop cache rm * 
+}
+
+function Update-Winget
+{
+  winget upgrade --all --force --purge 
+}
+
+function Decode-Base64
+{
   param (
     [string]$Base64String
   )
