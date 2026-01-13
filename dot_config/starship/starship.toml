@@ -7,7 +7,6 @@ ${custom.segment_separator_inverse}\
 $directory\
 ${custom.trailing_directory}\
 ${git_branch}\
-[](fg:green bg:background)\
 ${git_status}\
 ${custom.segment_separator_ending}\
 $time\
@@ -43,7 +42,7 @@ format = "[$symbol $branch(:$remote_branch)]($style)"
 
 [git_status]
 style = "bg:background fg:orange"
-format = "[ $all_status$ahead_behind]($style)"
+format = "[[](fg:green bg:background) $all_status$ahead_behind]($style)"
 
 [time]
 disabled = false
