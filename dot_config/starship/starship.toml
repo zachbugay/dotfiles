@@ -10,7 +10,7 @@ ${git_branch}\
 ${git_status}\
 ${custom.segment_separator_ending}\
 $time\
-[](fg:background)\
+[    ](fg:background)\
 $all\
 """
 add_newline = false
