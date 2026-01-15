@@ -46,6 +46,7 @@ packages:
   darwin:
     brews:
       - "git"
+      - "chezmoi"
       - "openssl"
       - "starship"
       - "neovim"
@@ -55,6 +56,8 @@ packages:
       - "tree-sitter"
       - "tlrc"
       - "diff-so-fancy"
+      - "rustup"
     casks:
       - "font-fira-code-nerd-font"
+      - "obsidian"
 

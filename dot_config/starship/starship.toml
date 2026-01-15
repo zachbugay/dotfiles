@@ -22,6 +22,7 @@ style = "bg:foreground fg:background"
 
 [os.symbols]
 Windows = " "
+Macos = "  "
 
 [directory]
 style = "fg:background bg:cyan"
