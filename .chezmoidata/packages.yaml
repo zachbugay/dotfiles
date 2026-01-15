@@ -44,13 +44,17 @@ packages:
       - "unzip"
       - "wget"
   darwin:
-    brew:
+    brews:
       - "git"
       - "openssl"
       - "starship"
-      - "neovim-nightly"
+      - "neovim"
       - "chezmoi"
       - "k9s"
       - "kubectl"
       - "tree-sitter"
       - "tlrc"
+      - "diff-so-fancy"
+    casks:
+      - "font-fira-code-nerd-font"
+

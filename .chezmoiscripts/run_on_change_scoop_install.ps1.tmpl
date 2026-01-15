@@ -1,6 +1,6 @@
 ##Requires -Version 7
 # Only populated if windows.
-{{- if eq .chezmoi.os "windows" }}
+{{- if eq .chezmoi.os "windows" -}}
 
 echo "Running scoop installer..."
 
@@ -20,4 +20,4 @@ if ($null -eq $scoop) {
 scoop install {{ . | quote }}
 {{ end -}}
 
-{{- end}}
+{{- end -}}
