@@ -1,0 +1,23 @@
+# font-family = "Hasklug Nerd Font Mono Med"
+font-family = "FiraCode Nerd Font"
+adjust-cell-width = -5%
+adjust-cell-height = 20%
+adjust-underline-position = 6
+adjust-underline-thickness = 40%
+adjust-cursor-thickness = 150%
+
+# Font Size
+font-size = 16
+
+# Title bar font:
+window-title-font-family = "Hasklug Nerd Font Mono Med"
+
+# No shadow looks cleaner.
+macos-window-shadow = false
+
+# Stop Ghostty when I close everything.
+quit-after-last-window-closed = true
+
+# This is done automatically by Hyprland on Linux so using this here.
+mouse-hide-while-typing = true
+ 
