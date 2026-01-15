@@ -1,0 +1,6 @@
+{{- if ne .chezmoi.os "windows"  -}}
+.chezmoiscripts/run_once_scoop_install.ps1.tmpl
+.chezmoiscripts/run_once_symbolic_links_windows_setup.ps1.tmpl
+.chezmoitemplates/default_powershell
+{{- end}}
+.DS_Store

@@ -43,3 +43,14 @@ packages:
       - "tree-sitter"
       - "unzip"
       - "wget"
+  darwin:
+    brew:
+      - "git"
+      - "openssl"
+      - "starship"
+      - "neovim-nightly"
+      - "chezmoi"
+      - "k9s"
+      - "kubectl"
+      - "tree-sitter"
+      - "tlrc"
