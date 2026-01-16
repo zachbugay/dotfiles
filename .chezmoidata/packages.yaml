@@ -56,6 +56,7 @@ packages:
       - "tlrc"
       - "diff-so-fancy"
       - "sk"
+      - "eza"
     headbrews:
       - "neovim"
       - "rustup"

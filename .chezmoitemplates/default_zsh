@@ -2,6 +2,18 @@
 # Performance tracking
 _start_time=$SECONDS
 
+_load_aliases() {
+  alias ls='eza -lha --icons=auto --group-directories-first'
+  alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
+  alias l='eza -lha --icons=auto --group-directories-first'
+  alias la='eza -lha --icons=auto'
+  alias ld='eza -lhD --icons=auto'
+  alias lt='eza --icons=auto --tree --level=2'
+  alias lta='eza --icons=auto --tree --level=3 --all'
+  export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
+}
+
+
 # Environment Variables
 export XDG_CONFIG_HOME="$HOME/.config" 
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -10,6 +22,8 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
+
+export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 
 # Plugins
 ZSH_REPO_HOME="$XDG_CONFIG_HOME/zsh/plugins"
@@ -38,6 +52,9 @@ for plugin in $plugins; do
 done
 
 eval "$(starship init zsh)"
+
+# Execute function
+_load_aliases
 
 # Performance warning
 _end_time=$SECONDS
