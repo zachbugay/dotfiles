@@ -1,0 +1,50 @@
+{{- if eq .chezmoi.os "darwin" -}}
+# Performance tracking
+_start_time=$SECONDS
+
+# Environment Variables
+export XDG_CONFIG_HOME="$HOME/.config" 
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
+
+# Plugins
+ZSH_REPO_HOME="$XDG_CONFIG_HOME/zsh/plugins"
+repos=(
+  mattmc3/ez-compinit                         # Setup tab completions
+  zsh-users/zsh-completions                   # Add completions for more cmds
+  romkatv/zsh-no-ps2                          # Proper multi-line commands
+  zdharma-continuum/fast-syntax-highlighting  # Syntax highlighting
+  zsh-users/zsh-autosuggestions               # Auto-suggestions
+  zsh-users/zsh-history-substring-search      # Up/Down to search history
+)
+
+for plugin in $repos; do
+  if ! [[ -d $ZSH_REPO_HOME/$plugin ]]; then
+    git clone https://github.com/$plugin $ZSH_REPO_HOME/$plugin
+  fi
+  source $ZSH_REPO_HOME/$plugin/${plugin:t}.plugin.zsh
+done
+
+plugins=(
+  sk
+)
+
+for plugin in $plugins; do
+  source <($plugin --shell zsh)
+done
+
+eval "$(starship init zsh)"
+
+# Performance warning
+_end_time=$SECONDS
+_load_time=$((_end_time - _start_time))
+if ((_load_time > 3)); then
+  echo "⚠️ Shell startup took ${_load_time}s. Consider optimizing further."
+fi
+
+{{- end -}}
+

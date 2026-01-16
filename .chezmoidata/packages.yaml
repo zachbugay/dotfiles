@@ -49,13 +49,15 @@ packages:
       - "chezmoi"
       - "openssl"
       - "starship"
-      - "neovim"
       - "chezmoi"
       - "k9s"
       - "kubectl"
       - "tree-sitter"
       - "tlrc"
       - "diff-so-fancy"
+      - "sk"
+    headbrews:
+      - "neovim"
       - "rustup"
     casks:
       - "font-fira-code-nerd-font"
