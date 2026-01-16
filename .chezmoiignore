@@ -1,9 +1,11 @@
 {{- if ne .chezmoi.os "windows"  -}}
-.chezmoiscripts/run_on_change_scoop_install.ps1.tmpl
-.chezmoiscripts/on_change_scoop_install.ps1
-.chezmoiscripts/run_once_symbolic_links_windows_setup.ps1.tmpl
-.chezmoiscripts/symbolic_links_windows_setup.ps1
+.chezmoiscripts/run_onchange-scoop-install.ps1.tmpl
+.chezmoiscripts/scoop-install.ps1
+.chezmoiscripts/run_once_symbolic-links-windows-setup.ps1.tmpl
+.chezmoiscripts/symbolic-links-windows-setup.ps1
 .chezmoitemplates/default_powershell
 {{- else if ne .chezmoi.os "darwin" -}}
-.DS_Store
+
 {{- end}}
+# Always ignore.
+.DS_Store
