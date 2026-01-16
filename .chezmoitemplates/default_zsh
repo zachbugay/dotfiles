@@ -63,5 +63,6 @@ if ((_load_time > 3)); then
   echo "⚠️ Shell startup took ${_load_time}s. Consider optimizing further."
 fi
 
-{{- end -}}
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
+{{- end -}}
