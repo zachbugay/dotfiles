@@ -1,18 +1,7 @@
 {{- if eq .chezmoi.os "darwin" -}}
+
 # Performance tracking
 _start_time=$SECONDS
-
-_load_aliases() {
-  alias ls='eza -lha --icons=auto --group-directories-first'
-  alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
-  alias l='eza -lha --icons=auto --group-directories-first'
-  alias la='eza -lha --icons=auto'
-  alias ld='eza -lhD --icons=auto'
-  alias lt='eza --icons=auto --tree --level=2'
-  alias lta='eza --icons=auto --tree --level=3 --all'
-  export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
-}
-
 
 # Environment Variables
 export XDG_CONFIG_HOME="$HOME/.config" 
@@ -24,6 +13,22 @@ export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
 
 export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
+
+# Shell options
+# Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
+# https://zsh.sourceforge.io/Doc/Release/Options.html
+setopt AUTO_CD 
+
+_load_aliases() {
+  alias ls='eza -lha --icons=auto --group-directories-first'
+  alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
+  alias l='eza -lha --icons=auto --group-directories-first'
+  alias la='eza -lha --icons=auto'
+  alias ld='eza -lhD --icons=auto'
+  alias lt='eza --icons=auto --tree --level=2'
+  alias lta='eza --icons=auto --tree --level=3 --all'
+  export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
+}
 
 # Plugins
 ZSH_REPO_HOME="$XDG_CONFIG_HOME/zsh/plugins"
@@ -44,7 +49,7 @@ for plugin in $repos; do
 done
 
 plugins=(
-  sk
+  sk    # Fuzzy Finder, rust implementation
 )
 
 for plugin in $plugins; do
