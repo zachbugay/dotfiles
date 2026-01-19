@@ -46,7 +46,6 @@ packages:
   darwin:
     brews:
       - "chezmoi"
-      - "chezmoi"
       - "diff-so-fancy"
       - "eza"
       - "git"
@@ -56,6 +55,7 @@ packages:
       - "kubectx"
       - "luarocks"
       - "openssl"
+      - "ripgrep"
       - "sk"
       - "starship"
       - "tlrc"

@@ -61,6 +61,17 @@ eval "$(starship init zsh)"
 # Execute function
 _load_aliases
 
+# Setup directories
+my_directories=(
+  "source/repos"
+)
+
+for directory in $my_directories; do
+  if [ ! -d $directory ]; then
+    mkdir -p $directory
+  fi
+done
+
 # Performance warning
 _end_time=$SECONDS
 _load_time=$((_end_time - _start_time))
