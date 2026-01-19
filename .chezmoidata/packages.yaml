@@ -60,6 +60,7 @@ packages:
       - "starship"
       - "tlrc"
       - "tree-sitter"
+      - "tree-sitter-cli"
       - "yq"
     headbrews:
       - "neovim"
