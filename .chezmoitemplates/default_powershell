@@ -113,6 +113,12 @@ if ($usingDevDrive)
     $env:npm_config_cache = "D:\$Env:USERNAME\packages\npm"
 }
 
+# $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+# $vsPath = (& $vsWhere -latest -products * -prerelease -property installationPath).Trim()
+
+# Write-Host "$vsPath is: " + $vsPath
+# Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
+
 $env:STARSHIP_CONFIG = [System.IO.Path]::Combine("$env:STARSHIP_CONFIG_DIR", "starship.toml")
 Invoke-Expression (&starship init powershell)
 

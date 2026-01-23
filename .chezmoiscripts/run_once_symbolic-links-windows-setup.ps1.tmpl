@@ -41,13 +41,13 @@ Create-SymbolicLink -Source $source -Destination $destination
 # rustup stuff
 # This is going to be the .cargo directory in the scoop folder.
 
-$path = (which rustup).Source
-$source = ($path).Substring(0, $path.IndexOf(".cargo") + ".cargo".Length)
+$rustupPath = (which rustup).Source
+$rustupTarget = ($rustupPath).Substring(0, $rustupPath.IndexOf(".cargo") + ".cargo".Length)
 
 # $destination="C:\Users\Zacha\.cargo"
 $destination = Join-Path -Path $env:USERPROFILE -ChildPath ".cargo"
 
-Create-SymbolicLink -Source $source -Destination $destination
+Create-SymbolicLink -Source $rustupTarget -Destination $destination
 
 # Install nightly toolchain
 rustup toolchain install nightly
