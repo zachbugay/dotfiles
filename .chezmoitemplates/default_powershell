@@ -1,7 +1,7 @@
 {{- if eq .chezmoi.os "windows" -}}
-Import-Module posh-git
 Import-Module Terminal-Icons
 Import-Module PSReadLine
+Import-Module "gsudoModule"
 
 # Kubernetes Defaults
 $env:KUBE_EDITOR = "nvim"
@@ -22,7 +22,6 @@ $directories = @(
     $env:XDG_DATA_HOME,
     $env:XDG_STATE_HOME,
     $env:XDG_CACHE_HOME,
-    $env:NVIM_LOG_FILE,
     $env:STARSHIP_CONFIG_DIR,
     $env:STARSHIP_CACHE
 )
@@ -113,13 +112,17 @@ if ($usingDevDrive)
     $env:npm_config_cache = "D:\$Env:USERNAME\packages\npm"
 }
 
-# $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-# $vsPath = (& $vsWhere -latest -products * -prerelease -property installationPath).Trim()
+$vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+$vsPath = (& $vsWhere -latest -products * -prerelease -property installationPath).Trim()
 
-# Write-Host "$vsPath is: " + $vsPath
-# Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
+Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
+Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -HostArch "arm64" -Arch "arm64"
 
 $env:STARSHIP_CONFIG = [System.IO.Path]::Combine("$env:STARSHIP_CONFIG_DIR", "starship.toml")
 Invoke-Expression (&starship init powershell)
 
-{{- end -}}
+# Another thing that I have done is build Shim locally, and updated scoop's shim.exe in all directories using the new shim.exe.
+# There was an issue where shim.exe was coming back as a x86, and not ARM.
+# https://github.com/ScoopInstaller/Shim/issues/9
+
+{{ end -}}

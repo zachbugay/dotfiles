@@ -24,7 +24,6 @@ packages:
       - "nuget"
       - "nvm"
       - "openssl"
-      - "posh-git"
       - "psreadline"
       - "rcedit"
       - "ripgrep"

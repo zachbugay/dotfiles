@@ -10,9 +10,10 @@ ${git_branch}\
 ${git_status}\
 ${custom.segment_separator_ending}\
 $time\
-[    ](fg:background)\
+[](fg:background)
+$character
 """
-add_newline = false
+add_newline = true
 palette = "dracula"
 
 [os]
