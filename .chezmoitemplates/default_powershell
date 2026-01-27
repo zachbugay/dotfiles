@@ -123,7 +123,7 @@ $env:STARSHIP_CONFIG = [System.IO.Path]::Combine("$env:STARSHIP_CONFIG_DIR", "st
 Invoke-Expression (&starship init powershell)
 
 # Another thing that I have done is build Shim locally, and updated scoop's shim.exe in all directories using the new shim.exe.
-# THere was an issue where shim.exe was coming back as a x86, and not ARM.
+# There was an issue where shim.exe was coming back as a x86, and not ARM.
 # https://github.com/ScoopInstaller/Shim/issues/9
 
 {{ end -}}
