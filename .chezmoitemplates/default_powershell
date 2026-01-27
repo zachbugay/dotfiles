@@ -22,7 +22,6 @@ $directories = @(
     $env:XDG_DATA_HOME,
     $env:XDG_STATE_HOME,
     $env:XDG_CACHE_HOME,
-    $env:NVIM_LOG_FILE,
     $env:STARSHIP_CONFIG_DIR,
     $env:STARSHIP_CACHE
 )
