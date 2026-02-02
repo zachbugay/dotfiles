@@ -30,17 +30,8 @@ function Create-SymbolicLink {
 
   Write-Host "Creating symbolic link directory, source: " + $Source + " destination: " + $Destination
 }
-
-# .clangd
-
-$source = Join-Path -Path $env:USERPROFILE -ChildPath ".config" -AdditionalChildPath "clangd"
-$destination = Join-Path -Path $env:LOCALAPPDATA -ChildPath "clangd"
-
-Create-SymbolicLink -Source $source -Destination $destination
-
-# rustup stuff
+# Setup rustup on Windows, using the nightly.
 # This is going to be the .cargo directory in the scoop folder.
-
 $rustupPath = (which rustup).Source
 $rustupTarget = ($rustupPath).Substring(0, $rustupPath.IndexOf(".cargo") + ".cargo".Length)
 

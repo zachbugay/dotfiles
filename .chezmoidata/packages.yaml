@@ -49,6 +49,7 @@ packages:
       - "kubectl"
       - "kubectx"
       - "luarocks"
+      - "nvm"
       - "openssl"
       - "ripgrep"
       - "sk"
