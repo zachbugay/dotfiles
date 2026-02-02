@@ -136,4 +136,3 @@ Invoke-Expression (&starship init powershell)
 # https://github.com/ScoopInstaller/Shim/issues/9
 
 {{ end -}}
-
