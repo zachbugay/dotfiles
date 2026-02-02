@@ -4,7 +4,7 @@
 _start_time=$SECONDS
 
 # Environment Variables
-export XDG_CONFIG_HOME="$HOME/.config" 
+export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
@@ -17,7 +17,7 @@ export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 # Shell options
 # Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
 # https://zsh.sourceforge.io/Doc/Release/Options.html
-setopt AUTO_CD 
+setopt AUTO_CD
 
 _load_aliases() {
   alias ls='eza -lha --icons=auto --group-directories-first'
@@ -64,6 +64,7 @@ _load_aliases
 # Setup directories
 my_directories=(
   "source/repos"
+  "~/.nvm"
 )
 
 for directory in $my_directories; do
@@ -72,6 +73,12 @@ for directory in $my_directories; do
   fi
 done
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+
 # Performance warning
 _end_time=$SECONDS
 _load_time=$((_end_time - _start_time))
@@ -79,6 +86,4 @@ if ((_load_time > 3)); then
   echo "⚠️ Shell startup took ${_load_time}s. Consider optimizing further."
 fi
 
-export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
-
-{{- end -}}
+{{- end }}
