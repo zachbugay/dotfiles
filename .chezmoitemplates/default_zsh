@@ -4,15 +4,20 @@
 _start_time=$SECONDS
 
 # Environment Variables
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_STATE_HOME="${HOME}/.local/state"
+export XDG_CACHE_HOME="${HOME}/.cache"
 
-export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
-export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
+# Starship
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
+export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
 
-export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
+#Eza
+export EZA_CONFIG_DIR="${XDG_CONFIG_HOME}/eza"
+
+# NVM Node Version Manager
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # Shell options
 # Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
@@ -30,18 +35,33 @@ _load_aliases() {
   export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
 }
 
+REPOS_HOME="${HOME}/source/repos"
+ZSH_REPO_HOME="${XDG_CONFIG_HOME}/zsh/plugins"
+
+# Setup directories
+user_directories=(
+  "${NVM_DIR}"
+  "${REPOS_HOME}"
+  "${ZSH_REPO_HOME}"
+)
+
+for directory in $user_directories; do
+  if [ ! -d $directory ]; then
+    mkdir -p $directory
+  fi
+done
+
 # Plugins
-ZSH_REPO_HOME="$XDG_CONFIG_HOME/zsh/plugins"
-repos=(
+zsh_plugins=(
   mattmc3/ez-compinit                         # Setup tab completions
-  zsh-users/zsh-completions                   # Add completions for more cmds
   romkatv/zsh-no-ps2                          # Proper multi-line commands
   zdharma-continuum/fast-syntax-highlighting  # Syntax highlighting
   zsh-users/zsh-autosuggestions               # Auto-suggestions
+  zsh-users/zsh-completions                   # Add completions for more cmds
   zsh-users/zsh-history-substring-search      # Up/Down to search history
 )
 
-for plugin in $repos; do
+for plugin in $zsh_plugins; do
   if ! [[ -d $ZSH_REPO_HOME/$plugin ]]; then
     git clone https://github.com/$plugin $ZSH_REPO_HOME/$plugin
   fi
@@ -52,32 +72,25 @@ plugins=(
   sk    # Fuzzy Finder, rust implementation
 )
 
+
+# A conditional that ensures nvm.sh is a file, and is not empty.
+# The Logical AND operator ensures subsequent commands will run only if the previous was successful.
+# The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \
+  . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \
+  . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+
+# Execute function
+_load_aliases
+
 for plugin in $plugins; do
   source <($plugin --shell zsh)
 done
 
 eval "$(starship init zsh)"
-
-# Execute function
-_load_aliases
-
-# Setup directories
-my_directories=(
-  "source/repos"
-  "~/.nvm"
-)
-
-for directory in $my_directories; do
-  if [ ! -d $directory ]; then
-    mkdir -p $directory
-  fi
-done
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
 # Performance warning
 _end_time=$SECONDS
