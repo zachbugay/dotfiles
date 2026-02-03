@@ -40,7 +40,9 @@ packages:
   darwin:
     brews:
       - "chezmoi"
+      - "colima"
       - "diff-so-fancy"
+      - "docker"
       - "eza"
       - "git"
       - "jq"
