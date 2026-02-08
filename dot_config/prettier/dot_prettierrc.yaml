@@ -1,0 +1,11 @@
+parser: "powershell"
+plugins: 
+  - "C:/Users/zacharybugay/scoop/apps/nvm/current/nodejs/nodejs/node_modules/prettier-plugin-powershell/dist/index.js" # https://github.com/Nick2bad4u/prettier-plugin-powershell?tab=readme-ov-file#install
+powershellPreset: "invoke-formatter"
+powershellIndentStyle: "spaces"
+powershellIndentSize: 2
+powershellTrailingComma: all
+powershellSortHashtableKeys: true
+powershellBlankLineAfterParam: true
+powershellPreferSingleQuote: true
+powershellRewriteAliases: true

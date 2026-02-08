@@ -1,5 +1,4 @@
-# I need to figure out a way to not persist the last_update value.
-{{- if eq .chezmoi.os "windows" -}}
+{{- if eq .chezmoi.os "windows" }}
 {
   "last_update": "2026-01-27T05:39:30.9521350-05:00",
   "scoop_repo": "https://github.com/ScoopInstaller/Scoop",
