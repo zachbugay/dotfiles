@@ -1,12 +1,8 @@
-{
-  {
-    - if eq.chezmoi.os 'windows' -
-  }
-}
+<# prettier-ignore #>
+{{- if eq .chezmoi.os "windows" -}}
 Import-Module Terminal-Icons
 Import-Module PSReadLine
 Import-Module 'gsudoModule'
-
 
 # Kubernetes Defaults
 $env:KUBE_EDITOR = 'nvim'
@@ -197,8 +193,5 @@ Invoke-Expression (& starship init powershell)
 # There was an issue where shim.exe was coming back as a x86, and not ARM.
 # https://github.com/ScoopInstaller/Shim/issues/9
 
-{
-  {
-    end -
-  }
-}
+# prettier-ignore
+{{ end -}}

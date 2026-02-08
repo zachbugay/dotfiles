@@ -18,4 +18,8 @@ if ($null -eq $scoop) {
 }
 
 scoop install {{- range.packages.windows.scoops }} {{ . }} {{- end }}
+
+# Install nightly toolchain
+rustup toolchain install nightly
+
 {{ end }}

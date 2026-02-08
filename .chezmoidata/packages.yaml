@@ -1,5 +1,6 @@
 packages:
   windows:
+    node_dir: "C:/Users/zacharybugay/scoop/apps/nvm/current/nodejs/nodejs"
     scoops:
       - "7zip"
       - "azure-functions-core-tools"
@@ -38,6 +39,7 @@ packages:
       - "unzip"
       - "wget"
   darwin:
+    node_dir: "/something/else"
     brews:
       - "chezmoi"
       - "colima"

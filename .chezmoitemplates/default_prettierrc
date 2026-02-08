@@ -1,0 +1,16 @@
+# have node installed, point to the global plugin here.
+parser: "powershell"
+plugins:
+{{- if eq .chezmoi.os "windows"}}
+  - "{{ .packages.windows.node_dir }}/node_modules/prettier-plugin-powershell/dist/index.js"
+{{ else }}
+  - "{{ .packages.darwin.node_dir }}/node_modules/prettier-plugin-powershell/dist/index.js"
+{{ end -}}
+powershellPreset: "invoke-formatter"
+powershellIndentStyle: "spaces"
+powershellIndentSize: 2
+powershellTrailingComma: all
+powershellSortHashtableKeys: true
+powershellBlankLineAfterParam: true
+powershellPreferSingleQuote: true
+powershellRewriteAliases: true
