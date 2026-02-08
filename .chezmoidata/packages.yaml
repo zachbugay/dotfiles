@@ -39,7 +39,7 @@ packages:
       - "unzip"
       - "wget"
   darwin:
-    node_dir: "/something/else"
+    node_dir: "/Users/zachbugay/.config/nvm/versions/node/v25.5.0"
     brews:
       - "chezmoi"
       - "colima"
@@ -71,4 +71,3 @@ packages:
       - "font-fira-code-nerd-font"
       - "obsidian"
       - "signal"
-
