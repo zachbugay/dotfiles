@@ -38,14 +38,10 @@ _load_aliases() {
   alias ld='eza -lhD --icons=auto'
   alias lt='eza --icons=auto --tree --level=2'
   alias lta='eza --icons=auto --tree --level=3 --all'
-  export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
-
-  alias poweroff="osascript -e 'tell app \"System Events\" to shut down'"
-  alias sleep="osascript -e 'tell app \"System Events\" to sleep'"
-
+  alias poweroff="osascript -e 'tell app \"Finder\" to shut down'"
+  alias sleep="osascript -e 'tell app \"Finder\" to sleep'"
   alias gcc="gcc-15"
 }
-
 
 REPOS_HOME="${HOME}/source/repos"
 ZSH_REPO_HOME="${XDG_CONFIG_HOME}/zsh/plugins"
