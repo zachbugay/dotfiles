@@ -1,0 +1,22 @@
+{{- if eq .chezmoi.os "darwin" -}}
+# Environment Variables
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_STATE_HOME="${HOME}/.local/state"
+export XDG_CACHE_HOME="${HOME}/.cache"
+
+# Starship
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
+export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
+
+# EZA Configuration settings.
+export EZA_CONFIG_DIR="${XDG_CONFIG_HOME}/eza"
+export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
+
+# NVM Node Version Manager
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+
+# zsh configuration.
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export SHELL_SESSIONS_DISABLE=1
+{{- end }}
