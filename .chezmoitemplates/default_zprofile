@@ -1,5 +1,4 @@
 {{- if eq .chezmoi.os "darwin" -}}
 # Homebrew variables.
-# eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 {{- end }}

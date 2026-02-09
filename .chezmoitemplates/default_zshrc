@@ -1,5 +1,4 @@
 {{- if eq .chezmoi.os "darwin" -}}
-
 # Performance tracking
 _start_time=$SECONDS
 
@@ -11,7 +10,6 @@ setopt SHARE_HISTORY
 
 # Ignore duplicated commands history list.
 setopt hist_ignore_dups
-
 
 # Shell options
 # Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
@@ -82,8 +80,8 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 fpath=($ZDOTDIR/func $fpath)
 fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 
-export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 
 printpath() {
   tr ':' '\n' <<< "$PATH"
