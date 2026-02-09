@@ -3,6 +3,15 @@
 # Performance tracking
 _start_time=$SECONDS
 
+# Delete duplicates first when HISTFILE size exceeds HISTSIZE.
+setopt hist_expire_dups_first
+
+# Share history between windows.
+setopt SHARE_HISTORY
+
+# Ignore duplicated commands history list.
+setopt hist_ignore_dups
+
 # Environment Variables
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_DATA_HOME="${HOME}/.local/share"
@@ -15,9 +24,6 @@ export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
 
 #Eza
 export EZA_CONFIG_DIR="${XDG_CONFIG_HOME}/eza"
-
-# NVM Node Version Manager
-export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # Shell options
 # Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
@@ -78,15 +84,16 @@ plugins=(
   sk    # Fuzzy Finder, rust implementation
 )
 
+# NVM Node Version Manager
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # A conditional that ensures nvm.sh is a file, and is not empty.
 # The Logical AND operator ensures subsequent commands will run only if the previous was successful.
 # The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \
-  . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \
-  . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
+export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
 # Execute function
