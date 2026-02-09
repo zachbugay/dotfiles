@@ -89,6 +89,10 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
+# Functions for completion sources.
+fpath=($ZDOTDIR/func $fpath)
+fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
