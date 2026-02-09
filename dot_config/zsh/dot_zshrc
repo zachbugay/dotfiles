@@ -1,5 +1,3 @@
-{{- if eq .chezmoi.os "darwin" -}}
-
 # Performance tracking
 _start_time=$SECONDS
 
@@ -103,5 +101,3 @@ _load_time=$((_end_time - _start_time))
 if ((_load_time > 3)); then
   echo "⚠️ Shell startup took ${_load_time}s. Consider optimizing further."
 fi
-
-{{- end }}
