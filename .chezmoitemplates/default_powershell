@@ -27,8 +27,11 @@ foreach ($dir in $env:XDG_CONFIG_HOME, $env:XDG_DATA_HOME, $env:XDG_STATE_HOME, 
 # Functions
 
 function touch {
-  Set-Content -Path $args[0] -Value ($null)
-  return $null
+  if ([System.IO.File]::Exists($args[0])) {
+    [System.IO.File]::SetLastWriteTimeUtc($args[0], [System.DateTime]::UtcNow)
+  } else {
+    $null = [System.IO.File]::Create($args[0]).Dispose()
+  }
 }
 
 function Get-ScriptDirectory {
@@ -86,6 +89,11 @@ function Remove-AllKubeConfigContexts {
   Write-Information 'kubectl contexts cleared.'
 }
 
+function Update-StarshipInit {
+  & starship init powershell --print-full-init | Set-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))
+  Write-Host 'Starship init cache updated. Restart your shell to apply.'
+}
+
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = [System.IO.Path]::Combine(
   'D:',
@@ -105,7 +113,7 @@ Set-PSReadLineOption -EditMode vi -PredictionSource HistoryAndPlugin -Prediction
 # Aliases are slow. Replace with functions.
 
 function open {
-  ii.
+  Invoke-Item .
 }
 
 function l {
@@ -138,29 +146,28 @@ if ($usingDevDrive) {
 # Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
 # Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -HostArch "arm64" -Arch "arm64"
 
-# Cache starship init to avoid subprocess on every startup; refreshed in OnIdle.
-$starshipInitCache = [System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1')
-if ([System.IO.File]::Exists($starshipInitCache)) {
-  . $starshipInitCache
-} else {
-  & starship init powershell | Set-Content -Path $starshipInitCache
-  . $starshipInitCache
-}
-
 # Defer heavy module loads and checks until after the first prompt renders.
 $null = Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
   Import-Module Terminal-Icons -Global
   Import-Module gsudoModule -Global
 
   # Check if Code Insiders is installed, and map code => code-insiders.
-  if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue))
-  {
+  $_codeInsiders = [System.IO.Path]::Combine($env:LOCALAPPDATA, 'Programs', 'Microsoft VS Code Insiders', 'bin', 'code-insiders.cmd')
+  if ([System.IO.File]::Exists($_codeInsiders)) {
     Set-Alias -Name code -Value code-insiders -Scope Global
   }
-
-  Invoke-Expression (&starship init powershell)
 }
 
+# Cache starship init script to avoid spawning a child process on every shell launch.
+# The init output is pure function/variable definitions — safe to cache and dot-source.
+# Run Update-StarshipInit after updating starship to refresh the cache.
+$_starshipInitCache = [System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1')
+if ([System.IO.File]::Exists($_starshipInitCache)) {
+  . $_starshipInitCache
+} else {
+  & starship init powershell --print-full-init | Set-Content $_starshipInitCache
+  . $_starshipInitCache
+}
 $stopwatch.Stop()
 Write-Host "Elapsed: $($stopwatch.Elapsed.TotalSeconds) seconds"
 Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
