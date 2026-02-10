@@ -1,60 +1,27 @@
 <# prettier-ignore #>
 {{- if eq .chezmoi.os "windows" -}}
-Import-Module Terminal-Icons
-Import-Module PSReadLine
-Import-Module 'gsudoModule'
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+$userProfile = $Env:USERPROFILE
+$userName = $Env:USERNAME
 
 # Kubernetes Defaults
 $env:KUBE_EDITOR = 'nvim'
 $env:EDITOR = 'nvim'
 
-$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine(
-  "$env:USERPROFILE",
-  '.config'
-)
-$env:XDG_DATA_HOME = [System.IO.Path]::Combine(
-  "$env:USERPROFILE",
-  '.local',
-  'share'
-)
-$env:XDG_STATE_HOME = [System.IO.Path]::Combine(
-  "$env:USERPROFILE",
-  '.local',
-  'state'
-)
-$env:XDG_CACHE_HOME = [System.IO.Path]::Combine( "$env:USERPROFILE", '.cache' )
+$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine($userProfile, '.config')
+$env:XDG_DATA_HOME = [System.IO.Path]::Combine($userProfile, '.local', 'share')
+$env:XDG_STATE_HOME = [System.IO.Path]::Combine($userProfile, '.local', 'state')
+$env:XDG_CACHE_HOME = [System.IO.Path]::Combine($userProfile, '.cache')
+$env:NVIM_LOG_FILE = [System.IO.Path]::Combine($userProfile, '.local', '.cache', 'nvim')
+$env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine($userProfile, '.config', 'starship')
+$env:STARSHIP_CACHE = [System.IO.Path]::Combine($userProfile, '.cache', 'starship')
+$env:STARSHIP_CONFIG = [System.IO.Path]::Combine($userProfile, '.config', 'starship', 'starship.toml')
 
-# Using XDG variables.
-$env:NVIM_LOG_FILE = [System.IO.Path]::Combine( "$env:XDG_STATE_HOME", 'nvim' )
-$env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine(
-  "$env:XDG_CONFIG_HOME",
-  'starship'
-)
-$env:STARSHIP_CACHE = [System.IO.Path]::Combine(
-  "$env:XDG_CACHE_HOME",
-  'starship'
-)
-
-$null = Start-ThreadJob -Name 'Checking for directories' -ScriptBlock {
-  function Initialize-DeveloperEnvironment {
-    $directories = @(
-      $env:XDG_CONFIG_HOME,
-      $env:XDG_DATA_HOME,
-      $env:XDG_STATE_HOME,
-      $env:XDG_CACHE_HOME,
-      $env:STARSHIP_CONFIG_DIR,
-      $env:STARSHIP_CACHE
-    )
-    foreach ($dir in $directories)
-    {
-      if (-not ([System.IO.Directory]::Exists($dir)))
-      {
-        $null = [System.IO.Directory]::CreateDirectory($dir)
-      }
-    }
+# Inline directory checks — 6 syscalls is faster than ThreadJob module load overhead.
+foreach ($dir in $env:XDG_CONFIG_HOME, $env:XDG_DATA_HOME, $env:XDG_STATE_HOME, $env:XDG_CACHE_HOME, $env:STARSHIP_CONFIG_DIR, $env:STARSHIP_CACHE) {
+  if (-not [System.IO.Directory]::Exists($dir)) {
+    $null = [System.IO.Directory]::CreateDirectory($dir)
   }
-
-  Initialize-DeveloperEnvironment
 }
 
 # Functions
@@ -73,22 +40,18 @@ function Get-ScriptDirectory {
 
 function Remove-AllAzureResourceGroups {
   az group list --query "[?name != 'Default-ActivityLogAlerts'].name"
-    | ConvertFrom-Json
-    | ForEach-Object {
-      az group delete --name $_ `
-        --no-wait `
-        --yes `
-        -f Microsoft.Compute/virtualMachineScaleSets `
-        -f Microsoft.Compute/virtualMachines `
-        -f Microsoft.Databricks/workspaces 
+  | ConvertFrom-Json
+  | ForEach-Object 
+    { 
+      az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
     }
 }
 
 function Update-Scoop {
   scoop update
-    | scoop update *
-    | scoop cleanup *
-    | scoop cache rm *
+  | scoop update *
+  | scoop cleanup *
+  | scoop cache rm *
   return $null
 }
 
@@ -97,7 +60,7 @@ function Update-Winget {
   return $null
 }
 
-function Decode-Base64 {
+function Get-Base64 {
   param([string] $Base64String)
 
   $bytes = [System.Convert]::FromBase64String($Base64String)
@@ -107,40 +70,37 @@ function Decode-Base64 {
 
 function Remove-AllKubeConfigContexts {
   kubectl config get-users
-    | ForEach-Object {
-      if ($_ -ne 'NAME') {
-        kubectl config delete-user $_
-      }
+  | ForEach-Object {
+    if ($_ -ne 'NAME') {
+      kubectl config delete-user $_
     }
+  }
   kubectl config get-contexts
-    | ForEach-Object {
-      if (! $_.Contains('NAME')) {
-        $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
-        kubectl config delete-context $contextArray[0]
-        kubectl config delete-cluster $contextArray[3]
-      }
+  | ForEach-Object {
+    if (! $_.Contains('NAME')) {
+      $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
+      kubectl config delete-context $contextArray[0]
+      kubectl config delete-cluster $contextArray[3]
     }
+  }
   Write-Information 'kubectl contexts cleared.'
 }
 
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = [System.IO.Path]::Combine(
   'D:',
-  "$env:USERNAME",
+  "$userName",
   'source'
 )
 $usingDevDrive = ([System.IO.Directory]::Exists($devDriveSourcePath))
-if ($usingDevDrive)
-{
+if ($usingDevDrive) {
   function cds {
     Set-Location ($devDriveSourcePath)
   }
 }
 
 #PSReadLine
-Set-PSReadLineOption -EditMode vi
-Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -EditMode vi -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
 
 # Aliases are slow. Replace with functions.
 
@@ -164,19 +124,12 @@ function which {
   param($item) Get-Command $item
 }
 
-# Check if Code Insiders is installed, and map code => code-insiders.
-if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue))
-{
-  Set-Alias -Name code -Value code-insiders
-}
-
 # Developer Setup
-if ($usingDevDrive)
-{
+if ($usingDevDrive) {
   # Set the NUGET_PACKAGES environment variable
   # This path has a symlink to ~\.nuget\packages
-  $env:NUGET_PACKAGES = "D:\$Env:USERNAME\.nuget\packages"
-  $env:npm_config_cache = "D:\$Env:USERNAME\packages\npm"
+  $env:NUGET_PACKAGES = "D:\$userName\.nuget\packages"
+  $env:npm_config_cache = "D:\$userName\packages\npm"
 }
 
 # $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
@@ -185,13 +138,34 @@ if ($usingDevDrive)
 # Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
 # Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -HostArch "arm64" -Arch "arm64"
 
-$env:STARSHIP_CONFIG = [System.IO.Path]::Combine(
-  "$env:STARSHIP_CONFIG_DIR",
-  'starship.toml'
-)
-Invoke-Expression (& starship init powershell)
+# Cache starship init to avoid subprocess on every startup; refreshed in OnIdle.
+$starshipInitCache = [System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1')
+if ([System.IO.File]::Exists($starshipInitCache)) {
+  . $starshipInitCache
+} else {
+  & starship init powershell | Set-Content -Path $starshipInitCache
+  . $starshipInitCache
+}
 
-# Another thing that I have done is build Shim locally, and updated scoop's shim.exe in all directories using the new shim.exe.
+# Defer heavy module loads and checks until after the first prompt renders.
+$null = Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
+  Import-Module Terminal-Icons -Global
+  Import-Module gsudoModule -Global
+
+  # Check if Code Insiders is installed, and map code => code-insiders.
+  if ($null -ne (Get-Command code-insiders -ErrorAction SilentlyContinue))
+  {
+    Set-Alias -Name code -Value code-insiders -Scope Global
+  }
+
+  Invoke-Expression (&starship init powershell)
+}
+
+$stopwatch.Stop()
+Write-Host "Elapsed: $($stopwatch.Elapsed.TotalSeconds) seconds"
+Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
+
+# TODO: Another thing that I have done is build Shim locally, and updated scoop's shim.exe in all directories using the new shim.exe.
 # There was an issue where shim.exe was coming back as a x86, and not ARM.
 # https://github.com/ScoopInstaller/Shim/issues/9
 
