@@ -64,6 +64,7 @@ packages:
       - "tree-sitter"
       - "tree-sitter-cli"
       - "yq"
+      - "zsh"
     headbrews:
       - "neovim"
       - "rustup"
