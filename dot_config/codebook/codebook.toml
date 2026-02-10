@@ -1,0 +1,12 @@
+# List of dictionaries to use for spell checking
+dictionaries = ["en_us"]
+
+# Custom allowlist of words to ignore (case-insensitive)
+# Codebook will add words here when you select "Add to dictionary"
+# Default: []
+words = ["codebook", "rustc"]
+
+# List of glob patterns for paths to ignore when spell checking
+# Default: []
+ignore_paths = ["target/**/*", "**/*.json", ".git/**/*"]
+

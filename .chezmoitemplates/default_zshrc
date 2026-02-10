@@ -95,6 +95,9 @@ done
 
 eval "$(starship init zsh)"
 
+# Use a completion menu.
+zstyle ':completion:*' menu select
+
 # Performance warning
 _end_time=$SECONDS
 _load_time=$((_end_time - _start_time))
