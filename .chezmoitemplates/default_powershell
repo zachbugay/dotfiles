@@ -165,9 +165,13 @@ $_starshipInitCache = [System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1')
 if ([System.IO.File]::Exists($_starshipInitCache)) {
   . $_starshipInitCache
 } else {
-  & starship init powershell --print-full-init | Set-Content $_starshipInitCache
-  . $_starshipInitCache
+
+  & starship init powershell --print-full-init | 
+    Set-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'));
+    Write-Host "Starship cache regenerated. Lines: $((Get-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))).Count)";
+    . $_starshipInitCache
 }
+
 $stopwatch.Stop()
 Write-Host "Elapsed: $($stopwatch.Elapsed.TotalSeconds) seconds"
 Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
