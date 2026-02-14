@@ -5,20 +5,61 @@ $userProfile = $Env:USERPROFILE
 $userName = $Env:USERNAME
 
 # Kubernetes Defaults
-$env:KUBE_EDITOR = 'nvim'
 $env:EDITOR = 'nvim'
 
-$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine($userProfile, '.config')
-$env:XDG_DATA_HOME = [System.IO.Path]::Combine($userProfile, '.local', 'share')
-$env:XDG_STATE_HOME = [System.IO.Path]::Combine($userProfile, '.local', 'state')
-$env:XDG_CACHE_HOME = [System.IO.Path]::Combine($userProfile, '.cache')
-$env:NVIM_LOG_FILE = [System.IO.Path]::Combine($userProfile, '.local', '.cache', 'nvim')
-$env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine($userProfile, '.config', 'starship')
-$env:STARSHIP_CACHE = [System.IO.Path]::Combine($userProfile, '.cache', 'starship')
-$env:STARSHIP_CONFIG = [System.IO.Path]::Combine($userProfile, '.config', 'starship', 'starship.toml')
+$env:DOCKER_CONFIG = [System.IO.Path]::Combine(
+  $userProfile,
+  '.config',
+  'docker'
+)
+$env:KUBE_EDITOR = 'nvim'
+
+$env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
+  $userProfile,
+  '.local',
+  '.cache',
+  'nvim'
+)
+
+$env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine(
+  $userProfile,
+  '.config',
+  'starship'
+)
+$env:STARSHIP_CACHE = [System.IO.Path]::Combine(
+  $userProfile,
+  '.cache',
+  'starship'
+)
+$env:STARSHIP_CONFIG = [System.IO.Path]::Combine(
+  $userProfile,
+  '.config',
+  'starship',
+  'starship.toml'
+)
+
+$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine( $userProfile, '.config' )
+$env:XDG_DATA_HOME = [System.IO.Path]::Combine(
+  $userProfile,
+  '.local',
+  'share'
+)
+$env:XDG_STATE_HOME = [System.IO.Path]::Combine(
+  $userProfile,
+  '.local',
+  'state'
+)
+$env:XDG_CACHE_HOME = [System.IO.Path]::Combine( $userProfile, '.cache' )
 
 # Inline directory checks — 6 syscalls is faster than ThreadJob module load overhead.
-foreach ($dir in $env:XDG_CONFIG_HOME, $env:XDG_DATA_HOME, $env:XDG_STATE_HOME, $env:XDG_CACHE_HOME, $env:STARSHIP_CONFIG_DIR, $env:STARSHIP_CACHE) {
+foreach (
+  $dir in $env:XDG_CONFIG_HOME,
+  $env:XDG_DATA_HOME,
+  $env:XDG_STATE_HOME,
+  $env:XDG_CACHE_HOME,
+  $env:STARSHIP_CONFIG_DIR,
+  $env:STARSHIP_CACHE
+) {
   if (-not [System.IO.Directory]::Exists($dir)) {
     $null = [System.IO.Directory]::CreateDirectory($dir)
   }
@@ -28,7 +69,7 @@ foreach ($dir in $env:XDG_CONFIG_HOME, $env:XDG_DATA_HOME, $env:XDG_STATE_HOME, 
 
 function touch {
   if ([System.IO.File]::Exists($args[0])) {
-    [System.IO.File]::SetLastWriteTimeUtc($args[0], [System.DateTime]::UtcNow)
+    [System.IO.File]::SetLastWriteTimeUtc( $args[0], [System.DateTime]::UtcNow )
   } else {
     $null = [System.IO.File]::Create($args[0]).Dispose()
   }
@@ -43,18 +84,18 @@ function Get-ScriptDirectory {
 
 function Remove-AllAzureResourceGroups {
   az group list --query "[?name != 'Default-ActivityLogAlerts'].name"
-  | ConvertFrom-Json
-  | ForEach-Object 
-    { 
-      az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
-    }
+    | ConvertFrom-Json
+    | ForEach-Object
+  {
+    az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
+  }
 }
 
 function Update-Scoop {
   scoop update
-  | scoop update *
-  | scoop cleanup *
-  | scoop cache rm *
+    | scoop update *
+    | scoop cleanup *
+    | scoop cache rm *
   return $null
 }
 
@@ -73,24 +114,25 @@ function Get-Base64 {
 
 function Remove-AllKubeConfigContexts {
   kubectl config get-users
-  | ForEach-Object {
-    if ($_ -ne 'NAME') {
-      kubectl config delete-user $_
+    | ForEach-Object {
+      if ($_ -ne 'NAME') {
+        kubectl config delete-user $_
+      }
     }
-  }
   kubectl config get-contexts
-  | ForEach-Object {
-    if (! $_.Contains('NAME')) {
-      $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
-      kubectl config delete-context $contextArray[0]
-      kubectl config delete-cluster $contextArray[3]
+    | ForEach-Object {
+      if (! $_.Contains('NAME')) {
+        $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
+        kubectl config delete-context $contextArray[0]
+        kubectl config delete-cluster $contextArray[3]
+      }
     }
-  }
   Write-Information 'kubectl contexts cleared.'
 }
 
 function Update-StarshipInit {
-  & starship init powershell --print-full-init | Set-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))
+  & starship init powershell --print-full-init
+    | Set-Content ([System.IO.Path]::Combine( $env:STARSHIP_CACHE, 'init.ps1' ))
   Write-Host 'Starship init cache updated. Restart your shell to apply.'
 }
 
@@ -152,7 +194,13 @@ $null = Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCoun
   Import-Module gsudoModule -Global
 
   # Check if Code Insiders is installed, and map code => code-insiders.
-  $_codeInsiders = [System.IO.Path]::Combine($env:LOCALAPPDATA, 'Programs', 'Microsoft VS Code Insiders', 'bin', 'code-insiders.cmd')
+  $_codeInsiders = [System.IO.Path]::Combine(
+    $env:LOCALAPPDATA,
+    'Programs',
+    'Microsoft VS Code Insiders',
+    'bin',
+    'code-insiders.cmd'
+  )
   if ([System.IO.File]::Exists($_codeInsiders)) {
     Set-Alias -Name code -Value code-insiders -Scope Global
   }
@@ -161,15 +209,17 @@ $null = Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCoun
 # Cache starship init script to avoid spawning a child process on every shell launch.
 # The init output is pure function/variable definitions — safe to cache and dot-source.
 # Run Update-StarshipInit after updating starship to refresh the cache.
-$_starshipInitCache = [System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1')
+$_starshipInitCache = [System.IO.Path]::Combine(
+  $env:STARSHIP_CACHE,
+  'init.ps1'
+)
 if ([System.IO.File]::Exists($_starshipInitCache)) {
-  . $_starshipInitCache
+  .$_starshipInitCache
 } else {
-
-  & starship init powershell --print-full-init | 
-    Set-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'));
-    Write-Host "Starship cache regenerated. Lines: $((Get-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))).Count)";
-    . $_starshipInitCache
+  & starship init powershell --print-full-init
+  Set-Content ([System.IO.Path]::Combine( $env:STARSHIP_CACHE, 'init.ps1' ))
+  Write-Host "Starship cache regenerated. Lines: $((Get-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))).Count)"
+  .$_starshipInitCache
 }
 
 $stopwatch.Stop()
