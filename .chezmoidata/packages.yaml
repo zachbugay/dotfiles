@@ -1,6 +1,7 @@
 packages:
   windows:
     node_dir: "C:/Users/zacharybugay/scoop/apps/nvm/current/nodejs/nodejs"
+    docker_context: "wsl-ssl-engine"
     scoops:
       - "7zip"
       - "azure-functions-core-tools"

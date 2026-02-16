@@ -1,43 +1,45 @@
-##Requires -Version 7
-# Only populated if windows.
-{{- if eq .chezmoi.os "windows" }}
+{{- if eq .chezmoi.os 'windows' }}
+#Requires -Version 7.0
+$userProfile = $Env:USERPROFILE
+$localAppData = $Env:LOCALAPPDATA
 
-function Create-SymbolicLink {
+function Initialize-SymbolicLink {
   param (
     [string]$Source,
     [string]$Destination
   )
 
-  Write-Host "Source and Destination!"
+  Write-Host 'Source and Destination!'
   Write-Host $Source
   Write-Host $Destination
 
   if (!(Test-Path -Path $Destination)) {
-    Write-Host "Creating the SymbolicLink!";
+    Write-Host 'Creating the SymbolicLink!';
     New-Item -ItemType SymbolicLink -Path $Destination -Target $Source;
   }
   else {
     $item = Get-Item -LiteralPath $Destination -Force
-    if ($item.Attributes.ToString() -match "ReparsePoint") {
-      Write-Host "Reparse point exists!";
+    if ($item.Attributes.ToString() -match 'ReparsePoint') {
+      Write-Host 'Reparse point exists!';
     }
     else {
-      Write-Host "Creating the SymbolicLink!";
+      Write-Host 'Creating the SymbolicLink!';
       New-Item -ItemType SymbolicLink -Path $Destination -Target $Source;
     }
   }
 
-  Write-Host "Creating symbolic link directory, source: " + $Source + " destination: " + $Destination
+  Write-Host 'Creating symbolic link directory, source: ' + $Source + ' destination: ' + $Destination
 }
+
 # Setup rustup on Windows, using the nightly.
 # This is going to be the .cargo directory in the scoop folder.
 $rustupPath = (which rustup).Source
-$rustupTarget = ($rustupPath).Substring(0, $rustupPath.IndexOf(".cargo") + ".cargo".Length)
+$rustupTarget = ($rustupPath).Substring(0, $rustupPath.IndexOf('.cargo') + '.cargo'.Length)
 
-# $destination="C:\Users\Zacha\.cargo"
-$destination = Join-Path -Path $env:USERPROFILE -ChildPath ".cargo"
+# $destination='C:\Users\Zacha\.cargo'
+$destination = Join-Path -Path $userProfile -ChildPath '.cargo'
 
-Create-SymbolicLink -Source $rustupTarget -Destination $destination
+Initialize-SymbolicLink -Source $rustupTarget -Destination $destination
 
 # Install nightly toolchain
 rustup toolchain install nightly

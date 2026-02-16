@@ -3,6 +3,8 @@
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 $userProfile = $Env:USERPROFILE
 $userName = $Env:USERNAME
+$env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path)) 
+  | ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
 
 # Kubernetes Defaults
 $env:EDITOR = 'nvim'

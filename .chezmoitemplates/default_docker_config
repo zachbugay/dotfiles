@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os 'windows' }}
+{
+  "auths": {},
+  "currentContext": "{{ packages.windows.docker_context }}"
+}
+{{- end }}
