@@ -14,6 +14,7 @@ $env:DOCKER_CONFIG = [System.IO.Path]::Combine(
   '.config',
   'docker'
 )
+
 $env:KUBE_EDITOR = 'nvim'
 
 $env:NVIM_LOG_FILE = [System.IO.Path]::Combine(

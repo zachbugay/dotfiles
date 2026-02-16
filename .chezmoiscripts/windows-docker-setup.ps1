@@ -1,21 +1,27 @@
-{{- if eq .chezmoi.os 'windows' }}
 #Requires -Version 7.0
 
 param (
-  [switch]$Build
+  [switch]$InstallDocker,
+  [switch]$BuildBugayInitializeDocker,
+  [switch]$InitializeLocalDockerContext
 )
 
 function Test-IsElevated {
   return (New-Object Security.Principal.WindowsPrincipal(
-    [Security.Principal.WindowsIdentity]::GetCurrent()))
-    .IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+      [Security.Principal.WindowsIdentity]::GetCurrent()))
+  .IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
 function Install-Docker {
   param (
     [string]$Version = '29.0.0-dev',
-    [string]$Commit = '7b93d61673'
+    [string]$Commit = '7b93d61673',
+    [switch]$InstallDocker
   )
+
+  if (!$InstallDocker) {
+    return;
+  }
 
   Write-Host 'Installing Docker...';
   $installDirectory = [System.IO.Path]::Combine($Env:LOCALAPPDATA, 'bugay-docker-installer')
@@ -65,37 +71,40 @@ function Install-Docker {
   Write-Host 'Docker installed.';
 }
 
-function Register-BugayInitializeDockerTask {
-  [CmdletBinding()]
-  param (
-    [string]$Description,
-    [string]$TaskName,
-    [string]$BinPath
-  )
-
-  $action = New-ScheduledTaskAction -Execute $BinPath
-  $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-  $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
-  $settings = New-ScheduledTaskSettingsSet `
-    -AllowStartIfOnBatteries `
-    -DontStopIfGoingOnBatteries `
-    -ExecutionTimeLimit ([TimeSpan]::Zero) `
-    -RestartCount 3 `
-    -RestartInterval (New-TimeSpan -Minutes 1) `
-    -Hidden
-
-  Write-Host "Registering and starting the scheduled task..."
-  Register-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\' -Action $action -Trigger $trigger `
-    -Principal $principal -Settings $settings -Description $Description
-
-  Start-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\'
-}
-
 function Install-BugayInitializeDocker {
   [CmdletBinding()]
   param (
     [switch]$Build
   )
+
+  function Register-BugayInitializeDockerTask {
+    [CmdletBinding()]
+    param (
+      [string]$Description,
+      [string]$TaskName,
+      [string]$BinPath
+    )
+
+    $action = New-ScheduledTaskAction -Execute $BinPath
+    $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
+    $settings = New-ScheduledTaskSettingsSet `
+      -AllowStartIfOnBatteries `
+      -DontStopIfGoingOnBatteries `
+      -ExecutionTimeLimit ([TimeSpan]::Zero) `
+      -RestartCount 3 `
+      -RestartInterval (New-TimeSpan -Minutes 1) `
+      -Hidden
+
+    Write-Host "Registering and starting the scheduled task..."
+    Register-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\' -Action $action -Trigger $trigger `
+      -Principal $principal -Settings $settings -Description $Description
+
+    Start-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\'
+  }
+  
+  Push-Location "D:\zacharybugay\source\repos\Bugay.Initialize.Docker"
+
   if ($Build) {
     Write-Host "Building the binary..."
     dotnet clean
@@ -103,8 +112,7 @@ function Install-BugayInitializeDocker {
   }
   
   $installDirectory = [System.IO.Path]::Combine($Env:LOCALAPPDATA, 'bugay-docker-installer', 'bin')
-  if ($false -eq (Test-Path $installDirectory -ErrorAction SilentlyContinue))
-  {
+  if ($false -eq (Test-Path $installDirectory -ErrorAction SilentlyContinue)) {
     New-Item -Type Directory -Path $installDirectory
   }
   
@@ -112,12 +120,6 @@ function Install-BugayInitializeDocker {
   $installPath = [System.IO.Path]::Combine($installDirectory, 'Bugay.Initialize.Docker.exe')
   # TODO: This needs to be added to git and pulled from git. 
   $exePath = '.\src\bin\release\net10.0\win-arm64\publish\Bugay.Initialize.Docker.exe'
-  
-  if ([System.IO.File]::Exists($installPath)) {
-    Remove-Item $installPath
-  }
-
-  Move-Item -Path $exePath -Destination $installPath
   
   $desc = 'Starts WSL in the background so the Host can communicate with the Docker daemon.'
   $taskName = "Bugay.Initialize.Docker"
@@ -129,7 +131,46 @@ function Install-BugayInitializeDocker {
     Unregister-ScheduledTask -TaskName $taskName -TaskPath '\Bugay\' -Confirm:$false
   }
 
+  if ([System.IO.File]::Exists($installPath)) {
+    Write-Host "Removing old binary..."
+    Remove-Item $installPath
+  }
+
+  Move-Item -Path $exePath -Destination $installPath
+
   Register-BugayInitializeDockerTask -Description $desc -TaskName $taskName -BinPath $installPath
+  Pop-Location
+}
+
+function Initialize-LocalDockerContext {
+  param(
+    [switch]$InitializeLocalDockerContext
+  )
+
+  if (!$InitializeLocalDockerContext) {
+    return;
+  }
+
+  Write-Host "Creating the wsl ssh Docker context..."
+  docker context create --docker host=ssh://wsl --description "WSL Engine (SSH)" { { .packages.windows.docker_context } }
+
+  Write-Host "Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance."
+  Write-Host "Create a .ssh/config"
+  Write-Host "Make sure that the WSL instance has installed openssh-server, docker, and the systemd services are setup"
+
+  $wslIp = ((wsl hostname -I) -split " ")[0]
+
+  $sshConfigPath = [System.IO.Path]::Combine($Env:USERPROFILE, ".ssh", "config")
+
+  if (![System.IO.File]::Exists($sshConfigPath)) {
+@"
+Host wsl
+    HostName $wslIp
+    User zacharybugay
+    IdentityFile ~/.ssh/local_wsl
+    Port 2222
+"@ | Out-File -FilePath $sshConfigPath -Encoding utf8 
+  } 
 }
 
 if ((Test-IsElevated) -eq $false) {
@@ -141,30 +182,8 @@ if ((Test-IsElevated) -eq $false) {
   return
 }
 
-Install-Docker
+Install-Docker -InstallDocker:$InstallDocker
 
-Install-BugayInitializeDocker -Build:$Build
+Install-BugayInitializeDocker -Build:$BuildBugayInitializeDocker
 
-Write-Host "Creating the wsl ssh Docker context..."
-docker context create --docker host=ssh://wsl --description "WSL Engine (SSH)" {{ .packages.windows.docker_context }}
-
-Write-Host "Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance."
-Write-Host "Create a .ssh/config"
-Write-Host "Make sure that the WSL instance has installed openssh-server, docker, and the systemd services are setup"
-
-$wslIp = ((wsl hostname -I) -split " ")[0]
-
-$sshConfigPath = [System.IO.Path]::Combine($Env:USERPROFILE, ".ssh", "config")
-
-if (![System.IO.File]::Exists($sshConfigPath)) {
-  @"
-Host wsl
-    HostName $wslIp
-    User zacharybugay
-    IdentityFile ~/.ssh/local_wsl
-"@ | Out-File -FilePath $sshConfigPath -Encoding utf8 
-}
-
-Register-BugayInitializeDockerTask
-
-{{-end }}
+Initialize-LocalDockerContext -InitializeLocalDockerContext:$InitializeLocalDockerContext
