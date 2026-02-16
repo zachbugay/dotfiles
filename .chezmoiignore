@@ -1,9 +1,11 @@
+# If the OS is not Windows, ignore these.
 {{- if ne .chezmoi.os "windows"  -}}
 .chezmoiscripts/run_onchange-scoop-install.ps1.tmpl
 .chezmoiscripts/scoop-install.ps1
 .chezmoiscripts/run_once_symbolic-links-windows-setup.ps1.tmpl
 .chezmoiscripts/symbolic-links-windows-setup.ps1
 .chezmoitemplates/default_powershell
+.scripts/
 {{- else if ne .chezmoi.os "darwin" -}}
 
 {{- end}}
