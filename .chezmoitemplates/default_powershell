@@ -88,10 +88,9 @@ function Get-ScriptDirectory {
 function Remove-AllAzureResourceGroups {
   az group list --query "[?name != 'Default-ActivityLogAlerts'].name"
     | ConvertFrom-Json
-    | ForEach-Object
-  {
-    az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
-  }
+    | ForEach-Object {
+        az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
+      }
 }
 
 function Update-Scoop {
