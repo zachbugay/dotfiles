@@ -47,6 +47,7 @@ packages:
       - "diff-so-fancy"
       - "docker"
       - "docker-credential-helper"
+      - "dotnet"
       - "eza"
       - "gcc"
       - "git"
