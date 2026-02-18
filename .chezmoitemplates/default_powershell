@@ -1,10 +1,10 @@
 <# prettier-ignore #>
-{{- if eq .chezmoi.os "windows" -}}
+{{- if eq .chezmoi.os "windows" }}
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 $userProfile = $Env:USERPROFILE
 $userName = $Env:USERNAME
 $env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path)) 
-  | ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
+| ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
 
 # Kubernetes Defaults
 $env:EDITOR = 'nvim'
@@ -73,7 +73,8 @@ foreach (
 function touch {
   if ([System.IO.File]::Exists($args[0])) {
     [System.IO.File]::SetLastWriteTimeUtc( $args[0], [System.DateTime]::UtcNow )
-  } else {
+  }
+  else {
     $null = [System.IO.File]::Create($args[0]).Dispose()
   }
 }
@@ -87,17 +88,33 @@ function Get-ScriptDirectory {
 
 function Remove-AllAzureResourceGroups {
   az group list --query "[?name != 'Default-ActivityLogAlerts'].name"
-    | ConvertFrom-Json
-    | ForEach-Object {
-        az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
-      }
+  | ConvertFrom-Json
+  | ForEach-Object {
+    az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
+  }
 }
 
 function Update-Scoop {
+  # Update Scoop itself
   scoop update
-    | scoop update *
-    | scoop cleanup *
-    | scoop cache rm *
+  | scoop update *
+  | scoop cleanup *
+  | scoop cache rm *
+  # Get `last_update` from scoop, and update the chezmoi template with the value.
+  $chezmoiScoopConfigTempatePath = [System.IO.Path]::Combine($userProfile, ".local", "share", "chezmoi", ".chezmoitemplates", "default_scoop");
+  $scoopConfig = Get-Content C:\Users\zacharybugay\.config\scoop\config.json | ConvertFrom-Json;
+  $lastUpdate = $scoopConfig.last_update.ToString('o');
+  @"
+{{- if eq .chezmoi.os "windows" -}}
+{
+  "shim": "kiennq",
+  "scoop_repo": "https://github.com/ScoopInstaller/Scoop",
+  "scoop_branch": "master",
+  "default_architecture": "arm64",
+  "last_update": $lastUpdate
+}
+{{- end }}
+"@ | Out-File -FilePath $chezmoiScoopConfigTempatePath -Encoding utf8 
   return $null
 }
 
@@ -116,25 +133,25 @@ function Get-Base64 {
 
 function Remove-AllKubeConfigContexts {
   kubectl config get-users
-    | ForEach-Object {
-      if ($_ -ne 'NAME') {
-        kubectl config delete-user $_
-      }
+  | ForEach-Object {
+    if ($_ -ne 'NAME') {
+      kubectl config delete-user $_
     }
+  }
   kubectl config get-contexts
-    | ForEach-Object {
-      if (! $_.Contains('NAME')) {
-        $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
-        kubectl config delete-context $contextArray[0]
-        kubectl config delete-cluster $contextArray[3]
-      }
+  | ForEach-Object {
+    if (! $_.Contains('NAME')) {
+      $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
+      kubectl config delete-context $contextArray[0]
+      kubectl config delete-cluster $contextArray[3]
     }
+  }
   Write-Information 'kubectl contexts cleared.'
 }
 
 function Update-StarshipInit {
   & starship init powershell --print-full-init
-    | Set-Content ([System.IO.Path]::Combine( $env:STARSHIP_CACHE, 'init.ps1' ))
+  | Set-Content ([System.IO.Path]::Combine( $env:STARSHIP_CACHE, 'init.ps1' ))
   Write-Host 'Starship init cache updated. Restart your shell to apply.'
 }
 
@@ -217,7 +234,8 @@ $_starshipInitCache = [System.IO.Path]::Combine(
 )
 if ([System.IO.File]::Exists($_starshipInitCache)) {
   .$_starshipInitCache
-} else {
+}
+else {
   & starship init powershell --print-full-init
   Set-Content ([System.IO.Path]::Combine( $env:STARSHIP_CACHE, 'init.ps1' ))
   Write-Host "Starship cache regenerated. Lines: $((Get-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))).Count)"
@@ -233,4 +251,4 @@ Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
 # https://github.com/ScoopInstaller/Shim/issues/9
 
 # prettier-ignore
-{{ end -}}
+{{- end }}
