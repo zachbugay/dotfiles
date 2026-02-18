@@ -79,6 +79,13 @@ function touch {
   }
 }
 
+function Initialize-VsDevPowerShell {
+  $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+  $vsPath = (& $vsWhere -latest -products * -prerelease -property installationPath).Trim()
+  Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
+  Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -HostArch "arm64" -Arch "arm64"
+}
+
 function Get-ScriptDirectory {
   [CmdletBinding()]
   param()
@@ -207,12 +214,6 @@ if ($usingDevDrive) {
   $env:NUGET_PACKAGES = "D:\$userName\.nuget\packages"
   $env:npm_config_cache = "D:\$userName\packages\npm"
 }
-
-# $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-# $vsPath = (& $vsWhere -latest -products * -prerelease -property installationPath).Trim()
-#
-# Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
-# Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -HostArch "arm64" -Arch "arm64"
 
 # Defer heavy module loads and checks until after the first prompt renders.
 $null = Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
