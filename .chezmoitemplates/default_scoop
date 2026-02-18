@@ -1,9 +1,9 @@
 {{- if eq .chezmoi.os "windows" -}}
 {
   "shim": "kiennq",
-  "scoop_repo": "https://github.com/ScoopInstaller/Scoop",
-  "scoop_branch": "master",
+  "scoop_repo": "git@github.com:zachbugay/Scoop.git",
+  "scoop_branch": "develop",
   "default_architecture": "arm64",
-  "last_update": "2026-02-18T06:18:37.3591450-05:00"
+  "last_update": "2026-02-18T06:21:00.4048459-05:00"
 }
 {{- end }}
