@@ -94,10 +94,26 @@ function Get-ScriptDirectory {
 }
 
 function Remove-AllAzureResourceGroups {
-  az group list --query "[?name != 'Default-ActivityLogAlerts'].name"
-  | ConvertFrom-Json
-  | ForEach-Object {
-    az group delete --name $_ --no-wait --yes -f 'Microsoft.Compute/virtualMachineScaleSets' -f 'Microsoft.Compute/virtualMachines' -f 'Microsoft.Databricks/workspaces'
+
+  $resourceGroupNames = az group list --query "[?name != 'Default-ActivityLogAlerts'].name" | ConvertFrom-Json
+  foreach ($resourceGroupName in $resourceGroupNames) {
+    # Check if there are any backup containers within the resource group...
+    $vaultNames = az backup vault list --resource-group $resourceGroupName --query "[].name" | ConvertFrom-Json
+
+    # Cleanup the vaults...
+    foreach ($vaultName in $vaultNames) {
+      $backupIds = az backup item list --resource-group $resourceGroupName --vault-name $vaultName --query "[].{Id:id}"
+      $ids = ($backupIds | ConvertFrom-Json).Id -join ' '
+      az backup protection disable --ids $ids --yes
+      $backupTypes = @( 'AzureIaasVM', 'AzureStorage', 'AzureWorkload', 'MAB' )
+      foreach ($backupType in $backupTypes) {
+        $backupIds = az backup container list --resource-group $resourceGroupName --vault-name $vaultName --backup-management-type $backupType --query "[].{Id:id}"
+        az backup container unregister --ids (($backupIds | ConvertFrom-Json).Id -join ' ') --yes
+      }
+      az backup vault delete --resource-group $resourceGroupName --name $vaultName --yes
+    }
+    # Delete the resource group now.
+    az group delete --name $resourceGroupName --no-wait --yes -f Microsoft.Compute/virtualMachineScaleSets -f Microsoft.Compute/virtualMachines -f Microsoft.Databricks/workspaces
   }
 }
 
