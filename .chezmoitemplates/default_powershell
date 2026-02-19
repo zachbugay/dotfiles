@@ -133,8 +133,8 @@ function Update-Scoop {
   } else {
     $lastUpdate = [System.DateTime]::Now.ToString('o');
   }
-# Ignore go template syntax.
-@"
+  # Ignore go template syntax.
+  $text = @"
 {{`{{- if eq .chezmoi.os "windows" -}}`}}
 {
   "shim": "kiennq",
@@ -144,7 +144,8 @@ function Update-Scoop {
   "last_update": "$lastUpdate"
 }
 {{`{{- end }}`}}
-"@ | Out-File -FilePath $chezmoiScoopConfigTempatePath -Encoding utf8
+"@
+  Out-File -FilePath $chezmoiScoopConfigTempatePath -InputObject $text -Encoding utf8
   return $null
 }
 
@@ -162,16 +163,16 @@ function Get-Base64 {
 }
 
 function Remove-AllKubeConfigContexts {
-  kubectl config get-users
-  | ForEach-Object {
-    if ($_ -ne 'NAME') {
-      kubectl config delete-user $_
+  $users = kubectl config get-users;
+  foreach ($user in $users) {
+    if ($user -ne 'NAME') {
+      kubectl config delete-user $user
     }
   }
-  kubectl config get-contexts
-  | ForEach-Object {
-    if (! $_.Contains('NAME')) {
-      $contextArray = ($_.Replace( '*', '' ).Trim().Split(' '))
+  $contexts = kubectl config get-contexts
+  foreach ($context in $contexts) {
+    if (!$context.Contains('NAME')) {
+      $contextArray = ($context.Replace( '*', '' ).Trim().Split(' '))
       kubectl config delete-context $contextArray[0]
       kubectl config delete-cluster $contextArray[3]
     }
