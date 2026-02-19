@@ -3,7 +3,7 @@
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 $userProfile = $Env:USERPROFILE
 $userName = $Env:USERNAME
-$env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path)) 
+$env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path))
 | ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
 
 # Kubernetes Defaults
@@ -113,22 +113,22 @@ function Update-Scoop {
   $scoopConfig = $scoopConfigStringContent | ConvertFrom-Json;
   $lastUpdate = "";
   if ($null -ne $scoopConfig.last_update) {
-    $lastUpdate = $scoopConfig.last_update.ToString('o');  
+    $lastUpdate = $scoopConfig.last_update.ToString('o');
   } else {
     $lastUpdate = [System.DateTime]::Now.ToString('o');
   }
-# Ignore go template syntax. 
+# Ignore go template syntax.
 @"
 {{`{{- if eq .chezmoi.os "windows" -}}`}}
 {
   "shim": "kiennq",
-  "scoop_repo": "https://github.com/ScoopInstaller/Scoop",
-  "scoop_branch": "master",
+  "scoop_repo": "git@github.com:zachbugay/Scoop.git",
+  "scoop_branch": "develop",
   "default_architecture": "arm64",
   "last_update": "$lastUpdate"
 }
 {{`{{- end }}`}}
-"@ | Out-File -FilePath $chezmoiScoopConfigTempatePath -Encoding utf8 
+"@ | Out-File -FilePath $chezmoiScoopConfigTempatePath -Encoding utf8
   return $null
 }
 

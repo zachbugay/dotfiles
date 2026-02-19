@@ -4,6 +4,6 @@
   "scoop_repo": "git@github.com:zachbugay/Scoop.git",
   "scoop_branch": "develop",
   "default_architecture": "arm64",
-  "last_update": "2026-02-18T08:44:47.3721613-05:00"
+  "last_update": "2026-02-19T05:14:18.2813845-05:00"
 }
 {{- end }}
