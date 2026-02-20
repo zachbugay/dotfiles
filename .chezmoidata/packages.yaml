@@ -17,6 +17,7 @@ packages:
       - "gzip"
       - "hack-nf"
       - "innounp"
+      - "jq"
       - "k9s"
       - "kubectl"
       - "kustomize"
