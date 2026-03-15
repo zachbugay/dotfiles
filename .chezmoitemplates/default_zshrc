@@ -82,6 +82,7 @@ fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 
 printpath() {
   tr ':' '\n' <<< "$PATH"
