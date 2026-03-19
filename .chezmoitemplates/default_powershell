@@ -6,6 +6,8 @@ $userName = $Env:USERNAME
 $env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path))
 | ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
 
+$env:USER = $userName
+
 # Kubernetes Defaults
 $env:EDITOR = 'nvim'
 
