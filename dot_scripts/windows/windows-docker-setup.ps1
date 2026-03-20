@@ -14,8 +14,6 @@ function Test-IsElevated {
 
 function Install-Docker {
   param (
-    [string]$Version = '29.0.0-dev',
-    [string]$Commit = '7b93d61673',
     [switch]$InstallDocker
   )
 
@@ -57,11 +55,12 @@ function Install-Docker {
   Copy-Item vendor.mod go.mod
 
   # Build with modules on, using the vendor directory
-  $version = '29.0.0-dev'
-  $commit = '7b93d61673'
+  $version = '29.3.0'
+  $commit = '499a4c50bda34f9d4f9420c2e47675a6e8a04769'
   $env:GO111MODULE = 'on'
   $env:GOTOOLCHAIN = 'local'
-  go build -mod=vendor -o build/docker.exe -ldflags '-X github.com/docker/cli/cli/version.Version=$version -X github.com/docker/cli/cli/version.GitCommit=$commit' github.com/docker/cli/cmd/docker
+  # https://github.com/docker/cli
+  go build -mod=vendor -o build/docker.exe -ldflags "-X github.com/docker/cli/cli/version.Version=$version -X github.com/docker/cli/cli/version.GitCommit=$commit" github.com/docker/cli/cmd/docker
 
   # Clean up
   Remove-Item go.mod
@@ -103,7 +102,7 @@ function Install-BugayInitializeDocker {
     Start-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\'
   }
   
-  Push-Location "D:\zacharybugay\source\repos\Bugay.Initialize.Docker"
+  Push-Location "D:\zacharybugay\source\repos\developer-environment\Bugay.Initialize.Docker"
 
   if ($Build) {
     Write-Host "Building the binary..."
@@ -152,7 +151,7 @@ function Initialize-LocalDockerContext {
   }
 
   Write-Host "Creating the wsl ssh Docker context..."
-  docker context create --docker host=ssh://wsl --description "WSL Engine (SSH)" { { .packages.windows.docker_context } }
+  docker context create --docker host=ssh://wsl --description "WSL Engine (SSH)" {{ .packages.windows.docker_context }}
 
   Write-Host "Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance."
   Write-Host "Create a .ssh/config"

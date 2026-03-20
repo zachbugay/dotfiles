@@ -6,6 +6,8 @@ $userName = $Env:USERNAME
 $env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path))
 | ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
 
+$env:USER = $userName
+
 # Kubernetes Defaults
 $env:EDITOR = 'nvim'
 
@@ -54,7 +56,6 @@ $env:XDG_STATE_HOME = [System.IO.Path]::Combine(
 )
 $env:XDG_CACHE_HOME = [System.IO.Path]::Combine( $userProfile, '.cache' )
 
-# Inline directory checks — 6 syscalls is faster than ThreadJob module load overhead.
 foreach (
   $dir in $env:XDG_CONFIG_HOME,
   $env:XDG_DATA_HOME,
@@ -69,7 +70,6 @@ foreach (
 }
 
 # Functions
-
 function touch {
   if ([System.IO.File]::Exists($args[0])) {
     [System.IO.File]::SetLastWriteTimeUtc( $args[0], [System.DateTime]::UtcNow )
@@ -202,8 +202,6 @@ if ($usingDevDrive) {
 #PSReadLine
 Set-PSReadLineOption -EditMode vi -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
 
-# Aliases are slow. Replace with functions.
-
 function open {
   Invoke-Item .
 }
@@ -234,8 +232,8 @@ if ($usingDevDrive) {
 
 # Defer heavy module loads and checks until after the first prompt renders.
 $null = Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-  Import-Module Terminal-Icons -Global
-  Import-Module gsudoModule -Global
+  Import-Module -Name Terminal-Icons
+  Import-Module -Name gsudoModule
 
   # Check if Code Insiders is installed, and map code => code-insiders.
   $_codeInsiders = [System.IO.Path]::Combine(
