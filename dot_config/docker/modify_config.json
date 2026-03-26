@@ -1,0 +1,10 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- $data := dict -}}
+{{- if .chezmoi.stdin -}}
+{{-   $data = fromJson .chezmoi.stdin -}}
+{{- end -}}
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $data = $data | setValueAtPath "currentContext" .packages.windows.docker_context -}}
+{{-   $data = $data | setValueAtPath "cliPluginsExtraDirs" (list (joinPath .chezmoi.homeDir "scoop" "shims")) -}}
+{{- end -}}
+{{ toPrettyJson $data }}

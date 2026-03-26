@@ -1,0 +1,16 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- $data := dict -}}
+{{- if .chezmoi.stdin -}}
+{{-   $data = fromJson .chezmoi.stdin -}}
+{{- end -}}
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $data = $data | setValueAtPath "shim" "kiennq" -}}
+{{-   if eq .chezmoi.arch "amd64" -}}
+{{-     $data = $data | setValueAtPath "scoop_repo" "git@github.com:ScoopInstaller/Scoop.git" -}}
+{{-   else -}}
+{{-     $data = $data | setValueAtPath "scoop_repo" "git@github.com:zachbugay/Scoop.git" -}}
+{{-     $data = $data | setValueAtPath "default_architecture" "arm64" -}}
+{{-   end -}}
+{{-   $data = $data | setValueAtPath "scoop_branch" "develop" -}}
+{{- end -}}
+{{ toPrettyJson $data }}
