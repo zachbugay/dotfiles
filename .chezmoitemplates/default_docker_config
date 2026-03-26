@@ -1,7 +1,0 @@
-{{- if eq .chezmoi.os "windows" }}
-{
-  "auths": {},
-  "currentContext": "{{ .packages.windows.docker_context }}",
-  "cliPluginsExtraDirs": ["{{ .chezmoi.homeDir }}/scoop/shims"]
-}
-{{- end }}

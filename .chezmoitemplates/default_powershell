@@ -123,32 +123,6 @@ function Update-Scoop {
   | scoop update *
   | scoop cleanup *
   | scoop cache rm *
-#   # Get `last_update` from scoop, and update the chezmoi template with the value.
-#   $chezmoiScoopConfigTempatePath = [System.IO.Path]::Combine($userProfile, ".local", "share", "chezmoi", ".chezmoitemplates", "default_scoop");
-#   $scoopConfigStringContent = Get-Content C:\Users\zacharybugay\.config\scoop\config.json;
-#   $scoopConfig = $scoopConfigStringContent | ConvertFrom-Json;
-#   $lastUpdate = "";
-#   if ($null -ne $scoopConfig.last_update) {
-#     $lastUpdate = $scoopConfig.last_update.ToString('o');
-#   } else {
-#     $lastUpdate = [System.DateTime]::Now.ToString('o');
-#   }
-
-
-
-#   # Ignore go template syntax.
-#   $text = @"
-# {{`{{- if eq .chezmoi.os "windows" -}}`}}
-# {
-#   "shim": "kiennq",
-#   "scoop_repo": "git@github.com:zachbugay/Scoop.git",
-#   "scoop_branch": "develop",
-#   "default_architecture": "arm64",
-#   "last_update": "$lastUpdate"
-# }
-# {{`{{- end }}`}}
-# "@
-#   Out-File -FilePath $chezmoiScoopConfigTempatePath -InputObject $text -Encoding utf8
   return $null
 }
 
