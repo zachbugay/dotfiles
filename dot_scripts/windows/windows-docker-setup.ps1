@@ -49,14 +49,21 @@ function Install-Docker {
 
   # Ensure we've got the latest updates
   Set-Location $dockerRepoPath;
-  git fetch && git pull;
+  git fetch origin;
+  
+  # Pin to the latest commit SHA on the default branch
+  $commit = (git rev-parse origin/master).Trim()
+  $shortSha = $commit.Substring(0, 12)
+  $commitDate = (git log -1 --format=%cd --date=format:%Y%m%d $commit).Trim()
+  $version = "$commitDate-$shortSha"
+
+  Write-Host "Building Docker CLI $version ($commit)..."
+  git checkout $commit;
 
   # Create a temporary go.mod from vendor.mod
   Copy-Item vendor.mod go.mod
 
   # Build with modules on, using the vendor directory
-  $version = '29.3.0'
-  $commit = '499a4c50bda34f9d4f9420c2e47675a6e8a04769'
   $env:GO111MODULE = 'on'
   $env:GOTOOLCHAIN = 'local'
   # https://github.com/docker/cli
@@ -67,7 +74,7 @@ function Install-Docker {
 
   Move-Item -Path './build/docker.exe' -Destination $destinationDirectory -Force;
 
-  Write-Host 'Docker installed.';
+  Write-Host "Docker CLI $version installed.";
 }
 
 function Install-BugayInitializeDocker {

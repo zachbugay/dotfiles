@@ -1,6 +1,7 @@
 [user]
   name = {{ .user.name | quote }}
   email = {{ .user.email | quote }}
+  signingkey = {{ .chezmoi.homeDir }}/.ssh/github_id_ed25519.pub
 [init]
   defaultBranch = main
 [core]
@@ -24,3 +25,5 @@
   required = true
 [commit]
   template = ~/.gitmessage
+[gpg]
+	format = ssh
