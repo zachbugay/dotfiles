@@ -71,11 +71,19 @@ foreach (
 
 # Functions
 function touch {
-  if ([System.IO.File]::Exists($args[0])) {
-    [System.IO.File]::SetLastWriteTimeUtc( $args[0], [System.DateTime]::UtcNow )
-  }
-  else {
-    $null = [System.IO.File]::Create($args[0]).Dispose()
+  param([string[]]$Files)
+
+  foreach ($file in $Files) {
+    # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.6#executioncontext
+    $resolvedPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($file)
+    if ([System.IO.File]::Exists($resolvedPath)) {
+      $now = [System.DateTime]::UtcNow
+      [System.IO.File]::SetLastWriteTimeUtc($resolvedPath, $now)
+      [System.IO.File]::SetLastAccessTimeUtc($resolvedPath, $now)
+    }
+    else {
+      [System.IO.File]::Create($resolvedPath).Dispose()
+    }
   }
 }
 
