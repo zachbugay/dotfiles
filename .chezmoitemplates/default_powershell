@@ -118,11 +118,10 @@ function Remove-AllAzureResourceGroups {
 }
 
 function Update-Scoop {
-  # Update Scoop itself
   scoop update
-  | scoop update *
-  | scoop cleanup *
-  | scoop cache rm *
+  scoop update *
+  scoop cleanup *
+  scoop cache rm *
   return $null
 }
 
@@ -136,7 +135,7 @@ function Get-Base64 {
 
   $bytes = [System.Convert]::FromBase64String($Base64String)
   $text = [System.Text.Encoding]::UTF8.GetString($bytes)
-  Write-Information $text
+  Write-Host $text
 }
 
 function Remove-AllKubeConfigContexts {
