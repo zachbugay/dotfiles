@@ -19,23 +19,18 @@ $env:DOCKER_CONFIG = [System.IO.Path]::Combine(
 
 $env:KUBE_EDITOR = 'nvim'
 
-$env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
-  $userProfile,
-  '.local',
-  '.cache',
-  'nvim'
-)
-
 $env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine(
   $userProfile,
   '.config',
   'starship'
 )
+
 $env:STARSHIP_CACHE = [System.IO.Path]::Combine(
   $userProfile,
   '.cache',
   'starship'
 )
+
 $env:STARSHIP_CONFIG = [System.IO.Path]::Combine(
   $userProfile,
   '.config',
@@ -43,18 +38,34 @@ $env:STARSHIP_CONFIG = [System.IO.Path]::Combine(
   'starship.toml'
 )
 
-$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine( $userProfile, '.config' )
+$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine(
+  $userProfile,
+  '.config'
+)
+
 $env:XDG_DATA_HOME = [System.IO.Path]::Combine(
   $userProfile,
   '.local',
   'share'
 )
+
 $env:XDG_STATE_HOME = [System.IO.Path]::Combine(
   $userProfile,
   '.local',
   'state'
 )
-$env:XDG_CACHE_HOME = [System.IO.Path]::Combine( $userProfile, '.cache' )
+
+$env:XDG_CACHE_HOME = [System.IO.Path]::Combine( 
+  $userProfile,
+  '.cache'
+)
+
+$env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
+  $userProfile,
+  '.cache',
+  'nvim',
+  'nvim.log'
+)
 
 foreach (
   $dir in $env:XDG_CONFIG_HOME,
