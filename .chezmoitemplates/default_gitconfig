@@ -24,7 +24,7 @@
   process = {{ .chezmoi.config.git.command }}-lfs filter-process
   required = true
 [commit]
-  template = ~/.gitmessage
+  template = ~/.config/git/gitmessage
   gpgsign = true
 [gpg]
 	format = ssh

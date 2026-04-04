@@ -63,7 +63,7 @@ $env:XDG_CACHE_HOME = [System.IO.Path]::Combine(
 $env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
   $userProfile,
   '.cache',
-  'nvim',
+  'nvim', 
   'nvim.log'
 )
 
