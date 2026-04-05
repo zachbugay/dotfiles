@@ -1,7 +1,13 @@
+{{- $publicToken := "" -}}
+{{- if eq .user.email "Zachary.Bugay@outlook.com" -}}
+  {{- $publicToken = "personal-github.pub" -}}
+{{- else -}}
+  {{- $publicToken = "github_id_ed25519.pub" -}}
+{{- end -}}
 [user]
   name = {{ .user.name | quote }}
   email = {{ .user.email | quote }}
-  signingkey = {{ .chezmoi.homeDir }}/.ssh/github_id_ed25519.pub
+  signingkey = {{ .chezmoi.homeDir }}/.ssh/{{ $publicToken }}
 [init]
   defaultBranch = main
 [core]
@@ -27,6 +33,7 @@
   template = ~/.config/git/gitmessage
   gpgsign = true
 [gpg]
-	format = ssh
+  format = ssh
 [gpg "ssh"]
   allowedSignersFile = {{ .chezmoi.homeDir }}/.config/git/allowed_signers
+

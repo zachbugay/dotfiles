@@ -10,14 +10,13 @@ $env:USER = $userName
 
 # Kubernetes Defaults
 $env:EDITOR = 'nvim'
+$env:KUBE_EDITOR = 'nvim'
 
 $env:DOCKER_CONFIG = [System.IO.Path]::Combine(
   $userProfile,
   '.config',
   'docker'
 )
-
-$env:KUBE_EDITOR = 'nvim'
 
 $env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine(
   $userProfile,
@@ -55,7 +54,7 @@ $env:XDG_STATE_HOME = [System.IO.Path]::Combine(
   'state'
 )
 
-$env:XDG_CACHE_HOME = [System.IO.Path]::Combine( 
+$env:XDG_CACHE_HOME = [System.IO.Path]::Combine(
   $userProfile,
   '.cache'
 )
@@ -63,7 +62,7 @@ $env:XDG_CACHE_HOME = [System.IO.Path]::Combine(
 $env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
   $userProfile,
   '.cache',
-  'nvim', 
+  'nvim',
   'nvim.log'
 )
 
@@ -155,6 +154,7 @@ function Get-Base64 {
   $bytes = [System.Convert]::FromBase64String($Base64String)
   $text = [System.Text.Encoding]::UTF8.GetString($bytes)
   Write-Host $text
+  return $null
 }
 
 function Remove-AllKubeConfigContexts {
