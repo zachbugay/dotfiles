@@ -118,7 +118,7 @@ function Install-BugayInitializeDocker {
   }
 
   $installDirectory = [System.IO.Path]::Combine($Env:LOCALAPPDATA, 'bugay-docker-installer', 'bin')
-  if ($False -eq (Test-Path $installDirectory -ErrorAction SilentlyContinue)) {
+  if ((Test-Path $installDirectory -ErrorAction SilentlyContinue) -eq $False) {
     New-Item -Type Directory -Path $installDirectory
   }
 
