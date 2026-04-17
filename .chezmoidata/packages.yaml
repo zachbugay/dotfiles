@@ -4,7 +4,9 @@ packages:
     docker_context: "wsl-ssl-engine"
     scoops:
       - "7zip"
+      - "azure-cli"
       - "azure-functions-core-tools"
+      - "bicep"
       - "bruno"
       - "cacert"
       - "chezmoi"
@@ -23,6 +25,7 @@ packages:
       - "gsudo"
       - "gzip"
       - "hack-nf"
+      - "helm"
       - "innounp"
       - "jq"
       - "k6"
