@@ -51,6 +51,7 @@ packages:
       - "tlrc"
       - "tree-sitter"
       - "unzip"
+      - "vcredist2022"
       - "wget"
   darwin:
     node_dir: "/Users/zachbugay/.config/nvm/versions/node/v25.5.0"
