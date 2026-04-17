@@ -21,7 +21,4 @@ scoop install {{- range.packages.windows.scoops }} {{ . }} {{- end }}
 
 # Install nightly toolchain
 rustup toolchain install nightly
-
-# Install prettier and plugins
-npm install -g prettier prettier-plugin-powershell
 {{ end }}
