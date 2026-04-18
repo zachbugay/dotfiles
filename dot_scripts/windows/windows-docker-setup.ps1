@@ -179,7 +179,8 @@ function Initialize-LocalDockerContext {
   }
 
   Write-Host 'Creating the wsl ssh Docker context...'
-  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' { { .packages.windows.docker_context } }
+  # dprint-ignore
+  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' {{ .packages.windows.docker_context }}
 
   Write-Host 'Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance.'
   Write-Host 'Create a .ssh/config'
@@ -221,8 +222,18 @@ if ((Test-IsElevated) -eq $False) {
 }
 
 function Initialize-DockerFirewallRules {
-  New-NetFirewallRule -DisplayName "WSL 2 Docker" -Direction Inbound -LocalPort 2222 -Action Allow -Protocol TCP
-  New-NetFirewallRule -DisplayName "WSL 2 Docker Outbound" -Direction Outbound -LocalPort 2222 -Action Allow -Protocol TCP
+  $inboundName = 'WSL 2 Docker'
+  $outboundName = 'WSL 2 Docker Outbound'
+  $inboundRule = Get-NetFirewallRule -DisplayName $inboundName -ErrorAction SilentlyContinue
+  $outboundRule = Get-NetFirewallRule -DisplayName $outboundName -ErrorAction SilentlyContinue
+
+  if ($null -eq $inboundRule) {
+    New-NetFirewallRule -DisplayName $inboundName -Direction Inbound -LocalPort 2222 -Action Allow -Protocol TCP
+  }
+
+  if ($null -eq $outboundRule) {
+    New-NetFirewallRule -DisplayName $outboundName -Direction Outbound -LocalPort 2222 -Action Allow -Protocol TCP
+  }
 }
 
 Install-Docker -InstallDocker:$InstallDocker

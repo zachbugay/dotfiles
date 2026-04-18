@@ -67,13 +67,16 @@ EOF
 getent group docker >/dev/null || groupadd docker
 usermod -aG docker "$TARGET_USER"
 
+# --- Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows. --- #
+sed -i 's/^#Port22$/Port 2222' /etc/ssh/sshd_config
+
 # --- Enable + start docker (if systemd is active this run) ---------------
 systemctl daemon-reload || true
 if pidof systemd >/dev/null 2>&1; then
-  systemctl enable --now docker
+  systemctl enable --now docker ssh
 else
   echo "systemd is not active in this WSL session."
-  echo "Run 'wsl --shutdown' from Windows, then relaunch WSL to start docker."
+  echo "Run 'wsl --shutdown' from Windows, then relaunch WSL to start docker and ssh."
 fi
 
 echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
