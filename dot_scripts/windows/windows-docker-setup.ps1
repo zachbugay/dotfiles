@@ -160,12 +160,20 @@ function Install-BugayInitializeDocker {
     Write-Host 'Removing existing scheduled task...'
     Get-ScheduledTask -TaskPath '\Bugay\' | Stop-ScheduledTask
     Unregister-ScheduledTask -TaskName $taskName -TaskPath '\Bugay\' -Confirm:$False
+    
+    $proc = Get-Process -Name 'Bugay.Initialize.Docker' -ErrorAction SilentlyContinue
+    if ($null -ne $proc) {
+      Stop-Process -InputObject $proc
+      $null = Get-Process | Where-Object { $_.HasExited }
+    }
+
     if ([System.IO.File]::Exists($installPath)) {
       Write-Host 'Removing old binary...'
       Remove-Item -Path $installPath
     }
-    Copy-Item -Path $exePath -Destination $installPath
   }
+
+  Copy-Item -Path $exePath -Destination $installPath
   Register-BugayInitializeDockerTask -Description $desc -TaskName $taskName -BinaryPath $installPath
 }
 
@@ -180,7 +188,7 @@ function Initialize-LocalDockerContext {
 
   Write-Host 'Creating the wsl ssh Docker context...'
   # dprint-ignore
-  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' {{ .packages.windows.docker_context }}
+  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' { { .packages.windows.docker_context } }
 
   Write-Host 'Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance.'
   Write-Host 'Create a .ssh/config'
