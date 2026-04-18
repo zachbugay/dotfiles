@@ -16,14 +16,14 @@ function Install-Docker {
   )
 
   if (!$InstallDocker) {
-    return;
+    return
   }
 
-  Write-Host 'Installing Docker...';
+  Write-Host 'Installing Docker...'
   $installDirectory = [System.IO.Path]::Combine($Env:LOCALAPPDATA, 'bugay-docker-installer')
   $destinationDirectory = [System.IO.Path]::Combine($Env:USERPROFILE, 'scoop', 'shims')
 
-  if (!(Test-Path -Path $destinationDirectory)) {
+  if ((Test-Path -Path $installDirectory) -eq $False) {
     New-Item -ItemType Directory -Path $installDirectory
   }
 
@@ -37,14 +37,14 @@ function Install-Docker {
     return
   }
 
-  $dockerRepoPath = [System.IO.Path]::Combine($installDirectory, 'cli');
+  $dockerRepoPath = [System.IO.Path]::Combine($installDirectory, 'cli')
 
-  if (!(Test-Path -Path $dockerRepoPath)) {
-    git -C $dockerRepoPath clone git@github.com:docker/cli.git;
+  if ((Test-Path -Path $dockerRepoPath) -eq $False) {
+    git -C $installDirectory clone git@github.com:docker/cli.git
   }
 
   # Ensure we've got the latest updates
-  git -C $dockerRepoPath fetch origin;
+  git -C $dockerRepoPath fetch origin
 
   # Pin to the latest commit SHA on the default branch
   $commit = (git -C $dockerRepoPath rev-parse origin/master).Trim()
@@ -53,27 +53,27 @@ function Install-Docker {
   $version = "$commitDate-$shortSha"
 
   Write-Host "Building Docker CLI $version ($commit)..."
-  git -C $dockerRepoPath checkout $commit;
+  git -C $dockerRepoPath checkout $commit
 
   # Create a temporary go.mod from vendor.mod
-  $src=[System.IO.Path]::Combine($dockerRepoPath, 'vendor.mod')
-  $dest=[System.IO.Path]::Combine($dockerRepoPath, 'go.mod')
+  $src = [System.IO.Path]::Combine($dockerRepoPath, 'vendor.mod')
+  $dest = [System.IO.Path]::Combine($dockerRepoPath, 'go.mod')
   Copy-Item $src $dest
 
   # Build with modules on, using the vendor directory
   $env:GO111MODULE = 'on'
   $env:GOTOOLCHAIN = 'local'
-  
+
   # https://github.com/docker/cli
-  $dockerExe=[System.IO.Path]::Combine($dockerRepoPath, 'build', 'docker.exe')
+  $dockerExe = [System.IO.Path]::Combine($dockerRepoPath, 'build', 'docker.exe')
   go build -C $dockerRepoPath -mod=vendor -o $dockerExe -ldflags "-X github.com/docker/cli/cli/version.Version=$version -X github.com/docker/cli/cli/version.GitCommit=$commit" github.com/docker/cli/cmd/docker
 
   # Clean up
   Remove-Item $dest
 
-  Copy-Item -Path $dockerExe -Destination $destinationDirectory -Force;
+  Copy-Item -Path $dockerExe -Destination $destinationDirectory -Force
 
-  Write-Host "Docker CLI $version installed.";
+  Write-Host "Docker CLI $version installed."
 }
 
 function Install-BugayInitializeDocker {
@@ -108,13 +108,38 @@ function Install-BugayInitializeDocker {
     Start-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\'
   }
 
-  # TODO: Dynamic, based on if I have a dev drive, or if in ~\source\repos directory
-  $bugayInitializeDockerLocation = 'D:\zacharybugay\source\repos\developer-environment\Bugay.Initialize.Docker'
+  $gitRepo = 'git@github.com:zachbugay/Bugay.Initialize.Docker.git'
+  $gitRoot = ''
+  if ((Test-Path $gitRoot)) {
+    $gitRoot = [System.IO.Path]::Combine('D:', $Env:USERNAME, 'source', 'repos')
+  }
+  else {
+    $gitRoot = [System.IO.Path]::Combine($Env:USERPROFILE, 'source', 'repos')
+  }
+
+  $dest = [System.IO.Path]::Combine($gitRoot, 'developer-environment')
+
+  if ((Test-Path $dest) -eq $False) {
+    New-Item -ItemType Directory -Path $dest
+  }
+
+  $bugayInitializeDockerLocation = [System.IO.Path]::Combine($dest, 'Bugay.Initialize.Docker')
+
+  if ((Test-Path -Path $bugayInitializeDockerLocation) -eq $False) {
+    git -C $installDirectory clone git@github.com:docker/cli.git
+    git -C $dest clone $gitRepo
+  }
+
+  git -C $bugayInitializeDockerLocation fetch origin
+
+  $arch = $Env:PROCESSOR_ARCHITECTURE -eq 'AMD64' ? 'win-x64' : 'win-arm64'
   Write-Host "Build value: $Build"
+
   if ($Build) {
     Write-Host 'Building the binary...'
-    dotnet clean
-    dotnet publish -c release -r win-arm64
+    $slnPath = [System.IO.Path]::Combine($bugayInitializeDockerLocation, 'Bugay.Initialize.Docker.slnx')
+    dotnet clean $slnPath
+    dotnet publish $slnPath -c Release -r $arch
   }
 
   $installDirectory = [System.IO.Path]::Combine($Env:LOCALAPPDATA, 'bugay-docker-installer', 'bin')
@@ -125,7 +150,7 @@ function Install-BugayInitializeDocker {
   Write-Host 'Installing the binary...'
   $installPath = [System.IO.Path]::Combine($installDirectory, 'Bugay.Initialize.Docker.exe')
 
-  $exePath = [System.IO.Path]::Combine($bugayInitializeDockerLocation, 'src', 'bin', 'Release', 'net10.0', 'win-arm64', 'publish', 'Bugay.Initialize.Docker.exe')
+  $exePath = [System.IO.Path]::Combine($bugayInitializeDockerLocation, 'src', 'bin', 'Release', 'net10.0', $arch, 'publish', 'Bugay.Initialize.Docker.exe')
   Write-Host "exePath is: $exePath"
   $desc = 'Starts WSL in the background so the Host can communicate with the Docker daemon.'
   $taskName = 'Bugay.Initialize.Docker'
@@ -135,13 +160,13 @@ function Install-BugayInitializeDocker {
     Write-Host 'Removing existing scheduled task...'
     Get-ScheduledTask -TaskPath '\Bugay\' | Stop-ScheduledTask
     Unregister-ScheduledTask -TaskName $taskName -TaskPath '\Bugay\' -Confirm:$False
-      if ([System.IO.File]::Exists($installPath)) {
-        Write-Host 'Removing old binary...'
-        Remove-Item -Path $installPath
-      }
+    if ([System.IO.File]::Exists($installPath)) {
+      Write-Host 'Removing old binary...'
+      Remove-Item -Path $installPath
+    }
     Copy-Item -Path $exePath -Destination $installPath
-    Register-BugayInitializeDockerTask -Description $desc -TaskName $taskName -BinaryPath $installPath
   }
+  Register-BugayInitializeDockerTask -Description $desc -TaskName $taskName -BinaryPath $installPath
 }
 
 function Initialize-LocalDockerContext {
@@ -150,11 +175,11 @@ function Initialize-LocalDockerContext {
   )
 
   if (!$InitializeLocalDockerContext) {
-    return;
+    return
   }
 
   Write-Host 'Creating the wsl ssh Docker context...'
-  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' {{ .packages.windows.docker_context }}
+  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' { { .packages.windows.docker_context } }
 
   Write-Host 'Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance.'
   Write-Host 'Create a .ssh/config'
@@ -178,7 +203,7 @@ Host wsl
 
 if ((Test-IsElevated) -eq $False) {
   Write-Warning 'This script requires local admin privileges. Elevating...'
-  $forwardedArgs = foreach($boundParams in $PSBoundParameters.GetEnumerator()) {
+  $forwardedArgs = foreach ($boundParams in $PSBoundParameters.GetEnumerator()) {
     if ($boundParams.Value -is [switch]) {
       if ($boundParams.Value.IsPresent) { "-$($boundParams.Key)" }
     }
@@ -195,8 +220,15 @@ if ((Test-IsElevated) -eq $False) {
   return
 }
 
+function Initialize-DockerFirewallRules {
+  New-NetFirewallRule -DisplayName "WSL 2 Docker" -Direction Inbound -LocalPort 2222 -Action Allow -Protocol TCP
+  New-NetFirewallRule -DisplayName "WSL 2 Docker Outbound" -Direction Outbound -LocalPort 2222 -Action Allow -Protocol TCP
+}
+
 Install-Docker -InstallDocker:$InstallDocker
 
-Install-BugayInitializeDocker -Build:$BugayInitializeDocker
+Install-BugayInitializeDocker -Build:$BuildBugayInitializeDocker
 
 Initialize-LocalDockerContext -InitializeLocalDockerContext:$InitializeLocalDockerContext
+
+Initialize-DockerFirewallRules
