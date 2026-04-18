@@ -68,7 +68,7 @@ getent group docker >/dev/null || groupadd docker
 usermod -aG docker "$TARGET_USER"
 
 # --- Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows. --- #
-sed -i 's/^#Port22$/Port 2222' /etc/ssh/sshd_config
+sed -i 's/^#Port 22$/Port 2222/' /etc/ssh/sshd_config
 
 # --- Enable + start docker (if systemd is active this run) ---------------
 systemctl daemon-reload || true
