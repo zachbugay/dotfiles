@@ -112,7 +112,7 @@ function Install-BugayInitializeDocker {
 
   $gitRepo = 'git@github.com:zachbugay/Bugay.Initialize.Docker.git'
   $gitRoot = ''
-  if ((Test-Path $gitRoot)) {
+  if ((Test-Path 'D:')) {
     $gitRoot = [System.IO.Path]::Combine('D:', $Env:USERNAME, 'source', 'repos')
   }
   else {
@@ -133,7 +133,7 @@ function Install-BugayInitializeDocker {
   }
 
   git -C $bugayInitializeDockerLocation fetch origin
-
+  git -C $bugayInitializeDockerLocation pull
   $arch = $Env:PROCESSOR_ARCHITECTURE -eq 'AMD64' ? 'win-x64' : 'win-arm64'
   Write-Host "Build value: $Build"
 
