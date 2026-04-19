@@ -1,32 +1,32 @@
-# Title: Summary, imperative, start upper case, don't end with a period
-# No more than 50 chars. #### 50 chars is here:  #
-
-# Remember blank line between title and body.
-
-# Body: Explain *what* and *why* (not *how*). Include task ID (Jira issue).
-# Wrap at 72 chars. ################################## which is here:  #
-
-# At the end: Include Co-authored-by for all contributors. 
-# Include at least one empty line before it. Format: 
-# Co-authored-by: name <user@users.noreply.github.com>
+# <type>(<scope>): <subject>
 #
-# How to Write a Git Commit Message:
-# https://chris.beams.io/posts/git-commit/
+# <body>
 #
-# 1. Separate subject from body with a blank line
-# 2. Limit the subject line to 50 characters
-# 3. Capitalize the subject line
-# 4. Do not end the subject line with a period
-# 5. Use the imperative mood in the subject line
-# 6. Wrap the body at 72 characters
-# 7. Use the body to explain what and why vs. how
-
-# Please enter the commit message for your changes. Lines starting
-# with '#' will be ignored, and an empty message aborts the commit.
+# <footer>
 #
-# On branch master
-# Your branch is up to date with 'origin/main'.
+# Types:
+#   feat:     A new feature (bumps MINOR version)
+#   fix:      A bug fix (bumps PATCH version)
+#   docs:     Documentation only changes
+#   style:    Formatting, missing semicolons, etc; no code change
+#   refactor: Code change that neither fixes a bug nor adds a feature
+#   perf:     A code change that improves performance (bumps PATCH version)
+#   test:     Adding missing or correcting existing tests
+#   build:    Changes to the build system or dependencies
+#   ci:       Changes to CI configuration files and scripts
+#   chore:    Other changes that don't modify src or test files
+#   revert:   Reverts a previous commit
 #
-# Changes to be committed:
-#       new file:   installation.md
+# Scope (optional): component affected (e.g., docker, logging, ci)
 #
+# Breaking changes:
+#   Add "BREAKING CHANGE:" in the footer, or append "!" after the type
+#   e.g., feat!: remove legacy API
+#   This bumps the MAJOR version.
+#
+# Examples:
+#   feat(docker): add health check endpoint
+#   fix: resolve startup crash on missing config
+#   feat!: drop support for .NET 8
+#   docs: update README with build instructions
+#   ci: switch to semantic-release
