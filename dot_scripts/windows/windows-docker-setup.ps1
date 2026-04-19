@@ -10,6 +10,8 @@ function Test-IsElevated {
   return (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
+# TODO: I am building releases for my Bugay.Intiialize.Docker. No longer need to build here. Just get the latest artifact version
+
 function Install-Docker {
   param (
     [switch]$InstallDocker
@@ -160,7 +162,7 @@ function Install-BugayInitializeDocker {
     Write-Host 'Removing existing scheduled task...'
     Get-ScheduledTask -TaskPath '\Bugay\' | Stop-ScheduledTask
     Unregister-ScheduledTask -TaskName $taskName -TaskPath '\Bugay\' -Confirm:$False
-    
+
     $proc = Get-Process -Name 'Bugay.Initialize.Docker' -ErrorAction SilentlyContinue
     if ($null -ne $proc) {
       Stop-Process -InputObject $proc
