@@ -66,8 +66,15 @@ $env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
   'nvim.log'
 )
 
+$env:COPILOT_HOME = [System.IO.Path]::Combine(
+  $userProfile,
+ '.config',
+ 'copilot'
+)
+
 foreach (
   $dir in $env:XDG_CONFIG_HOME,
+  $env:COPILOT_HOME,
   $env:XDG_DATA_HOME,
   $env:XDG_STATE_HOME,
   $env:XDG_CACHE_HOME,
