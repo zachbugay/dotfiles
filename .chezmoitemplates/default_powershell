@@ -184,7 +184,7 @@ function Remove-AllKubeConfigContexts {
 
 function Update-StarshipInit {
   & starship init powershell --print-full-init
-  | Set-Content ([System.IO.Path]::Combine( $env:STARSHIP_CACHE, 'init.ps1' ))
+  | Set-Content ([System.IO.Path]::Combine($env:STARSHIP_CACHE, 'init.ps1'))
   Write-Host 'Starship init cache updated. Restart your shell to apply.'
 }
 
@@ -199,6 +199,12 @@ if ($usingDevDrive) {
   function cds {
     Set-Location ($devDriveSourcePath)
   }
+}
+
+function Remove-PSReadlineCache {
+  $appDataPath = $ENV:APPDATA
+  $consoleHistoryPath = [System.IO.Path]::Combine($appDataPath, 'Microsoft', 'Windows', 'PowerShell', 'PSReadLine', 'ConsoleHost_history.txt')
+  Remove-Item $consoleHistoryPath
 }
 
 #PSReadLine
