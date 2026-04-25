@@ -156,12 +156,27 @@ function Update-Winget {
 }
 
 function Get-Base64 {
+  [OutputType([string])]
   param([string] $Base64String)
 
   $bytes = [System.Convert]::FromBase64String($Base64String)
-  $text = [System.Text.Encoding]::UTF8.GetString($bytes)
-  Write-Host $text
-  return $null
+  return [System.Text.Encoding]::UTF8.GetString($bytes)
+}
+
+function Set-Base64 {
+  [OutputType([string])]
+  param([string] $Value)
+  $bytes = [System.Text.Encoding]::UTF8.GetBytes($Value)
+  return [System.Convert]::ToBase64String($bytes)
+}
+
+function Set-Base64FromHex {
+  [OutputType([string])]
+  param([string] $Value)
+  $bytes = for ($i = 0; $i -lt $Value.Length; $i += 2) {
+      [Convert]::ToByte($Value.Substring($i, 2), 16)
+  }
+  return [Convert]::ToBase64String($bytes)
 }
 
 function Remove-AllKubeConfigContexts {
