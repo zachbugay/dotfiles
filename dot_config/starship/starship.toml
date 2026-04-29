@@ -21,8 +21,9 @@ disabled = false
 style = "bg:foreground fg:background"
 
 [os.symbols]
-Windows = " "
+CachyOS = "  "
 Macos = "  "
+Windows = " "
 
 [directory]
 style = "fg:background bg:cyan"
