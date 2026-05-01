@@ -3,7 +3,7 @@
   {{- $publicToken = "personal-github.pub" }}
 {{- else }}
   {{- $publicToken = "github_id_ed25519.pub" }}
-{{- end }}
+{{- end -}}
 [user]
   name = {{ .user.name | quote }}
   email = {{ .user.email | quote }}
