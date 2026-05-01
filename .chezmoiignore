@@ -1,15 +1,13 @@
-# If the OS is not Windows, ignore these.
-{{- if ne .chezmoi.os "windows" -}}
-.chezmoiscripts/run_onchange-scoop-install.ps1.tmpl
+# Ignore these directories unless the os is 'windows'.
+{{- if ne .chezmoi.os "windows" }}
 .chezmoiscripts/scoop-install.ps1
-.chezmoiscripts/run_once_symbolic-links-windows-setup.ps1.tmpl
 .chezmoiscripts/symbolic-links-windows-setup.ps1
-.chezmoitemplates/default_powershell
-.scripts/
-{{- end -}}
-# If the OS is not Mac, ignore these
-{{- if ne .chezmoi.os "darwin" -}}
+.scripts/windows
+{{- end }}
 
-{{- end -}}
+# Ignore these directories unless the os is 'darwin' (mac.)
+{{- if ne .chezmoi.os "darwin" }}
+
+{{- end }}
 # Always ignore.
 .DS_Store
