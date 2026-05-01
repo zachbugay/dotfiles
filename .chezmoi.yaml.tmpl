@@ -12,8 +12,9 @@ interpreters:
   cmd:
     args:
       - "-NoLogo"
+      - "-NoProfile"
     command: "pwsh"
-{{- end -}}
+{{- end }}
 data:
   user:
     email: {{ $email | quote }}
