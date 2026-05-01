@@ -3,9 +3,9 @@ parser: "powershell"
 plugins:
 {{- if eq .chezmoi.os "windows"}}
   - "{{ .packages.windows.node_dir }}/node_modules/prettier-plugin-powershell/dist/index.js"
-{{ else }}
+{{- else }}
   - "{{ .packages.darwin.node_dir }}/node_modules/prettier-plugin-powershell/dist/index.js"
-{{ end -}}
+{{- end }}
 powershellPreset: "invoke-formatter"
 powershellIndentStyle: "spaces"
 powershellIndentSize: 2

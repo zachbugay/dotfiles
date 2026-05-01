@@ -2,8 +2,16 @@
 {{- if ne .chezmoi.os "windows" }}
 .chezmoiscripts/scoop-install.ps1
 .chezmoiscripts/symbolic-links-windows-setup.ps1
+<<<<<<< Updated upstream
 .scripts/windows
 {{- end }}
+=======
+.chezmoitemplates/default_powershell
+.scripts
+{{- end -}}
+# If the OS is not Mac, ignore these
+{{- if ne .chezmoi.os "darwin" -}}
+>>>>>>> Stashed changes
 
 # Ignore these directories unless the os is 'darwin' (mac.)
 {{- if ne .chezmoi.os "darwin" }}

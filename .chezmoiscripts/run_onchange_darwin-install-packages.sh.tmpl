@@ -1,16 +1,16 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{- if eq .chezmoi.os "darwin" }}
 #!/bin/bash
 
 brew bundle --file=/dev/stdin <<EOF
-{{ range .packages.darwin.brews -}}
+{{- range .packages.darwin.brews }}
 brew {{ . | quote }}
-{{ end -}}
-{{ range .packages.darwin.headbrews -}}
+{{- end }}
+{{- range .packages.darwin.headbrews }}
 brew {{ . | quote }}, args: ["HEAD"]
-{{ end -}}
-{{ range .packages.darwin.casks -}}
+{{- end }}
+{{- range .packages.darwin.casks }}
 cask {{ . | quote }}
-{{ end -}}
+{{- end }}
 EOF
 
 # Install rustup toolchain for nightly builds.
@@ -18,4 +18,4 @@ rustup toolchain install nightly-aarch64-apple-darwin
 
 npm install -g prettier prettier-plugin-powershell
 
-{{ end -}}
+{{- end }}
