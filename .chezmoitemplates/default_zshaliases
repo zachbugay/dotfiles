@@ -1,0 +1,15 @@
+{{- if eq .chezmoi.os "darwin" -}}
+# Apple Script
+alias poweroff="osascript -e 'tell app \"Finder\" to shut down'"
+alias sleep="osascript -e 'tell app \"Finder\" to sleep'"
+{{- end }}
+# Universal
+alias ls='eza -lha --icons=auto --group-directories-first'
+alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
+alias l='eza -lha --icons=auto --group-directories-first'
+alias la='eza -lha --icons=auto'
+alias ld='eza -lhD --icons=auto'
+alias lt='eza --icons=auto --tree --level=2'
+alias lta='eza --icons=auto --tree --level=3 --all'
+alias gcc="gcc-15"
+

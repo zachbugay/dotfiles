@@ -1,37 +1,25 @@
-{{- if eq .chezmoi.os "darwin" }}
 # Performance tracking
 _start_time=$SECONDS
 
+# Shell options
+# https://zsh.sourceforge.io/Doc/Release/Options.html
+# https://github.com/rothgar/mastering-zsh/blob/master/docs/config/history.md
+setopt APPEND_HISTORY         # Append to the history file.
+setopt AUTO_CD                # Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
+setopt EXTENDED_HISTORY       # Write the history file in the "start:elapsed;command" format.
+setopt HIST_EXPIRE_DUPS_FIRST # Delete duplicates first when HISTFILE size exceeds HISTSIZE.
+setopt HIST_FIND_NO_DUPS      # Do not display a line previously find.
+setopt HIST_IGNORE_ALL_DUPS   # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_IGNORE_DUPS       # Ignore duplicated commands history list.
+setopt HIST_IGNORE_SPACE      # Don't record an entry starting with a space.
+setopt HIST_REDUCE_BLANKS     # Remove superflous blanks before recording entry.
+setopt HIST_SAVE_NO_DUPS      # Don't write duplicate entries in the history file.
+setopt HIST_VERIFY            # Don't execute immediately upon history expansion.
+setopt INC_APPEND_HISTORY     # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY          # Share history between sessions.
+
 # When deleting with <C-w>, delete file names at a time.
 WORDCHARS=${WORDCHARS/\/}
-
-# Delete duplicates first when HISTFILE size exceeds HISTSIZE.
-setopt hist_expire_dups_first
-
-# Share history between windows.
-setopt SHARE_HISTORY
-
-# Ignore duplicated commands history list.
-setopt hist_ignore_dups
-
-# Shell options
-# Typing the directory name CD's into it. Best for interactive use only. Not for scripts.
-# https://zsh.sourceforge.io/Doc/Release/Options.html
-setopt AUTO_CD
-
-# A function that will import all my aliases.
-_load_aliases() {
-  alias ls='eza -lha --icons=auto --group-directories-first'
-  alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
-  alias l='eza -lha --icons=auto --group-directories-first'
-  alias la='eza -lha --icons=auto'
-  alias ld='eza -lhD --icons=auto'
-  alias lt='eza --icons=auto --tree --level=2'
-  alias lta='eza --icons=auto --tree --level=3 --all'
-  alias poweroff="osascript -e 'tell app \"Finder\" to shut down'"
-  alias sleep="osascript -e 'tell app \"Finder\" to sleep'"
-  alias gcc="gcc-15"
-}
 
 REPOS_HOME="${HOME}/source/repos"
 ZSH_REPO_HOME="${XDG_CONFIG_HOME}/zsh/plugins"
@@ -77,9 +65,13 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 fpath=($ZDOTDIR/func $fpath)
 fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 
+
+
+{{- if eq .chezmoi.os "darwin" }}
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+{{- end }}
 
 # A conditional that ensures nvm.sh is a file, and is not empty.
 # The Logical AND operator ensures subsequent commands will run only if the previous was successful.
@@ -91,8 +83,6 @@ export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 printpath() {
   tr ':' '\n' <<< "$PATH"
 }
-# Execute function
-_load_aliases
 
 for plugin in $plugins; do
   source <($plugin --shell zsh)
@@ -103,6 +93,8 @@ eval "$(starship init zsh)"
 # Use a completion menu.
 zstyle ':completion:*' menu select
 
+source ${ZDOTDIR}/.zshaliases
+
 # Performance warning
 _end_time=$SECONDS
 _load_time=$((_end_time - _start_time))
@@ -110,4 +102,3 @@ if ((_load_time > 3)); then
   echo "⚠️ Shell startup took ${_load_time}s. Consider optimizing further."
 fi
 
-{{- end }}
