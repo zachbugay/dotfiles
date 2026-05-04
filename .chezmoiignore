@@ -5,7 +5,7 @@
 .scripts/windows
 {{- else }}
 .chezmoiscripts/darwin-install-packages.sh
-.config/zsh/.zaliases
+.config/zsh/zaliases.zsh
 .config/zsh/.zprofile
 .config/zsh/.zshrc
 .zshenv
