@@ -19,6 +19,11 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # zsh configuration.
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+
+# Disable Apple's save/restore mechanism.
 export SHELL_SESSIONS_DISABLE=1
+
+# Man pages
+export MANPAGER='nvim +Man!'
 
 {{- end }}
