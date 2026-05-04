@@ -1,6 +1,5 @@
 packages:
   windows:
-    node_dir: "C:/Users/zacharybugay/scoop/apps/nvm/current/nodejs/nodejs"
     docker_context: "wsl-ssl-engine"
     scoops:
       - "7zip"
@@ -54,7 +53,6 @@ packages:
       - "vcredist2022"
       - "wget"
   darwin:
-    node_dir: "/Users/zachbugay/.config/nvm/versions/node/v25.5.0"
     brews:
       - "chezmoi"
       - "colima"
