@@ -2,6 +2,9 @@
 # Performance tracking
 _start_time=$SECONDS
 
+# When deleting with <C-w>, delete file names at a time.
+WORDCHARS=${WORDCHARS/\/}
+
 # Delete duplicates first when HISTFILE size exceeds HISTSIZE.
 setopt hist_expire_dups_first
 
@@ -70,12 +73,6 @@ plugins=(
 # NVM Node Version Manager
 export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
-# A conditional that ensures nvm.sh is a file, and is not empty.
-# The Logical AND operator ensures subsequent commands will run only if the previous was successful.
-# The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
-
 # Functions for completion sources.
 fpath=($ZDOTDIR/func $fpath)
 fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
@@ -83,6 +80,13 @@ fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+
+# A conditional that ensures nvm.sh is a file, and is not empty.
+# The Logical AND operator ensures subsequent commands will run only if the previous was successful.
+# The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
+[ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
+[ -s "${NVM_DIR}/etc/bash_completion.d/nvm" ] && . "${NVM_DIR}/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+
 
 printpath() {
   tr ':' '\n' <<< "$PATH"
