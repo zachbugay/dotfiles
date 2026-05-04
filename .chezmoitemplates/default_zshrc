@@ -98,7 +98,7 @@ eval "$(starship init zsh)"
 # Use a completion menu.
 zstyle ':completion:*' menu select
 
-source ${ZDOTDIR}/.zshaliases
+source ${ZDOTDIR}/.zaliases
 
 # Performance warning
 _end_time=$SECONDS

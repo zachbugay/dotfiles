@@ -3,11 +3,13 @@
 .chezmoiscripts/scoop-install.ps1
 .chezmoiscripts/symbolic-links-windows-setup.ps1
 .scripts/windows
+{{- else }}
+.chezmoiscripts/darwin-install-packages.sh
+.config/zsh/.zaliases
+.config/zsh/.zprofile
+.config/zsh/.zshrc
+.zshenv
 {{- end }}
-# Ignore these directories unless the os is 'darwin' (mac.)
-{{- if ne .chezmoi.os "darwin" }}
-
-{{- end -}}
 # Always ignore.
 .DS_Store
 
