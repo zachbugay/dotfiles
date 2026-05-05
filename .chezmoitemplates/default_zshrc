@@ -74,7 +74,6 @@ export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 {{- end }}
 
-eval "$(starship init zsh)"
 
 # Use a completion menu.
 zstyle ':completion:*' menu select
@@ -106,7 +105,6 @@ bindkey "^[[1;5C" forward-word
 #     cargo install ripgrep
 
 # I had to setup my WSL ~/.ssh/config
-
 path+=(~/.cargo/bin ~/.local/bin /opt/nvim-linux-arm64/bin)
 source <(sk --shell zsh)
 
@@ -119,6 +117,9 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 # The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
 [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
 [ -s "${NVM_DIR}/etc/bash_completion.d/nvm" ] && . "${NVM_DIR}/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+
+# Finally, activate the prompt.
+eval "$(starship init zsh)"
 
 # Performance warning
 _end_time=$SECONDS
