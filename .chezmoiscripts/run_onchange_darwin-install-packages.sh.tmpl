@@ -2,13 +2,13 @@
 #!/bin/bash
 
 brew bundle --file=/dev/stdin <<EOF
-{{- range .packages.darwin.brews }}
+{{- range .distributions.darwin.brews }}
 brew {{ . | quote }}
 {{- end }}
-{{- range .packages.darwin.headbrews }}
+{{- range .distributions.darwin.headbrews }}
 brew {{ . | quote }}, args: ["HEAD"]
 {{- end -}}
-{{- range .packages.darwin.casks }}
+{{- range .distributions.darwin.casks }}
 cask {{ . | quote -}}
 {{- end }}
 EOF
