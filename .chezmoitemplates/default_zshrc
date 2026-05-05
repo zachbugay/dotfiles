@@ -105,6 +105,8 @@ bindkey "^[[1;5C" forward-word
 #     cargo install tree-sitter-cli
 #     cargo install ripgrep
 
+# I had to setup my WSL ~/.ssh/config
+
 path+=(~/.cargo/bin ~/.local/bin /opt/nvim-linux-arm64/bin)
 source <(sk --shell zsh)
 
