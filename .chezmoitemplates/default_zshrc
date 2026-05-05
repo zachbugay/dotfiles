@@ -27,13 +27,13 @@ setopt SHARE_HISTORY          # Share history between sessions.
 WORDCHARS=${WORDCHARS/\/}
 
 REPOS_HOME="${HOME}/source/repos"
-ZSH_REPO_HOME="${XDG_CONFIG_HOME}/zsh/plugins"
+ZSH_PLUGINS="${XDG_CONFIG_HOME}/zsh/plugins"
 
 # Setup directories
 user_directories=(
   "${NVM_DIR}"
   "${REPOS_HOME}"
-  "${ZSH_REPO_HOME}"
+  "${ZSH_PLUGINS}"
 )
 
 for directory in $user_directories; do
@@ -53,45 +53,26 @@ zsh_plugins=(
 )
 
 for plugin in $zsh_plugins; do
-  if ! [[ -d $ZSH_REPO_HOME/$plugin ]]; then
-    git clone https://github.com/$plugin $ZSH_REPO_HOME/$plugin
+  if ! [[ -d $ZSH_PLUGINS/$plugin ]]; then
+    git clone https://github.com/$plugin $ZSH_PLUGINS/$plugin
   fi
-  source $ZSH_REPO_HOME/$plugin/${plugin:t}.plugin.zsh
+  source $ZSH_PLUGINS/$plugin/${plugin:t}.plugin.zsh
 done
 
-plugins=(
-  sk    # Fuzzy Finder, rust implementation
-)
-
-# NVM Node Version Manager
-export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # Functions for completion sources.
 fpath=($ZDOTDIR/func $fpath)
-fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
-
-
-
-{{- if eq .chezmoi.os "darwin" }}
-export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
-{{- end }}
-
-# A conditional that ensures nvm.sh is a file, and is not empty.
-# The Logical AND operator ensures subsequent commands will run only if the previous was successful.
-# The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
-[ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
-[ -s "${NVM_DIR}/etc/bash_completion.d/nvm" ] && . "${NVM_DIR}/etc/bash_completion.d/nvm" # This loads nvm bash_completion
-
 
 printpath() {
   tr ':' '\n' <<< "$PATH"
 }
 
-for plugin in $plugins; do
-  source <($plugin --shell zsh)
-done
+{{- if eq .chezmoi.os "darwin" }}
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+{{- end }}
 
 eval "$(starship init zsh)"
 
@@ -99,6 +80,43 @@ eval "$(starship init zsh)"
 zstyle ':completion:*' menu select
 
 source ${ZDOTDIR}/zaliases.zsh
+
+# This is my Ubuntu WSL config changes
+# TODO: Keybindings own file.
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+
+# I had to chsh to zsh
+# chsh --shell $(which zsh)
+# What did I have to install manually?
+# - starship
+# - chezmoi
+# - nvm
+# - neovim
+# - diff-so-fancy
+
+# What did I install with apt?
+# - eza
+# - unzip
+# - rustup
+#   - rustup toolchain install nightly
+#     cargo install skim
+#     cargo install tealdeer
+#     cargo install tree-sitter-cli
+#     cargo install ripgrep
+
+path+=(~/.cargo/bin ~/.local/bin /opt/nvim-linux-arm64/bin)
+source <(sk --shell zsh)
+
+# NVM Node Version Manager
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+
+# NVM has to already be installed for this to work.
+# A conditional that ensures nvm.sh is a file, and is not empty.
+# The Logical AND operator ensures subsequent commands will run only if the previous was successful.
+# The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
+[ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
+[ -s "${NVM_DIR}/etc/bash_completion.d/nvm" ] && . "${NVM_DIR}/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
 # Performance warning
 _end_time=$SECONDS
