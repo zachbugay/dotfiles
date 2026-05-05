@@ -2,7 +2,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TARGET_USER="${SUDO_USER:-{{ .chezmoi.username }}"
+TARGET_USER="{{ .chezmoi.username }}"
 
 if [[ $EUID -ne 0 ]]; then
   echo "This script must be run as root (use sudo)." >&2
@@ -37,7 +37,7 @@ apt-get update -y
 apt-get install -y \
   docker-ce docker-ce-cli containerd.io \
   docker-buildx-plugin docker-compose-plugin \
-  openssh-server net-tools
+  openssh-server net-tools gcc clang
 
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json << 'EOF'
