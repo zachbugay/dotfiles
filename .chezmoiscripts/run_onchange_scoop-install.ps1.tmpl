@@ -17,8 +17,9 @@ if ($null -eq $scoop) {
     scoop bucket add tilt-dev https://github.com/tilt-dev/scoop-bucket
 }
 
-scoop install {{- range.packages.windows.scoops }} {{ . }} {{- end }}
+scoop install {{- range.distributions.windows.scoops }} {{ . }} {{- end }}
 
 # Install nightly toolchain
 rustup toolchain install nightly
-{{ end }}
+
+{{- end }}

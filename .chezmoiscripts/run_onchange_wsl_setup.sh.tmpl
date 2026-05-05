@@ -1,0 +1,18 @@
+{{- if (.chezmoi.kernel.osrelease | lower | conatiners | "microsoft") -}}
+#!/usr/bin/env bash
+
+echo <<EOF
+[boot]
+systemd=true
+
+[user]
+default={{ .chezmoi.username }}
+
+[interop]
+enabled=false
+appendWindowsPath=false
+
+EOF
+
+
+{{- end }}

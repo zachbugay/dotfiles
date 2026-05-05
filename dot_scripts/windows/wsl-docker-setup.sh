@@ -27,12 +27,13 @@ install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 chmod a+r /etc/apt/keyrings/docker.asc
 
-cat > /etc/apt/sources.list.d/docker.sources <<EOF
+cat > /etc/apt/sources.list.d/docker.sources << EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
 Suites: ${CODENAME}
 Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
+
 EOF
 
 apt-get update -y
@@ -42,29 +43,32 @@ apt-get install -y \
   openssh-server net-tools tldr
 
 mkdir -p /etc/docker
-cat > /etc/docker/daemon.json <<'EOF'
+cat > /etc/docker/daemon.json << 'EOF'
 {
   "hosts": ["unix:///var/run/docker.sock"]
 }
+
 EOF
 
 mkdir -p /etc/systemd/system/docker.service.d
-cat > /etc/systemd/system/docker.service.d/override.conf <<'EOF'
+cat > /etc/systemd/system/docker.service.d/override.conf << 'EOF'
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd --config-file /etc/docker/daemon.json
+
 EOF
 
 # Overwrite /etc/wsl.conf with a known-good config (idempotent).
-cat > /etc/wsl.conf <<EOF
+cat > /etc/wsl.conf << EOF
 [boot]
 systemd=true
 
 [user]
 default=${TARGET_USER}
+
 EOF
 
-getent group docker >/dev/null || groupadd docker
+getent group docker > /dev/null || groupadd docker
 usermod -aG docker "$TARGET_USER"
 
 # --- Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows. --- #
@@ -72,7 +76,7 @@ sed -i 's/^#Port 22$/Port 2222/' /etc/ssh/sshd_config
 
 # --- Enable + start docker (if systemd is active this run) ---------------
 systemctl daemon-reload || true
-if pidof systemd >/dev/null 2>&1; then
+if pidof systemd > /dev/null 2>&1; then
   systemctl enable --now docker ssh
 else
   echo "systemd is not active in this WSL session."
