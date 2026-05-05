@@ -1,12 +1,67 @@
 {{- if (.chezmoi.kernel.osrelease | lower | conatiners | "microsoft") -}}
 #!/usr/bin/env bash
+set -euo pipefail
 
-echo <<EOF
+TARGET_USER="${SUDO_USER:-{{ .chezmoi.username }}"
+
+if [[ $EUID -ne 0 ]]; then
+  echo "This script must be run as root (use sudo)." >&2
+  exit 1
+fi
+
+# Source the file into the current shell so the variables are available.
+. /etc/os-release
+CODENAME="${UBUNTU_CODENAME:-${VERSION_CODENAME:-}}"
+if [[ -z "$CODENAME" ]]; then
+  echo "Could not determine Ubuntu codename." >&2
+  exit 1
+fi
+
+apt-get update -y
+apt-get install -y ca-certificates curl gnupg rustup eza unzip zsh
+
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+
+cat > /etc/apt/sources.list.d/docker.sources << EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: ${CODENAME}
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+
+EOF
+
+apt-get update -y
+apt-get install -y \
+  docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin \
+  openssh-server net-tools
+
+mkdir -p /etc/docker
+cat > /etc/docker/daemon.json << 'EOF'
+{
+  "hosts": ["unix:///var/run/docker.sock"]
+}
+
+EOF
+
+mkdir -p /etc/systemd/system/docker.service.d
+cat > /etc/systemd/system/docker.service.d/override.conf << 'EOF'
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --config-file /etc/docker/daemon.json
+
+EOF
+
+# Overwrite /etc/wsl.conf with a known-good config (idempotent).
+cat > /etc/wsl.conf << EOF
 [boot]
 systemd=true
 
 [user]
-default={{ .chezmoi.username }}
+default=${TARGET_USER}
 
 [interop]
 enabled=false
@@ -14,5 +69,38 @@ appendWindowsPath=false
 
 EOF
 
+getent group docker > /dev/null || groupadd docker
+usermod -aG docker "$TARGET_USER"
+
+# --- Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows. --- #
+sed -i 's/^#Port 22$/Port 2222/' /etc/ssh/sshd_config
+
+# --- Enable + start docker (if systemd is active this run) ---------------
+systemctl daemon-reload || true
+if pidof systemd > /dev/null 2>&1; then
+  systemctl enable --now docker ssh
+else
+  echo "systemd is not active in this WSL session."
+  echo "Run 'wsl --shutdown' from Windows, then relaunch WSL to start docker and ssh."
+fi
+
+# Rust
+rustup toolchain install nightly
+cargo install skim
+cargo install tealdeer
+cargo install tree-sitter-cli
+cargo install ripgrep
+cargo install starship
+
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
+
+curl -LO https://github.com/so-fancy/diff-so-fancy/releases/download/v1.4.10/diff-so-fancy
+chmod +x diff-so-fancy
+mv diff-so-fancy ~/.local/bin
+
+
+chsh --shell $(which zsh)
+
+echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
 
 {{- end }}

@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-#
-# WSL (Ubuntu) Docker Engine setup.
-# Run as root:  sudo ./wsl-docker-setup.sh
-#
 set -euo pipefail
 
 TARGET_USER="${SUDO_USER:-zacharybugay}"
