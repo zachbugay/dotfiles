@@ -1,4 +1,4 @@
-{{- if (.chezmoi.kernel.osrelease | lower | conatiners | "microsoft") -}}
+{{- if (.chezmoi.kernel.osrelease | lower | contains | "microsoft") -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
