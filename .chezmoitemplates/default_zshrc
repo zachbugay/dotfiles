@@ -115,12 +115,16 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 # The Logical AND operator ensures subsequent commands will run only if the previous was successful.
 # The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
 [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
-if [[ $(which brew) ]]; then
-  NVM_BASH_COMPLETION="${HOMEBREW_REPOSITORY}/opt/nvm/etc/bash_completion.d/nvm"
-  [ -s "${NVM_BASH_COMPLETION}" ] && . "${NVM_BASH_COMPLETION}" # This loads nvm bash_completion
-else
+NVM_BASH_COMPLETION=""
 
+if which brew > /dev/null 2>&1; then
+  $NVM_BASH_COMPLETION="${HOMEBREW_REPOSITORY}/opt/nvm/etc/bash_completion.d/nvm/bash_completion"
+else
+  $NVM_BASH_COMPLETION="${NVM_DIR}/bash_completion"
 fi
+
+# Load nvm bash completion
+[ -r "${NVM_BASH_COMPLETION}" ] && . $NVM_BASH_COMPLETION
 
 # Finally, activate the prompt.
 eval "$(starship init zsh)"
