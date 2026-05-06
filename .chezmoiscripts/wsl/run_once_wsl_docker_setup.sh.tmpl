@@ -1,8 +1,9 @@
-{{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
 #!/usr/bin/env bash
 # set -e: Exit when any command returns a non-zero status.
 # set -u: Treats any reference to an undefined variable as an error.
-# set -o pipefail: Catch failures inside of pipelines. 
+# set -o pipefail: Catch failures inside of pipelines.
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -79,7 +80,7 @@ EOF
 sudo getent group docker > /dev/null || sudo groupadd docker
 sudo usermod -aG docker "{{ .chezmoi.username }}"
 
-# Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows. 
+# Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows.
 sudo sed -i 's/^#Port 22$/Port 2222/' /etc/ssh/sshd_config
 
 # Enable + start docker (if systemd is active this run)
@@ -95,5 +96,5 @@ else
 fi
 
 echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
-
+{{-   end }}
 {{- end }}

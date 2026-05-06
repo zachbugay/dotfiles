@@ -1,9 +1,10 @@
-{{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
 #!/usr/bin/env bash
 
 sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install \
 	rustup
-	
+
 # Rust
 rustup toolchain install nightly
 cargo install skim
@@ -18,7 +19,7 @@ curl -LO https://github.com/so-fancy/diff-so-fancy/releases/download/v1.4.10/dif
 chmod +x diff-so-fancy
 mv diff-so-fancy ~/.local/bin
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh 
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh
 
 zshPath=$(which zsh)
 if [[ $SHELL != $zshPath ]]; then
@@ -27,4 +28,5 @@ fi
 
 echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
 
+{{-   end }}
 {{- end }}
