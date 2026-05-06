@@ -68,8 +68,10 @@ printpath() {
 
 {{- if eq .chezmoi.os "darwin" }}
 eval "$(/opt/homebrew/bin/brew shellenv)"
+path=("$(brew --prefix rustup)/bin" $path)
 {{- else }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+path+=(~/.cargo/bin ~/.local/bin)
 {{- end }}
 
 # Use a completion menu.
@@ -101,7 +103,6 @@ bindkey "^[[1;5C" forward-word
 #     cargo install tree-sitter-cli
 #     cargo install ripgrep
 
-path+=(~/.cargo/bin ~/.local/bin)
 source <(sk --shell zsh)
 
 # NVM Node Version Manager
