@@ -2,6 +2,9 @@
 #!/usr/bin/env bash
 
 brew bundle --file=/dev/stdin <<EOF
+{{- range .distributions.shared }}
+brew {{ . | quote }}
+{{ -end- }}
 {{- range .distributions.darwin.brews }}
 brew {{ . | quote }}
 {{- end }}
@@ -15,7 +18,5 @@ EOF
 
 # Install rustup toolchain for nightly builds.
 rustup toolchain install nightly-aarch64-apple-darwin
-
-npm install -g prettier prettier-plugin-powershell
 
 {{- end }}
