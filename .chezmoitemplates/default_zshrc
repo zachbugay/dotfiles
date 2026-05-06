@@ -71,6 +71,8 @@ export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+{{- else }}
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 {{- end }}
 
 

@@ -21,6 +21,10 @@ if [[ $SHELL != $zshPath ]]; then
   chsh --shell $(which zsh)
 fi
 
+if ! which brew > /dev/null 2>&1; then
+  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+fi
+
 echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
 
 {{-   end }}
