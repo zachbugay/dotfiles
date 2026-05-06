@@ -31,7 +31,6 @@ ZSH_PLUGINS="${XDG_CONFIG_HOME}/zsh/plugins"
 
 # Setup directories
 user_directories=(
-  "${NVM_DIR}"
   "${REPOS_HOME}"
   "${ZSH_PLUGINS}"
 )
@@ -116,7 +115,12 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 # The Logical AND operator ensures subsequent commands will run only if the previous was successful.
 # The . (dot) command is the source command. It is used to execute commands from a file in the current shell.
 [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
-[ -s "${NVM_DIR}/etc/bash_completion.d/nvm" ] && . "${NVM_DIR}/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+if [[ $(which brew) ]]; then
+  NVM_BASH_COMPLETION="${HOMEBREW_REPOSITORY}/opt/nvm/etc/bash_completion.d/nvm"
+  [ -s "${NVM_BASH_COMPLETION}" ] && . "${NVM_BASH_COMPLETION}" # This loads nvm bash_completion
+else
+
+fi
 
 # Finally, activate the prompt.
 eval "$(starship init zsh)"
