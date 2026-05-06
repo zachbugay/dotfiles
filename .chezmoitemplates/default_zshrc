@@ -26,23 +26,23 @@ setopt SHARE_HISTORY          # Share history between sessions.
 # When deleting with <C-w>, delete file names at a time.
 WORDCHARS=${WORDCHARS/\/}
 
-REPOS_HOME="${HOME}/source/repos"
-ZSH_PLUGINS="${XDG_CONFIG_HOME}/zsh/plugins"
+gitReposHome="${HOME}/source/repos"
+zshPluginsPath="${XDG_CONFIG_HOME}/zsh/plugins"
 
 # Setup directories
-user_directories=(
-  "${REPOS_HOME}"
-  "${ZSH_PLUGINS}"
+userDirectories=(
+  "${gitReposHome}"
+  "${zshPluginsPath}"
 )
 
-for directory in $user_directories; do
+for directory in $userDirectories; do
   if [ ! -d $directory ]; then
     mkdir -p $directory
   fi
 done
 
 # Plugins
-zsh_plugins=(
+zshPlugins=(
   mattmc3/ez-compinit                         # Setup tab completions
   romkatv/zsh-no-ps2                          # Proper multi-line commands
   zdharma-continuum/fast-syntax-highlighting  # Syntax highlighting
@@ -51,11 +51,11 @@ zsh_plugins=(
   zsh-users/zsh-history-substring-search      # Up/Down to search history
 )
 
-for plugin in $zsh_plugins; do
-  if ! [[ -d $ZSH_PLUGINS/$plugin ]]; then
-    git clone https://github.com/$plugin $ZSH_PLUGINS/$plugin
+for plugin in $zshPlugins; do
+  if ! [[ -d $zshPluginsPath/$plugin ]]; then
+    git clone https://github.com/$plugin $zshPluginsPath/$plugin
   fi
-  source $ZSH_PLUGINS/$plugin/${plugin:t}.plugin.zsh
+  source $zshPluginsPath/$plugin/${plugin:t}.plugin.zsh
 done
 
 
@@ -71,7 +71,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 {{- else }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 {{- end }}
-
 
 # Use a completion menu.
 zstyle ':completion:*' menu select
