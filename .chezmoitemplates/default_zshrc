@@ -67,11 +67,6 @@ printpath() {
 }
 
 {{- if eq .chezmoi.os "darwin" }}
-# export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
-# export PATH="/opt/homebrew/bin:$PATH"
-# export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
-# fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
-
 eval "$(/opt/homebrew/bin/brew shellenv)"
 {{- else }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -107,8 +102,7 @@ bindkey "^[[1;5C" forward-word
 #     cargo install tree-sitter-cli
 #     cargo install ripgrep
 
-# I had to setup my WSL ~/.ssh/config
-path+=(~/.cargo/bin ~/.local/bin /opt/nvim-linux-arm64/bin)
+path+=(~/.cargo/bin ~/.local/bin)
 source <(sk --shell zsh)
 
 # NVM Node Version Manager
