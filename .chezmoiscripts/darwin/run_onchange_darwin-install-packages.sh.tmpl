@@ -1,11 +1,9 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/usr/bin/env bash
+{{- $packages := range.distributions.shared .distributions.darwin.brews -}}
 
 brew bundle --file=/dev/stdin <<EOF
-{{- range .distributions.shared }}
-brew {{ . | quote }}
-{{ -end- }}
-{{- range .distributions.darwin.brews }}
+{{- range $packages }}
 brew {{ . | quote }}
 {{- end }}
 {{- range .distributions.darwin.headbrews }}
