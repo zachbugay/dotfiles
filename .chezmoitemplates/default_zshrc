@@ -118,13 +118,13 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 NVM_BASH_COMPLETION=""
 
 if which brew > /dev/null 2>&1; then
-  $NVM_BASH_COMPLETION="${HOMEBREW_REPOSITORY}/opt/nvm/etc/bash_completion.d/nvm/bash_completion"
+  NVM_BASH_COMPLETION="${HOMEBREW_REPOSITORY}/opt/nvm/etc/bash_completion.d/nvm"
 else
-  $NVM_BASH_COMPLETION="${NVM_DIR}/bash_completion"
+  NVM_BASH_COMPLETION="${NVM_DIR}/bash_completion"
 fi
 
 # Load nvm bash completion
-[ -r "${NVM_BASH_COMPLETION}" ] && . $NVM_BASH_COMPLETION
+[ -s "${NVM_BASH_COMPLETION}" ] && . "${NVM_BASH_COMPLETION}"
 
 # Finally, activate the prompt.
 eval "$(starship init zsh)"
