@@ -1,3 +1,20 @@
-".config/nvim":
+nvim-config:
   type: "git-repo"
   url: "https://github.com/zachbugay/config-nvim"
+  targetPath: ".config/nvim"
+
+{{- if eq .chezmoi.os "linux" }}
+diff-so-fancy:
+   type: "file"
+   url: "https://github.com/so-fancy/diff-so-fancy/releases/download/v1.4.10/diff-so-fancy"
+   executable: true
+   targetPath: ".local/bin/diff-so-fancy"
+
+neovim:
+  type: "file"
+  url: "https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-arm64.appimage"
+  executable: true
+  targetPath: ".local/bin/nvim"
+  refreshPeriod: 24h
+
+{{- end }}
