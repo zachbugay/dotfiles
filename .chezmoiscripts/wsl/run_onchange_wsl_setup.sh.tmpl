@@ -2,10 +2,9 @@
 {{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
 #!/usr/bin/env bash
 
-{{- $aptPackages := concat .distributions.ubuntu.apt }}
 sudo apt-get update -y && \
-  sudo apt-get upgrade -y \
-  sudo apt-get install {{- $aptPackages }} {{ . }} {{- end }}
+  sudo apt-get upgrade -y && \
+  sudo apt-get install {{- range .distributions.ubuntu.apt }} {{ . }} {{- end }}
 
 zshPath=$(which zsh)
 if [[ $SHELL != $zshPath ]]; then

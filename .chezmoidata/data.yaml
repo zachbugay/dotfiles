@@ -67,6 +67,7 @@ distributions:
       - "wget"
   darwin:
     brews:
+      - "azure-dev"
       - "colima"
       - "docker"
       - "docker-credential-helper"
@@ -86,10 +87,11 @@ distributions:
   ubuntu:
     apt:
       - "build-essential"
-      - "procps"
-      - "file"
       - "curl"
+      - "file"
       - "git"
+      - "procps"
     brews:
+      - "azure-dev"
       - "rustup"
       - "sk"
