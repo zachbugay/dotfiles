@@ -19,7 +19,7 @@ if ($null -eq $scoop) {
 
 {{- $packages := concat .distributions.shared .distributions.windows.scoops }}
 
-scoop install {{- $packages }} {{ . }} {{- end }}
+scoop install {{- range $packages }} {{ . }} {{- end }}
 
 # Install nightly toolchain
 rustup toolchain install nightly
