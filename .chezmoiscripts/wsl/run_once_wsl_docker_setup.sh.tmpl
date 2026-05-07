@@ -95,6 +95,13 @@ else
 	echo "'systemd' not running."
 fi
 
+sudo tee /etc/sudoers.d/zacharybugay << EOF
+# Sudo without password for me.
+zacharybugay ALL=(ALL) NOPASSWD:ALL
+
+EOF
+
 echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
+
 {{-   end }}
 {{- end }}
