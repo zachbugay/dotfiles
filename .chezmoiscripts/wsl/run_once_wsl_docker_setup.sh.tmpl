@@ -12,9 +12,9 @@ TARGET_USER="{{ .chezmoi.username }}"
 
 # Source the file into the current shell so the variables are available.
 
-sudo apt-get update -y && \
-	sudo apt upgrade -y && \
-	sudo apt-get install -y ca-certificates curl gnupg
+sudo apt-get update -y &&
+        sudo apt upgrade -y &&
+        sudo apt-get install -y ca-certificates curl gnupg
 
 # Add Docker's official GPG key.
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -33,16 +33,16 @@ Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
 # Install docker, and other various tools.
-sudo apt-get update && \
-	sudo apt-get upgrade -y && \
-	sudo apt install \
-		docker-ce \
-		docker-ce-cli \
-		containerd.io \
-		docker-buildx-plugin \
-		docker-compose-plugin \
-		openssh-server \
-		net-tools
+sudo apt-get update &&
+        sudo apt-get upgrade -y &&
+        sudo apt install \
+                docker-ce \
+                docker-ce-cli \
+                containerd.io \
+                docker-buildx-plugin \
+                docker-compose-plugin \
+                openssh-server \
+                net-tools
 
 # Setup docker configuration to use ssh over a socket.
 sudo mkdir -p /etc/docker
@@ -54,7 +54,7 @@ sudo tee /etc/docker/daemon.json <<EOF
 EOF
 
 # Overwrite /etc/wsl.conf with a known-good config.
-sudo tee /etc/wsl.conf << EOF
+sudo tee /etc/wsl.conf <<EOF
 [boot]
 systemd=true
 
@@ -69,7 +69,7 @@ EOF
 
 # Override the startup command to use the config file.
 sudo mkdir -p /etc/systemd/system/docker.service.d
-sudo tee /etc/systemd/system/docker.service.d/override.conf << EOF
+sudo tee /etc/systemd/system/docker.service.d/override.conf <<EOF
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd --config-file /etc/docker/daemon.json
@@ -77,7 +77,7 @@ ExecStart=/usr/bin/dockerd --config-file /etc/docker/daemon.json
 EOF
 
 # Create the docker group if it doesn't exist, and add me to the docker group.
-sudo getent group docker > /dev/null || sudo groupadd docker
+sudo getent group docker >/dev/null || sudo groupadd docker
 sudo usermod -aG docker "{{ .chezmoi.username }}"
 
 # Configure SSH to listen on port 2222, instead of 22. This is to ensure Docker CLI access from Windows.
@@ -87,15 +87,15 @@ sudo sed -i 's/^#Port 22$/Port 2222/' /etc/ssh/sshd_config
 sudo systemctl daemon-reload || true
 
 if [[ "$(cat /proc/1/comm)" == "systemd" ]]; then
-	sudo systemctl enable --now docker.service
-	sudo systemctl enable --now containerd.service
-	sudo systemctl enable --now ssh
-	sudo systemctl enable --now ssh.socket
+        sudo systemctl enable --now docker.service
+        sudo systemctl enable --now containerd.service
+        sudo systemctl enable --now ssh
+        sudo systemctl enable --now ssh.socket
 else
-	echo "'systemd' not running."
+        echo "'systemd' not running."
 fi
 
-sudo tee /etc/sudoers.d/zacharybugay << EOF
+sudo tee /etc/sudoers.d/zacharybugay <<EOF
 # Sudo without password for me.
 zacharybugay ALL=(ALL) NOPASSWD:ALL
 
@@ -103,5 +103,5 @@ EOF
 
 echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
 
-{{-   end }}
+{{- end }}
 {{- end }}
