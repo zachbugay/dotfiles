@@ -23,5 +23,16 @@ brew {{ . | quote }}
 {{- end }}
 EOF
 
+
+# For anything that cannot be installed via apt, or brew
+{{- range $binary, $command := .distributions.ubuntu.curls }}
+if ! which {{ $binary }} > /dev/null 2>&1; then
+  {{ $command }}
+else
+  echo '{{ $binary }} already installed! Skipping ...'
+fi
+
+{{- end }}
+
 {{-   end }}
 {{- end }}
