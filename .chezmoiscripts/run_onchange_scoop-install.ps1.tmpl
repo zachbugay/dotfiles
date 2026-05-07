@@ -17,7 +17,7 @@ if ($null -eq $scoop) {
     scoop bucket add tilt-dev https://github.com/tilt-dev/scoop-bucket
 }
 
-{{- $packages := concat .distributions.windows.scoops + range.distributions.shared }}
+{{- $packages := concat .distributions.shared .distributions.windows.scoops }}
 
 scoop install {{- $packages }} {{ . }} {{- end }}
 

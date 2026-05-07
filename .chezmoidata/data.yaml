@@ -1,5 +1,6 @@
 distributions:
   shared:
+    - "azure-cli"
     - "chezmoi"
     - "diff-so-fancy"
     - "git"
@@ -19,7 +20,6 @@ distributions:
     docker_context: "wsl-ssl-engine"
     scoops:
       - "7zip"
-      - "azure-cli"
       - "azure-developer-cli"
       - "azure-functions-core-tools"
       - "bicep"
@@ -75,7 +75,6 @@ distributions:
       - "gcc"
       - "kubectx"
       - "sk"
-      - "tree-sitter-cli"
       - "zsh"
     headbrews:
       - "neovim"
@@ -84,3 +83,13 @@ distributions:
       - "font-fira-code-nerd-font"
       - "obsidian"
       - "signal"
+  ubuntu:
+    apt:
+      - "build-essential"
+      - "procps"
+      - "file"
+      - "curl"
+      - "git"
+    brews:
+      - "rustup"
+      - "sk"

@@ -1,6 +1,6 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/usr/bin/env bash
-{{- $packages := range.distributions.shared .distributions.darwin.brews -}}
+{{- $packages := concat .distributions.shared .distributions.darwin.brews -}}
 
 brew bundle --file=/dev/stdin <<EOF
 {{- range $packages }}

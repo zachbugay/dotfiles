@@ -2,19 +2,10 @@
 {{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
 #!/usr/bin/env bash
 
+{{- $aptPackages := concat .distributions.ubuntu.apt }}
 sudo apt-get update -y && \
-  sudo apt-get upgrade -y && \
-  sudo apt-get install rustup
-
-# Rust
-rustup toolchain install nightly
-cargo install skim
-cargo install tealdeer
-cargo install tree-sitter-cli
-cargo install ripgrep
-cargo install starship
-
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
+  sudo apt-get upgrade -y \
+  sudo apt-get install {{- $aptPackages }} {{ . }} {{- end }}
 
 zshPath=$(which zsh)
 if [[ $SHELL != $zshPath ]]; then
@@ -25,7 +16,13 @@ if ! which brew > /dev/null 2>&1; then
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
 fi
 
-echo "Done. Log out/in (or restart WSL) for docker group membership to apply."
+{{- $brewPackages := concat .distributions.shared .distributions.ubuntu.brews }}
+
+brew bundle --file=/dev/stdin <<EOF
+{{- range $brewPackages }}
+brew {{ . | quote }}
+{{- end }}
+EOF
 
 {{-   end }}
 {{- end }}
