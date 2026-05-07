@@ -95,5 +95,6 @@ distributions:
       - "azure-dev"
       - "rustup"
       - "sk"
+      - "xclip"
     curls:
       copilot: "curl -fsSL https://gh.io/copilot-install | bash"
