@@ -21,6 +21,9 @@ brew bundle --file=/dev/stdin <<EOF
 {{- range $brewPackages }}
 brew {{ . | quote }}
 {{- end }}
+{{- range .distributions.ubuntu.headbrews }}
+brew {{ . | quote }}, args: ["HEAD"]
+{{- end }}
 EOF
 
 

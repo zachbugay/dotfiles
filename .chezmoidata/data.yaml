@@ -93,8 +93,10 @@ distributions:
       - "procps"
     brews:
       - "azure-dev"
-      - "rustup"
       - "sk"
       - "xclip"
+    headbrews:
+      - "neovim"
+      - "rustup"
     curls:
       copilot: "curl -fsSL https://gh.io/copilot-install | bash"
