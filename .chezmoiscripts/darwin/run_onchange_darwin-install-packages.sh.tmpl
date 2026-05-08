@@ -2,6 +2,8 @@
 #!/usr/bin/env bash
 {{- $packages := concat .distributions.shared .distributions.darwin.brews -}}
 
+brew tap hashicorp/tap
+
 brew bundle --file=/dev/stdin <<EOF
 {{- range $packages }}
 brew {{ . | quote }}

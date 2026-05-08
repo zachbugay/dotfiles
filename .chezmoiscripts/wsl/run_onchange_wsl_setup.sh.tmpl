@@ -17,6 +17,8 @@ fi
 
 {{- $brewPackages := concat .distributions.shared .distributions.ubuntu.brews }}
 
+brew tap hashicorp/tap
+
 brew bundle --file=/dev/stdin <<EOF
 {{- range $brewPackages }}
 brew {{ . | quote }}
@@ -32,7 +34,7 @@ EOF
 if ! which {{ $binary }} > /dev/null 2>&1; then
   {{ $command }}
 else
-  echo '{{ $binary }} already installed! Skipping ...'
+  echo "'{{ $binary }}' already installed! Skipping ..."
 fi
 
 {{- end }}

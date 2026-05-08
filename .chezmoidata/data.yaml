@@ -20,6 +20,7 @@ distributions:
     docker_context: "wsl-ssl-engine"
     scoops:
       - "7zip"
+      - "Terminal-Icons"
       - "azure-developer-cli"
       - "azure-functions-core-tools"
       - "bicep"
@@ -59,7 +60,7 @@ distributions:
       - "scons"
       - "sed"
       - "sqlite"
-      - "Terminal-Icons"
+      - "terraform"
       - "tilt"
       - "unzip"
       - "uv"
@@ -74,6 +75,7 @@ distributions:
       - "dotnet"
       - "eza"
       - "gcc"
+      - "hashicorp/tap/terraform"
       - "kubectx"
       - "sk"
       - "zsh"
@@ -90,6 +92,7 @@ distributions:
       - "curl"
       - "file"
       - "git"
+      - "hashicorp/tap/terraform"
       - "procps"
     brews:
       - "azure-dev"
