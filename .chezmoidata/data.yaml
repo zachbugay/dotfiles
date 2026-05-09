@@ -93,11 +93,11 @@ distributions:
       - "curl"
       - "file"
       - "git"
-      - "hashicorp/tap/terraform"
       - "procps"
     brews:
       - "azure-dev"
       - "sk"
+      - "hashicorp/tap/terraform"
       - "xclip"
     headbrews:
       - "neovim"
