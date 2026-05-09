@@ -28,7 +28,6 @@ brew {{ . | quote }}, args: ["HEAD"]
 {{- end }}
 EOF
 
-
 # For anything that cannot be installed via apt, or brew
 {{- range $binary, $command := .distributions.ubuntu.curls }}
 if ! which {{ $binary }} > /dev/null 2>&1; then

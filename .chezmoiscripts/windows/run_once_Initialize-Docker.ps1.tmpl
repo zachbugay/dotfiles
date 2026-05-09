@@ -1,4 +1,5 @@
-#Requires -Version 7.0
+{{- if eq .chezmoi.os "windows" }}
+#Requires -Version 7
 
 param (
   [switch]$InstallDocker,
@@ -11,7 +12,6 @@ function Test-IsElevated {
 }
 
 # TODO: I am building releases for my Bugay.Intiialize.Docker. No longer need to build here. Just get the latest artifact version
-
 function Install-Docker {
   param (
     [switch]$InstallDocker
@@ -253,3 +253,5 @@ Install-BugayInitializeDocker -Build:$BuildBugayInitializeDocker
 Initialize-LocalDockerContext -InitializeLocalDockerContext:$InitializeLocalDockerContext
 
 Initialize-DockerFirewallRules
+
+{{ end }}

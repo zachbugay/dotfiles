@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.os "darwin" -}}
 #!/usr/bin/env bash
 {{- $packages := concat .distributions.shared .distributions.darwin.brews }}
 
@@ -14,6 +14,7 @@ brew {{ . | quote }}, args: ["HEAD"]
 {{- range .distributions.darwin.casks }}
 cask {{ . | quote -}}
 {{- end }}
+
 EOF
 
 # Install rustup toolchain for nightly builds.

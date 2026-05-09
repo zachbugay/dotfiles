@@ -7,6 +7,7 @@ distributions:
     - "jq"
     - "k9s"
     - "kubectl"
+    - "kubectx"
     - "luarocks"
     - "make"
     - "nvm"
@@ -76,7 +77,6 @@ distributions:
       - "eza"
       - "gcc"
       - "hashicorp/tap/terraform"
-      - "kubectx"
       - "sk"
       - "zsh"
     headbrews:
