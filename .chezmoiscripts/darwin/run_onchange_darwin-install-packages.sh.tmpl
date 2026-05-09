@@ -1,6 +1,6 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- if eq .chezmoi.os "darwin" }}
 #!/usr/bin/env bash
-{{- $packages := concat .distributions.shared .distributions.darwin.brews -}}
+{{- $packages := concat .distributions.shared .distributions.darwin.brews }}
 
 brew tap hashicorp/tap
 
