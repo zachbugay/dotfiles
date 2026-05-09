@@ -3,6 +3,7 @@ distributions:
     - "azure-cli"
     - "chezmoi"
     - "diff-so-fancy"
+    - "fastfetch"
     - "git"
     - "jq"
     - "k9s"

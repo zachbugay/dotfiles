@@ -26,6 +26,10 @@ setopt SHARE_HISTORY          # Share history between sessions.
 # When deleting with <C-w>, delete file names at a time.
 WORDCHARS=${WORDCHARS/\/}
 
+function _greeting() {
+  fastfetch
+}
+
 gitReposHome="${HOME}/source/repos"
 zshPluginsPath="${XDG_CONFIG_HOME}/zsh/plugins"
 
@@ -57,7 +61,6 @@ for plugin in $zshPlugins; do
   fi
   source $zshPluginsPath/$plugin/${plugin:t}.plugin.zsh
 done
-
 
 # Functions for completion sources.
 fpath=($ZDOTDIR/func $fpath)
@@ -124,8 +127,11 @@ fi
 # Load nvm bash completion
 [ -s "${NVM_BASH_COMPLETION}" ] && . "${NVM_BASH_COMPLETION}"
 
+
 # Finally, activate the prompt.
 eval "$(starship init zsh)"
+
+_greeting
 
 # Performance warning
 _end_time=$SECONDS
