@@ -2,3 +2,4 @@ nvim-config:
   type: "git-repo"
   url: "https://github.com/zachbugay/config-nvim"
   targetPath: ".config/nvim"
+  refreshPeriod: "168h" # One Week
