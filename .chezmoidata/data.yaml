@@ -87,6 +87,7 @@ distributions:
       - "font-fira-code-nerd-font"
       - "obsidian"
       - "signal"
+      - "nikitabobko/tap/aerospace"
   ubuntu:
     apt:
       - "build-essential"
