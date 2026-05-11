@@ -28,3 +28,6 @@ confirm-close-surface = false
 # This is done automatically by Hyprland on Linux so using this here.
 mouse-hide-while-typing = true
 
+# Keybindings
+# This isn't working.
+# keybind = super+comma=ignore
