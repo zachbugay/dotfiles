@@ -1,14 +1,22 @@
-# Ignore these directories unless the os is 'windows'.
-{{- if ne .chezmoi.os "windows" }}
-.chezmoiscripts/scoop-install.ps1
-.chezmoiscripts/symbolic-links-windows-setup.ps1
-.scripts/windows
-{{- else }}
+{{- if eq .chezmoi.os "windows" }}
+# Skip Linux and macOS configs on Windows.
 .chezmoiscripts/darwin-install-packages.sh
-.config/zsh/zaliases.zsh
-.config/zsh/.zprofile
-.config/zsh/.zshrc
+.config/aerospace/
+.config/eza/
+.config/ghostty/
+.config/zsh/
 .zshenv
+{{- else if eq .chezmoi.os "darwin" }}
+# Skip Windows, and Linux on macOS.
+.config/docker/
+.config/powershell/
+.config/scoop/
+{{- else }}
+# Skip Windows, and macOS configs on Linux.
+.config/aerospace/
+.config/docker/
+.config/powershell/
+.config/scoop/
 {{- end }}
 # Always ignore.
 .DS_Store
