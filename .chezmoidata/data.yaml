@@ -97,6 +97,7 @@ distributions:
       - "procps"
     brews:
       - "azure-dev"
+      - "dotnet"
       - "sk"
       - "hashicorp/tap/terraform"
       - "xclip"

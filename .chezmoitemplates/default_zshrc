@@ -111,6 +111,9 @@ source <(sk --shell zsh)
 # NVM Node Version Manager
 export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
+# DOTNET_ROOT for other apps to know I have dotnet.
+export DOTNET_ROOT="${HOMEBREW_PREFIX}/opt/dotnet/libexec"
+
 # NVM has to already be installed for this to work.
 # A conditional that ensures nvm.sh is a file, and is not empty.
 # The Logical AND operator ensures subsequent commands will run only if the previous was successful.
