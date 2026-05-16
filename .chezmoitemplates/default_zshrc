@@ -26,9 +26,23 @@ setopt SHARE_HISTORY          # Share history between sessions.
 # When deleting with <C-w>, delete file names at a time.
 WORDCHARS=${WORDCHARS/\/}
 
+# TODO: Function that printenv in alphabetical order.
 function _greeting() {
   fastfetch
 }
+
+function printpath() {
+  # `tr` copies standard input to the standard output, replacing characters. In my case replacing ':' with a new line character.
+  tr ':' '\n' <<< "$PATH"
+}
+
+{{- if eq .chezmoi.os "darwin" }}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+path=("$(brew --prefix rustup)/bin" $path)
+{{- else }}
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+path+=(~/.cargo/bin ~/.local/bin)
+{{- end }}
 
 gitReposHome="${HOME}/source/repos"
 zshPluginsPath="${XDG_CONFIG_HOME}/zsh/plugins"
@@ -65,18 +79,6 @@ done
 # Functions for completion sources.
 fpath=($ZDOTDIR/func $fpath)
 
-printpath() {
-  tr ':' '\n' <<< "$PATH"
-}
-
-{{- if eq .chezmoi.os "darwin" }}
-eval "$(/opt/homebrew/bin/brew shellenv)"
-path=("$(brew --prefix rustup)/bin" $path)
-{{- else }}
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-path+=(~/.cargo/bin ~/.local/bin)
-{{- end }}
-
 # Use a completion menu.
 zstyle ':completion:*' menu select
 
@@ -84,8 +86,8 @@ source ${ZDOTDIR}/zaliases.zsh
 
 # This is my Ubuntu WSL config changes
 # TODO: Keybindings own file.
-bindkey "^[[1;5D" backward-word
-bindkey "^[[1;5C" forward-word
+# bindkey "^[[1;5D" backward-word
+# bindkey "^[[1;5C" forward-word
 
 # I had to chsh to zsh
 # chsh --shell $(which zsh)
@@ -114,6 +116,7 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 # DOTNET_ROOT for other apps to know I have dotnet.
 export DOTNET_ROOT="${HOMEBREW_PREFIX}/opt/dotnet/libexec"
 
+# TODO: Check if NVM exists. If so, then do this.
 # NVM has to already be installed for this to work.
 # A conditional that ensures nvm.sh is a file, and is not empty.
 # The Logical AND operator ensures subsequent commands will run only if the previous was successful.
@@ -134,6 +137,7 @@ fi
 # Finally, activate the prompt.
 eval "$(starship init zsh)"
 
+# Print fastfetch
 _greeting
 
 # Performance warning
