@@ -177,3 +177,8 @@ on-mode-changed = []
 [[on-window-detected]]
     if.app-id = 'com.apple.Safari'
     run = "move-node-to-workspace Browser"
+
+[[on-window-detected]]
+    if.app-id = 'org.mozilla.firefoxdeveloperedition'
+    run = "move-node-to-workspace Browser"
+
