@@ -1,6 +1,7 @@
 distributions:
   shared:
     - "azure-cli"
+    - "bind"
     - "chezmoi"
     - "diff-so-fancy"
     - "fastfetch"
