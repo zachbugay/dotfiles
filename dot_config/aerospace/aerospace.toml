@@ -145,7 +145,7 @@ alt-shift-3 = "move-node-to-workspace 3"
 alt-shift-4 = "move-node-to-workspace 4"
 alt-shift-5 = "move-node-to-workspace 5"
 alt-shift-b = "move-node-to-workspace Browsers"
-alt-shift-t = "move-node-to-workspace Terminal"
+alt-shift-t = "move-node-to-workspace Terminals"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = "workspace-back-and-forth"
