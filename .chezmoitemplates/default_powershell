@@ -202,6 +202,20 @@ function Update-StarshipInit {
   Write-Host 'Starship init cache updated. Restart your shell to apply.'
 }
 
+function Remove-TempFiles {
+  foreach (
+    $dir in [System.IO.Path]::Combine($env:HOMEDRIVE, 'Windows', 'Temp'),
+    [System.IO.Path]::Combine($env:LOCALAPPDATA, 'Temp')
+    ) {
+    if ([System.IO.Directory]::Exists($dir)) {
+      $path=([System.IO.Path]::Combine($dir, '*.*'))
+      Write-Host "Deleting all from: ${path}"
+      Remove-Item -Recurse -Force $path
+    }
+  }
+
+}
+
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = [System.IO.Path]::Combine(
   'D:',
