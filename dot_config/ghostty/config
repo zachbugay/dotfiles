@@ -4,7 +4,7 @@ font-family = "FiraCode Nerd Font"
 # Font Size
 font-size = 16
 
-adjust-cell-width = -5%
+# adjust-cell-width = -5%
 adjust-cell-height = 20%
 adjust-underline-position = 6
 adjust-underline-thickness = 40%

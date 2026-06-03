@@ -29,3 +29,5 @@ export SHELL_SESSIONS_DISABLE=1
 # Man pages
 export MANPAGER='nvim +Man!'
 
+export COPILOT_HOME="${XDG_CONFIG_HOME}/copilot"
+

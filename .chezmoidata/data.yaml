@@ -86,9 +86,10 @@ distributions:
       - "rustup"
     casks:
       - "font-fira-code-nerd-font"
+      - "font-iosevka"
+      - "nikitabobko/tap/aerospace"
       - "obsidian"
       - "signal"
-      - "nikitabobko/tap/aerospace"
   ubuntu:
     apt:
       - "build-essential"
