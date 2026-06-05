@@ -1,4 +1,4 @@
-#:schema https://starship.rs/config-schema.json
+# :schema https://starship.rs/config-schema.json
 
 format = """
 ${custom.segment_separator}\
@@ -22,9 +22,9 @@ style = "bg:foreground fg:background"
 
 [os.symbols]
 CachyOS = "  "
-Macos   = "  "
+Macos = "  "
 Windows = " "
-Ubuntu  = "󰕈 "
+Ubuntu = " 󰕈 "
 
 [directory]
 style = "fg:background bg:cyan"
@@ -50,7 +50,7 @@ format = "[[](fg:green bg:background) $all_status$ahead_behind]($style)"
 [time]
 disabled = false
 use_12hr = true
-time_format = "%I:%M %p"  # Hour:Minute Format
+time_format = "%I:%M %p" # Hour:Minute Format
 style = "bg:background"
 format = "[  $time ]($style)"
 
@@ -59,21 +59,21 @@ description = "Output a styled separator right after the segment when outside a 
 command = ""
 format = "[]($style)"
 style = "bg:foreground fg:background"
-when = true  # always show
+when = true # always show
 
 [custom.segment_separator_inverse]
 description = "Output a styled separator right after the segment when outside a git repository."
 command = ""
 format = "[]($style)"
 style = "bg:background fg:foreground"
-when = true  # always show
+when = true # always show
 
 [custom.segment_separator_ending]
 description = "Output a styled separator right after the segment when outside a git repository."
 command = ""
 format = "[]($style)"
 style = "bg:background fg:background"
-when = true  # always show
+when = true # always show
 
 [custom.trailing_directory]
 description = "Output a styled separator right after the directory."
