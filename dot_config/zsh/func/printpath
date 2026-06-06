@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+function printpath() {
+  # `tr` copies standard input to the standard output, replacing characters. In my case replacing ':' with a new line character.
+  tr ':' '\n' <<< "$PATH"
+}
+
+printpath "$@"

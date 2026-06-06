@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+function up() {
+  brew update && brew upgrade && brew cleanup -s --prune=all
+}
+
+up "$@"

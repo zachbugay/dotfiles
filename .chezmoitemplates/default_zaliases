@@ -14,4 +14,3 @@ alias lt='eza --icons=auto --tree --level=2'
 alias lta='eza --icons=auto --tree --level=3 --all'
 alias gcc="gcc-15"
 alias cds="cd ~/source/repos"
-alias up="brew update && brew upgrade && brew cleanup -s --prune=all"

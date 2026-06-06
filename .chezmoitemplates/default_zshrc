@@ -31,11 +31,6 @@ function _greeting() {
   fastfetch
 }
 
-function printpath() {
-  # `tr` copies standard input to the standard output, replacing characters. In my case replacing ':' with a new line character.
-  tr ':' '\n' <<< "$PATH"
-}
-
 {{- if eq .chezmoi.os "darwin" }}
 eval "$(/opt/homebrew/bin/brew shellenv)"
 path=("$(brew --prefix rustup)/bin" $path)
@@ -79,6 +74,15 @@ done
 # Functions for completion sources.
 fpath=($ZDOTDIR/func $fpath)
 
+funcs=(
+  up
+  printpath
+)
+
+for func in $funcs; do
+  autoload -Uz $ZDOTDIR/func/$func
+done
+
 # Use a completion menu.
 zstyle ':completion:*' menu select
 
@@ -88,25 +92,6 @@ source ${ZDOTDIR}/zaliases.zsh
 # TODO: Keybindings own file.
 # bindkey "^[[1;5D" backward-word
 # bindkey "^[[1;5C" forward-word
-
-# I had to chsh to zsh
-# chsh --shell $(which zsh)
-# What did I have to install manually?
-# - starship
-# - chezmoi
-# - nvm
-# - neovim
-# - diff-so-fancy
-
-# What did I install with apt?
-# - eza
-# - unzip
-# - rustup
-#   - rustup toolchain install nightly
-#     cargo install skim
-#     cargo install tealdeer
-#     cargo install tree-sitter-cli
-#     cargo install ripgrep
 
 source <(sk --shell zsh)
 
@@ -132,7 +117,6 @@ fi
 
 # Load nvm bash completion
 [ -s "${NVM_BASH_COMPLETION}" ] && . "${NVM_BASH_COMPLETION}"
-
 
 # Finally, activate the prompt.
 eval "$(starship init zsh)"
