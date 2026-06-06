@@ -101,6 +101,22 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 # DOTNET_ROOT for other apps to know I have dotnet.
 export DOTNET_ROOT="${HOMEBREW_PREFIX}/opt/dotnet/libexec"
 
+if [ ! -d "${DOCKER_CONFIG}/cli-plugins" ]; then
+  mkdir -p "${DOCKER_CONFIG}/cli-plugins"
+fi
+
+dockerPlugins=(
+  docker-compose
+  docker-buildx
+)
+
+for plugin in $dockerPlugins; do
+  if [ ! -h "${DOCKER_CONFIG}/cli-plugins/$plugin" ]; then
+   ln -sfn $(brew --prefix)/opt/docker-compose/bin/$plugin "${DOCKER_CONFIG}/cli-plugins/$plugin"
+  fi
+done
+
+
 # TODO: Check if NVM exists. If so, then do this.
 # NVM has to already be installed for this to work.
 # A conditional that ensures nvm.sh is a file, and is not empty.

@@ -8,7 +8,6 @@
 .zshenv
 {{- else if eq .chezmoi.os "darwin" }}
 # Skip Windows, and Linux on macOS.
-.config/docker/
 .config/powershell/
 .config/scoop/
 {{- else }}

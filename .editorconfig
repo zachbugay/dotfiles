@@ -11,6 +11,5 @@ insert_final_newline = true
 [*.sh]
 indent_size = 2
 tab_width = 2
-# shell_variant      = posix
 space_redirects    = true
 
