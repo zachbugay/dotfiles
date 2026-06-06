@@ -17,6 +17,7 @@ distributions:
     - "openssl"
     - "ripgrep"
     - "starship"
+    - "tilt"
     - "tlrc"
     - "tree-sitter"
     - "yq"
