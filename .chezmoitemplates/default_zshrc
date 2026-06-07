@@ -112,7 +112,7 @@ dockerPlugins=(
 
 for plugin in $dockerPlugins; do
   if [ ! -h "${DOCKER_CONFIG}/cli-plugins/$plugin" ]; then
-   ln -sfn $(brew --prefix)/opt/docker-compose/bin/$plugin "${DOCKER_CONFIG}/cli-plugins/$plugin"
+   ln -sfn $(brew --prefix)/opt/$plugin/bin/$plugin "${DOCKER_CONFIG}/cli-plugins/$plugin"
   fi
 done
 
