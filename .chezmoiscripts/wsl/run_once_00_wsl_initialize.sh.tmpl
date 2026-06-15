@@ -11,10 +11,12 @@ IFS=$'\n\t'
 TARGET_USER="{{ .chezmoi.username }}"
 
 # Source the file into the current shell so the variables are available.
-
 sudo apt-get update -y &&
         sudo apt upgrade -y &&
-        sudo apt-get install -y ca-certificates curl gnupg
+        sudo apt-get install -y \
+                ca-certificates \
+                curl \
+                gnupg
 
 # Add Docker's official GPG key.
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -42,7 +44,8 @@ sudo apt-get update &&
                 docker-buildx-plugin \
                 docker-compose-plugin \
                 openssh-server \
-                net-tools
+                net-tools \
+                zsh
 
 # Setup docker configuration to use ssh over a socket.
 sudo mkdir -p /etc/docker

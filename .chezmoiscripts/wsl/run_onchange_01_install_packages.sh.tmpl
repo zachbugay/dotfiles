@@ -19,6 +19,7 @@ fi
 
 if ! which brew > /dev/null 2>&1; then
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+  exit 1;
 fi
 
 {{- $brewPackages := concat .distributions.shared .distributions.ubuntu.brews }}
