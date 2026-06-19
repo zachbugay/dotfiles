@@ -97,6 +97,7 @@ distributions:
       - "curl"
       - "file"
       - "git"
+      - "icu-devtools"
       - "procps"
     brews:
       - "azure-dev"
