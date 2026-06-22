@@ -1,5 +1,4 @@
 {{- if eq .chezmoi.os "linux" -}}
-{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
 #!/usr/bin/env bash
 # set -e: Exit when any command returns a non-zero status.
 # set -u: Treats any reference to an undefined variable as an error.
@@ -8,18 +7,14 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-sudo apt-get update -y && \
-  sudo apt-get upgrade -y && \
-  sudo apt-get install {{- range .distributions.ubuntu.apt }} {{ . }} {{- end }}
+sudo apt-get update -y &&
+        sudo apt-get upgrade -y &&
+        sudo apt-get install {{- range .distributions.ubuntu.apt }} {{ . }} {{- end }}
 
-zshPath=$(which zsh)
-if [[ $SHELL != $zshPath ]]; then
-  chsh --shell $(which zsh)
-fi
-
-if ! which brew > /dev/null 2>&1; then
-  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
-  exit 1;
+if ! which brew >/dev/null 2>&1; then
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+        echo "Setup brew on Linux"
+        exit 1
 fi
 
 {{- $brewPackages := concat .distributions.shared .distributions.ubuntu.brews }}
@@ -37,13 +32,17 @@ EOF
 
 # For anything that cannot be installed via apt, or brew
 {{- range $binary, $command := .distributions.ubuntu.curls }}
-if ! which {{ $binary }} > /dev/null 2>&1; then
-  {{ $command }}
+if ! which {{ $binary }} >/dev/null 2>&1; then
+        {{ $command }}
 else
-  echo "'{{ $binary }}' already installed! Skipping ..."
+        echo "'{{ $binary }}' already installed! Skipping ..."
+fi
+
+zshPath=$(which zsh)
+if [[ $SHELL != $zshPath ]]; then
+        chsh --shell $(which zsh)
 fi
 
 {{- end }}
 
-{{-   end }}
 {{- end }}

@@ -81,6 +81,7 @@ distributions:
       - "gcc"
       - "hashicorp/tap/terraform"
       - "sk"
+      - "tree-sitter-cli"
       - "zsh"
     headbrews:
       - "neovim"
@@ -99,12 +100,14 @@ distributions:
       - "git"
       - "icu-devtools"
       - "procps"
+      - "zsh"
     brews:
       - "azure-dev"
       - "dotnet"
       - "eza"
-      - "sk"
       - "hashicorp/tap/terraform"
+      - "sk"
+      - "tree-sitter-cli"
       - "xclip"
     headbrews:
       - "neovim"

@@ -1,5 +1,5 @@
 {{- $publicToken := "" }}
-{{- if eq .user.email "Zachary.Bugay@outlook.com" }}
+{{- if eq .user.email "Zachary.Bugay@outlook.com" "zachary.bugay@outlook.com" }}
   {{- $publicToken = "personal-github.pub" }}
 {{- else }}
   {{- $publicToken = "github_id_ed25519.pub" }}
