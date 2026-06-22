@@ -14,6 +14,10 @@ sudo apt-get update -y &&
 if ! which brew >/dev/null 2>&1; then
         curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
         echo "Setup brew on Linux"
+        TARGET_USER="{{ .chezmoi.username }}"
+        echo >>/home/${TARGET_USER}/.bashrc
+        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"' >>/home/${TARGET_USER}/.bashrc
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
         exit 1
 fi
 
