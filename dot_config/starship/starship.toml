@@ -26,6 +26,9 @@ Macos = "  "
 Windows = " "
 Ubuntu = " 󰕈 "
 
+[hostname]
+ssh_only = true
+
 [directory]
 style = "fg:background bg:cyan"
 format = "[ $path ]($style)"
