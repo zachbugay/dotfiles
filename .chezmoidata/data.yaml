@@ -106,7 +106,7 @@ distributions:
       - "azure-dev"
       - "dotnet"
       - "eza"
-      - "hashicorp/tap/terraform"
+      # - "hashicorp/tap/terraform"
       - "sk"
       - "tree-sitter-cli"
       - "xclip"
