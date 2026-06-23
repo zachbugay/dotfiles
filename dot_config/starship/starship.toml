@@ -4,6 +4,8 @@ format = """
 ${custom.segment_separator}\
 $os\
 ${custom.segment_separator_inverse}\
+$hostname\
+${custom.os_separator}\
 $directory\
 ${custom.trailing_directory}\
 ${git_branch}\
@@ -27,7 +29,9 @@ Windows = " "
 Ubuntu = " 󰕈 "
 
 [hostname]
-ssh_only = true
+style = "fg:background bg:cyan"
+format = "[ $hostname](fg:foreground bg:background)"
+ssh_only = false
 
 [directory]
 style = "fg:background bg:cyan"
@@ -56,6 +60,13 @@ use_12hr = true
 time_format = "%I:%M %p" # Hour:Minute Format
 style = "bg:background"
 format = "[  $time ]($style)"
+
+[custom.os_separator]
+description = "Output a styled separator right after the segment when outside a git repository."
+command = ""
+format = "[]($style)"
+style = "bg:background fg:background"
+when = true # always show
 
 [custom.segment_separator]
 description = "Output a styled separator right after the segment when outside a git repository."
