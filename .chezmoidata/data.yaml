@@ -7,6 +7,7 @@ distributions:
     - "docker-buildx"
     - "docker-compose"
     - "fastfetch"
+    - "flux"
     - "git"
     - "jq"
     - "k6"
