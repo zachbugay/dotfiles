@@ -302,6 +302,7 @@ else {
 }
 
 $stopwatch.Stop()
+fastfetch
 Write-Host "Elapsed: $($stopwatch.Elapsed.TotalSeconds) seconds"
 Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
 
