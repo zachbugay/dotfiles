@@ -15,6 +15,7 @@
 {{- if eq .chezmoi.os "windows" }}
   # On windows, keep committed files with a LF.
   autocrlf = true
+  fileMode false
 {{- else }}
   # On linux, if a CRLF is in the repo convert it to LF.
   autocrlf = input
