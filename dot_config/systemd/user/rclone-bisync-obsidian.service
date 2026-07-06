@@ -6,5 +6,5 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/rclone bisync %h/Documents/Obsidian iCloudDrive:Obsidian --create-empty-src-dirs --log-file=%h/.local/state/rclone-bisync-obsidian.log --log-level INFO
+ExecStart=/usr/bin/rclone bisync iCloudDrive:Obsidian %h/Documents/Obsidian --create-empty-src-dirs --log-file=%h/.local/state/rclone-bisync-obsidian.log --log-level INFO
 
