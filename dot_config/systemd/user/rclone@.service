@@ -19,8 +19,13 @@ ExecStartPre=-/usr/bin/mkdir -p %h/mnt/%i
 ExecStart= \
   /usr/bin/rclone mount \
     --config=%h/.config/rclone/rclone.conf \
-    --vfs-cache-mode writes \
-    --vfs-cache-max-size 100M \
+    --vfs-cache-mode full \
+    --vfs-cache-max-age 1h \
+    --vfs-cache-max-size 100G \
+    --buffer-size 1G \
+    --vfs-read-ahead 512M \
+    --dir-cache-time 5m \
+    --poll-interval 1m \
     --log-level INFO \
     --log-file /tmp/rclone-%i.log \
     --umask 022 \
