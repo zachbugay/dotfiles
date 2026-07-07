@@ -71,9 +71,17 @@ $env:COPILOT_HOME = [System.IO.Path]::Combine(
  'copilot'
 )
 
+$env:DPRINT_CONFIG_DIR = [System.IO.Path]::Combine(
+  $userProfile,
+ '.config',
+ 'dprint'
+)
+
+
 foreach (
   $dir in $env:XDG_CONFIG_HOME,
   $env:COPILOT_HOME,
+  $env:DPRINT_CONFIG_DIR,
   $env:XDG_DATA_HOME,
   $env:XDG_STATE_HOME,
   $env:XDG_CACHE_HOME,
