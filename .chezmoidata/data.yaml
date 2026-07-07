@@ -19,6 +19,7 @@ distributions:
     - "make"
     - "nvm"
     - "openssl"
+    - "rclone"
     - "ripgrep"
     - "starship"
     - "tilt"

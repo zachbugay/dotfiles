@@ -4,12 +4,14 @@
 .config/aerospace/
 .config/eza/
 .config/ghostty/
+.config/systemd/
 .config/zsh/
 .zshenv
 {{- else if eq .chezmoi.os "darwin" }}
 # Skip Windows, and Linux on macOS.
 .config/powershell/
 .config/scoop/
+.config/systemd/
 {{- else }}
 # Skip Windows, and macOS configs on Linux.
 .config/aerospace/
