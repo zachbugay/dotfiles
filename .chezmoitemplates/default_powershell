@@ -11,7 +11,11 @@ $env:USER = $userName
 $env:EDITOR = 'nvim'
 $env:KUBE_EDITOR = 'nvim'
 
-$env:AZURE_DEV_COLLECT_TELEMETRY = 'no'
+$env:AZD_CONFIG_DIR = [System.IO.Path]::Combine(
+  $userProfile,
+  '.config',
+  'azd'
+)
 
 $env:AZURE_CONFIG_DIR = [System.IO.Path]::Combine(
   $userProfile,
@@ -87,6 +91,7 @@ $env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
 foreach (
   $dir in $env:XDG_CONFIG_HOME,
   $env:AZURE_CONFIG_DIR,
+  $env:AZD_CONFIG_DIR,
   $env:COPILOT_HOME,
   $env:DPRINT_CONFIG_DIR,
   $env:XDG_DATA_HOME,
