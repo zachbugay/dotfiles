@@ -1,0 +1,10 @@
+[cloud]
+name = AzureCloud
+
+[core]
+first_run = yes
+collect_telemetry = false
+
+[bicep]
+use_binary_from_path = false
+

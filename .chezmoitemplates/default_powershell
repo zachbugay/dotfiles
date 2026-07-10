@@ -11,10 +11,29 @@ $env:USER = $userName
 $env:EDITOR = 'nvim'
 $env:KUBE_EDITOR = 'nvim'
 
+$env:AZURE_DEV_COLLECT_TELEMETRY = 'no'
+
+$env:AZURE_CONFIG_DIR = [System.IO.Path]::Combine(
+  $userProfile,
+  '.config',
+  'azure'
+)
+
+$env:COPILOT_HOME = [System.IO.Path]::Combine(
+  $userProfile,
+ '.config',
+ 'copilot'
+)
+
 $env:DOCKER_CONFIG = [System.IO.Path]::Combine(
   $userProfile,
   '.config',
   'docker'
+)
+$env:DPRINT_CONFIG_DIR = [System.IO.Path]::Combine(
+  $userProfile,
+ '.config',
+ 'dprint'
 )
 
 $env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine(
@@ -65,21 +84,9 @@ $env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
   'nvim.log'
 )
 
-$env:COPILOT_HOME = [System.IO.Path]::Combine(
-  $userProfile,
- '.config',
- 'copilot'
-)
-
-$env:DPRINT_CONFIG_DIR = [System.IO.Path]::Combine(
-  $userProfile,
- '.config',
- 'dprint'
-)
-
-
 foreach (
   $dir in $env:XDG_CONFIG_HOME,
+  $env:AZURE_CONFIG_DIR,
   $env:COPILOT_HOME,
   $env:DPRINT_CONFIG_DIR,
   $env:XDG_DATA_HOME,
