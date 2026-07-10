@@ -1,0 +1,7 @@
+{{ - /*https://www.chezmoi.io/user-guide/manage-different-types-of-file/#manage-part-but-not-all-of-a-file */ }}
+{{- /* chezmoi:modify-template */ }}
+{{- $data := dict }}
+{{- if .chezmoi.stdin }}
+{{-   $data = fromJson .chezmoi.stdin }}
+{{- end -}}
+{{ toPrettyJson $data }}
