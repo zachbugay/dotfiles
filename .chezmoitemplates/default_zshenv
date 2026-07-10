@@ -12,9 +12,16 @@ export HISTFILE="${ZDOTDIR}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST="$HISTSIZE"
 
-# Starship
-export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
-export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
+# Azure
+export AZD_CONFIG_DIR="${XDG_CONFIG_HOME}/azd"
+export AZURE_CONFIG_DIR="${XDG_CONFIG_HOME}/azure"
+
+# Copilot
+export COPILOT_HOME="${XDG_CONFIG_HOME}/copilot"
+export COPILOT_CACHE_HOME="${XDG_CACHE_HOME}/copilot"
+
+# Docker
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 
 # EZA Configuration settings.
 export EZA_CONFIG_DIR="${XDG_CONFIG_HOME}/eza"
@@ -29,9 +36,7 @@ export SHELL_SESSIONS_DISABLE=1
 # Man pages
 export MANPAGER='nvim +Man!'
 
-# Copilot
-export COPILOT_HOME="${XDG_CONFIG_HOME}/copilot"
-
-# Docker
-export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
+# Starship
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
+export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
 
