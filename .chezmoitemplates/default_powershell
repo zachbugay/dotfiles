@@ -29,6 +29,12 @@ $env:COPILOT_HOME = [System.IO.Path]::Combine(
  'copilot'
 )
 
+$env:COPILOT_CACHE_HOME = [System.IO.Path]::Combine(
+  $userProfile,
+  '.cache',
+  'copilot'
+)
+
 $env:DOCKER_CONFIG = [System.IO.Path]::Combine(
   $userProfile,
   '.config',
