@@ -3,3 +3,13 @@ nvim-config:
   url: "https://github.com/zachbugay/config-nvim"
   targetPath: ".config/nvim"
   refreshPeriod: "168h" # One Week
+copilot-skill-grug:
+  type: "git-repo"
+  url: "https://github.com/nickperkins/grug-brain"
+  targetPath: ".config/copliot/skills"
+  refreshPreiod: "168h"
+copilot-skill-karpathy:
+  type: "git-repo"
+  url: "https://github.com/multica-ai/andrej-karpathy-skills"
+  targetPath: ".config/copliot/skills"
+  refreshPreiod: "168h"
