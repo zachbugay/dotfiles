@@ -47,6 +47,8 @@ if [[ $SHELL != $zshPath ]]; then
         chsh --shell $(which zsh)
 fi
 
+dprint config update --global
+
 {{- end }}
 
 {{- end }}
