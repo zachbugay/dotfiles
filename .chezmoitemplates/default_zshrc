@@ -100,6 +100,7 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # DOTNET_ROOT for other apps to know I have dotnet.
 export DOTNET_ROOT="${HOMEBREW_PREFIX}/opt/dotnet/libexec"
+path+=(~/.dotnet/tools)
 
 if [ ! -d "${DOCKER_CONFIG}/cli-plugins" ]; then
   mkdir -p "${DOCKER_CONFIG}/cli-plugins"

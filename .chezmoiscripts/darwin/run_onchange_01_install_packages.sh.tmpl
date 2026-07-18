@@ -22,4 +22,7 @@ rustup toolchain install nightly-aarch64-apple-darwin
 
 dprint config update --global
 
+dotnet tool install --global dotnet-outdated-tool
+dotnet dev-certs https --trust
+
 {{- end }}

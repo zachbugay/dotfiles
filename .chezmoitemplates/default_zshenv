@@ -23,6 +23,9 @@ export COPILOT_CACHE_HOME="${XDG_CACHE_HOME}/copilot"
 # Docker
 export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 
+# Dotnet
+export DOTNET_CLI_TELEMETRY_OPTOUT=true
+
 # EZA Configuration settings.
 export EZA_CONFIG_DIR="${XDG_CONFIG_HOME}/eza"
 export EZA_COLORS="da=36:di=34:ex=32:fi=0:ln=35:pi=33:so=31"
