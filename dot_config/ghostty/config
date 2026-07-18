@@ -28,6 +28,9 @@ confirm-close-surface = false
 # This is done automatically by Hyprland on Linux so using this here.
 mouse-hide-while-typing = true
 
+# Fix ssh to Linux
+shell-integration-features = ssh-env,ssh-terminfo
+
 # Keybindings
 # This isn't working.
 # keybind = super+comma=ignore
