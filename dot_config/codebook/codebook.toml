@@ -9,4 +9,3 @@ words = ["codebook", "rustc"]
 # List of glob patterns for paths to ignore when spell checking
 # Default: []
 ignore_paths = ["target/**/*", "**/*.json", ".git/**/*"]
-
