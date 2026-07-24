@@ -15,6 +15,7 @@ export SAVEHIST="$HISTSIZE"
 # Azure
 export AZD_CONFIG_DIR="${XDG_CONFIG_HOME}/azd"
 export AZURE_CONFIG_DIR="${XDG_CONFIG_HOME}/azure"
+export FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT=true
 
 # Copilot
 export COPILOT_HOME="${XDG_CONFIG_HOME}/copilot"
