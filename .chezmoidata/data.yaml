@@ -75,6 +75,7 @@ distributions:
   darwin:
     brews:
       - "azure-dev"
+      - "azurite"
       - "colima"
       - "docker"
       - "docker-credential-helper"
@@ -82,6 +83,7 @@ distributions:
       - "eza"
       - "gcc"
       - "hashicorp/tap/terraform"
+      - "shellcheck"
       - "sk"
       - "tree-sitter-cli"
       - "zsh"
@@ -106,9 +108,11 @@ distributions:
       - "zsh"
     brews:
       - "azure-dev"
+      - "azurite"
       - "dotnet"
       - "eza"
       - "hashicorp/tap/terraform"
+      - "shellcheck"
       - "sk"
       - "tree-sitter-cli"
       - "xclip"
