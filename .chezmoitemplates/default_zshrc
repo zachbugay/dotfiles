@@ -33,11 +33,10 @@ function _greeting() {
 
 {{- if eq .chezmoi.os "darwin" }}
 eval "$(/opt/homebrew/bin/brew shellenv)"
-path=("$(brew --prefix rustup)/bin" $path)
 {{- else }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-path+=(~/.cargo/bin ~/.local/bin)
 {{- end }}
+path=("$(brew --prefix rustup)/bin" ~/.cargo/bin ~/.local/bin $path)
 
 gitReposHome="${HOME}/source/repos"
 zshPluginsPath="${XDG_CONFIG_HOME}/zsh/plugins"

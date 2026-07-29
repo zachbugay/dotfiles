@@ -45,8 +45,10 @@ export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
 export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
 
 {{ if eq .chezmoi.os "linux" -}}
-{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
-export NUGET_PACKAGES="/mnt/d/zacharybugay/.nuget/packages"
-{{- end}}
-{{- end}}
+  {{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+if [ -d "/mnt/d/${USER}" ]; then
+  export NUGET_PACKAGES="/mnt/d/${USER}/.nuget/packages"
+fi
+  {{- end -}}
+{{- end }}
 
