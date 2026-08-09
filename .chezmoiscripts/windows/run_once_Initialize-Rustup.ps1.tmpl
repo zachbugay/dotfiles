@@ -33,7 +33,7 @@ function Initialize-SymbolicLink {
 
 # Setup rustup on Windows, using the nightly.
 # This is going to be the .cargo directory in the scoop folder.
-$rustupPath = (which rustup).Source
+$rustupPath = (Get-Command rustup).Source
 $rustupTarget = ($rustupPath).Substring(0, $rustupPath.IndexOf('.cargo') + '.cargo'.Length)
 
 # $destination='C:\Users\Zacha\.cargo'
