@@ -1,114 +1,58 @@
 {{- if eq .chezmoi.os "windows" }}
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
+class EnvironmentVariablePathEntry {
+  [string]$EnvironmentVariableValue
+  [string]$Path
+  [bool]$IsDirectory
+
+  EnvironmentVariablePathEntry([string]$EnvironmentVariableValue, [string]$Path, [bool]$IsDirectory) {
+    $this.EnvironmentVariableValue = $EnvironmentVariableValue
+    $this.Path = $Path
+    $this.IsDirectory = $IsDirectory
+  }
+
+  # Sets the environment variable. A directory is created if IsDirectory is true and it doesn't exist.
+  [void] Apply() {
+    [System.Environment]::SetEnvironmentVariable($this.EnvironmentVariableValue, $this.Path)
+    if ($this.IsDirectory -and -not [System.IO.Directory]::Exists($this.Path)) {
+      $null = [System.IO.Directory]::CreateDirectory($this.Path)
+    }
+  }
+}
+
 $userProfile = $Env:USERPROFILE
 $userName = $Env:USERNAME
-$env:PATH = @((Get-ItemPropertyValue 'HKCU:\Environment' -Name Path), (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path))
-| ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
+
+# Set my user path ahead of my system path. By default, the system path takes precedence over the user path.
+$env:PATH = @(
+  (Get-ItemPropertyValue 'HKCU:\Environment' -Name Path),
+  (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path))
+    | ForEach-Object { $_.TrimEnd(';') } | Join-String -Separator ';'
 
 $env:USER = $userName
 
-# Kubernetes Defaults
-$env:EDITOR = 'nvim'
-$env:KUBE_EDITOR = 'nvim'
-
-$env:AZD_CONFIG_DIR = [System.IO.Path]::Combine(
-  $userProfile,
-  '.config',
-  'azd'
+$envPaths = @(
+  [EnvironmentVariablePathEntry]::new('AZD_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azd'), $true)
+  [EnvironmentVariablePathEntry]::new('AZURE_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azure'), $true)
+  [EnvironmentVariablePathEntry]::new('COPILOT_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache', 'copilot'), $true)
+  [EnvironmentVariablePathEntry]::new('COPILOT_HOME', [System.IO.Path]::Combine($userProfile, '.config', 'copilot'), $true)
+  [EnvironmentVariablePathEntry]::new('DOCKER_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'docker'), $true)
+  [EnvironmentVariablePathEntry]::new('DPRINT_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'dprint'), $true)
+  [EnvironmentVariablePathEntry]::new('EDITOR', 'nvim', $false)
+  [EnvironmentVariablePathEntry]::new('KUBE_EDITOR', 'nvim', $false)
+  [EnvironmentVariablePathEntry]::new('NVIM_LOG_FILE', [System.IO.Path]::Combine($userProfile, '.cache', 'nvim', 'nvim.log'), $false)
+  [EnvironmentVariablePathEntry]::new('STARSHIP_CACHE', [System.IO.Path]::Combine($userProfile, '.cache', 'starship'), $true)
+  [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'starship', 'starship.toml'), $false)
+  [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'starship'), $true)
+  [EnvironmentVariablePathEntry]::new('XDG_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache'), $true)
+  [EnvironmentVariablePathEntry]::new('XDG_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config'), $true)
+  [EnvironmentVariablePathEntry]::new('XDG_DATA_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'share'), $true)
+  [EnvironmentVariablePathEntry]::new('XDG_STATE_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'state'), $true)
 )
 
-$env:AZURE_CONFIG_DIR = [System.IO.Path]::Combine(
-  $userProfile,
-  '.config',
-  'azure'
-)
-
-$env:COPILOT_HOME = [System.IO.Path]::Combine(
-  $userProfile,
- '.config',
- 'copilot'
-)
-
-$env:COPILOT_CACHE_HOME = [System.IO.Path]::Combine(
-  $userProfile,
-  '.cache',
-  'copilot'
-)
-
-$env:DOCKER_CONFIG = [System.IO.Path]::Combine(
-  $userProfile,
-  '.config',
-  'docker'
-)
-$env:DPRINT_CONFIG_DIR = [System.IO.Path]::Combine(
-  $userProfile,
- '.config',
- 'dprint'
-)
-
-$env:STARSHIP_CONFIG_DIR = [System.IO.Path]::Combine(
-  $userProfile,
-  '.config',
-  'starship'
-)
-
-$env:STARSHIP_CACHE = [System.IO.Path]::Combine(
-  $userProfile,
-  '.cache',
-  'starship'
-)
-
-$env:STARSHIP_CONFIG = [System.IO.Path]::Combine(
-  $userProfile,
-  '.config',
-  'starship',
-  'starship.toml'
-)
-
-$env:XDG_CONFIG_HOME = [System.IO.Path]::Combine(
-  $userProfile,
-  '.config'
-)
-
-$env:XDG_DATA_HOME = [System.IO.Path]::Combine(
-  $userProfile,
-  '.local',
-  'share'
-)
-
-$env:XDG_STATE_HOME = [System.IO.Path]::Combine(
-  $userProfile,
-  '.local',
-  'state'
-)
-
-$env:XDG_CACHE_HOME = [System.IO.Path]::Combine(
-  $userProfile,
-  '.cache'
-)
-
-$env:NVIM_LOG_FILE = [System.IO.Path]::Combine(
-  $userProfile,
-  '.cache',
-  'nvim',
-  'nvim.log'
-)
-
-foreach (
-  $dir in $env:XDG_CONFIG_HOME,
-  $env:AZURE_CONFIG_DIR,
-  $env:AZD_CONFIG_DIR,
-  $env:COPILOT_HOME,
-  $env:DPRINT_CONFIG_DIR,
-  $env:XDG_DATA_HOME,
-  $env:XDG_STATE_HOME,
-  $env:XDG_CACHE_HOME,
-  $env:STARSHIP_CONFIG_DIR,
-  $env:STARSHIP_CACHE
-) {
-  if (-not [System.IO.Directory]::Exists($dir)) {
-    $null = [System.IO.Directory]::CreateDirectory($dir)
-  }
+foreach ($envPath in $envPaths) {
+  $envPath.Apply()
 }
 
 # Functions
