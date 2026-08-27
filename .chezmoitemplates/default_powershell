@@ -173,10 +173,12 @@ function Update-StarshipInit {
 }
 
 function Remove-TempFiles {
-  foreach (
-    $dir in [System.IO.Path]::Combine($env:HOMEDRIVE, 'Windows', 'Temp'),
+  $tempDirs = @(
+    [System.IO.Path]::Combine($env:HOMEDRIVE, 'Windows', 'Temp'), 
     [System.IO.Path]::Combine($env:LOCALAPPDATA, 'Temp')
-    ) {
+  )
+
+  foreach ($dir in $tempDirs) {
     if ([System.IO.Directory]::Exists($dir)) {
       $path=([System.IO.Path]::Combine($dir, '*.*'))
       Write-Host "Deleting all from: ${path}"
