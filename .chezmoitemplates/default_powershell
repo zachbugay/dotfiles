@@ -3,20 +3,20 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 class EnvironmentVariablePathEntry {
   [string]$EnvironmentVariableValue
-  [string]$Path
+  [string]$Value
   [bool]$IsDirectory
 
-  EnvironmentVariablePathEntry([string]$EnvironmentVariableValue, [string]$Path, [bool]$IsDirectory) {
+  EnvironmentVariablePathEntry([string]$EnvironmentVariableValue, [string]$Value, [bool]$IsDirectory) {
     $this.EnvironmentVariableValue = $EnvironmentVariableValue
-    $this.Path = $Path
+    $this.Value = $Value
     $this.IsDirectory = $IsDirectory
   }
 
   # Sets the environment variable. A directory is created if IsDirectory is true and it doesn't exist.
   [void] Apply() {
-    [System.Environment]::SetEnvironmentVariable($this.EnvironmentVariableValue, $this.Path)
-    if ($this.IsDirectory -and -not [System.IO.Directory]::Exists($this.Path)) {
-      $null = [System.IO.Directory]::CreateDirectory($this.Path)
+    [System.Environment]::SetEnvironmentVariable($this.EnvironmentVariableValue, $this.Value)
+    if ($this.IsDirectory -and -not [System.IO.Directory]::Exists($this.Value)) {
+      $null = [System.IO.Directory]::CreateDirectory($this.Value)
     }
   }
 }
@@ -32,7 +32,7 @@ $env:PATH = @(
 
 $env:USER = $userName
 
-$envPaths = @(
+$envValues = @(
   [EnvironmentVariablePathEntry]::new('AZD_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azd'), $true)
   [EnvironmentVariablePathEntry]::new('AZURE_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azure'), $true)
   [EnvironmentVariablePathEntry]::new('COPILOT_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache', 'copilot'), $true)
@@ -49,10 +49,15 @@ $envPaths = @(
   [EnvironmentVariablePathEntry]::new('XDG_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config'), $true)
   [EnvironmentVariablePathEntry]::new('XDG_DATA_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'share'), $true)
   [EnvironmentVariablePathEntry]::new('XDG_STATE_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'state'), $true)
+
+  # Disable metrics collection.
+  [EnvironmentVariablePathEntry]::new('DOTNET_CLI_TELEMETRY_OPTOUT', 'true', $false)
+  [EnvironmentVariablePathEntry]::new('FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT', 'true', $false)
+  [EnvironmentVariablePathEntry]::new('TESTINGPLATFORM_TELEMETRY_OPTOUT ', 'true', $false)
 )
 
-foreach ($envPath in $envPaths) {
-  $envPath.Apply()
+foreach ($envPath in $envValues) {
+  $envValues.Apply()
 }
 
 # Functions
@@ -174,7 +179,7 @@ function Update-StarshipInit {
 
 function Remove-TempFiles {
   $tempDirs = @(
-    [System.IO.Path]::Combine($env:HOMEDRIVE, 'Windows', 'Temp'), 
+    [System.IO.Path]::Combine($env:HOMEDRIVE, 'Windows', 'Temp'),
     [System.IO.Path]::Combine($env:LOCALAPPDATA, 'Temp')
   )
 
