@@ -34,6 +34,7 @@ distributions:
       - "Terminal-Icons"
       - "azure-developer-cli"
       - "azure-functions-core-tools"
+      - "azure-kubelogin"
       - "bicep"
       - "bruno"
       - "cacert"
