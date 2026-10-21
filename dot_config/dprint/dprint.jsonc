@@ -26,6 +26,8 @@
     "npm:dprint-plugin-malva@0.16.0",
     "npm:dprint-plugin-markup@0.27.6",
     "npm:dprint-plugin-yaml@0.6.0",
-    "npm:@dprint/roslyn@0.23.4"
+    "npm:@dprint/roslyn@0.23.4",
+    "npm:@dprint/dockerfile@0.7.0",
+    "npm:@dprint/sql@0.4.1"
   ],
 }
