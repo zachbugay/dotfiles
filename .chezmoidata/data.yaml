@@ -1,32 +1,46 @@
 distributions:
   shared:
-    - "azure-cli"
-    - "bind"
-    - "chezmoi"
-    - "diff-so-fancy"
-    - "docker-buildx"
-    - "docker-compose"
-    - "dprint"
-    - "fastfetch"
-    - "flux"
-    - "git"
-    - "helm"
-    - "jq"
-    - "k6"
-    - "k9s"
-    - "kubectl"
-    - "kubectx"
-    - "luarocks"
-    - "make"
-    - "nvm"
-    - "openssl"
-    - "rclone"
-    - "ripgrep"
-    - "starship"
-    - "tilt"
-    - "tlrc"
-    - "tree-sitter"
-    - "yq"
+    packages:
+      - "azure-cli"
+      - "bind"
+      - "chezmoi"
+      - "diff-so-fancy"
+      - "docker-buildx"
+      - "docker-compose"
+      - "dprint"
+      - "fastfetch"
+      - "flux"
+      - "git"
+      - "helm"
+      - "jq"
+      - "k6"
+      - "k9s"
+      - "kubectl"
+      - "kubectx"
+      - "luarocks"
+      - "make"
+      - "nvm"
+      - "openssl"
+      - "rclone"
+      - "ripgrep"
+      - "starship"
+      - "tilt"
+      - "tlrc"
+      - "tree-sitter"
+      - "yq"
+    gitConfig:
+      init:
+        defaultBranch: "main"
+      core:
+        autocrlf: "input"
+        editor: "nvim"
+        eol: "lf"
+        longpaths: true
+        pager: "diff-so-fancy | less --tabs=4 -RFX"
+      pull:
+        rebase: false
+      gpg:
+        format: "ssh"
   windows:
     docker_context: "wsl-ssl-engine"
     scoops:
@@ -74,12 +88,16 @@ distributions:
       - "uv"
       - "vcredist2022"
       - "wget"
+    gitConfig:
+      core:
+        fileMode: false
   darwin:
     brews:
       - "azure-dev"
       - "azurite"
       - "colima"
       - "copa"
+      - "cri-tools"
       - "docker"
       - "docker-credential-helper"
       - "dotnet"
@@ -114,6 +132,7 @@ distributions:
       - "azure-dev"
       - "azurite"
       - "copa"
+      - "cri-tools"
       - "dotnet"
       - "eza"
       - "hashicorp/tap/terraform"

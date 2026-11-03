@@ -21,7 +21,7 @@ if ! which brew >/dev/null 2>&1; then
         exit 1
 fi
 
-{{- $brewPackages := concat .distributions.shared .distributions.ubuntu.brews }}
+{{- $brewPackages := concat .distributions.shared.packages .distributions.ubuntu.brews }}
 
 brew tap hashicorp/tap
 
