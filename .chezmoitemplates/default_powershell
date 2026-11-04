@@ -193,6 +193,15 @@ function Remove-TempFiles {
 
 }
 
+function Update-AzureCredentials {
+  param([string] $TenantId)
+  az logout
+  az auth logout
+  az login --tenant $TenantId
+  az auth login --tenant-id $TenantId
+  return $null
+}
+
 # If a Dev Drive, or D drive exists.
 $devDriveSourcePath = [System.IO.Path]::Combine(
   'D:',
