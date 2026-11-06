@@ -39,6 +39,9 @@ export SHELL_SESSIONS_DISABLE=1
 
 # Man pages
 export MANPAGER='nvim +Man!'
+export SUDO_EDITOR='nvim'
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 # Starship
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
