@@ -24,4 +24,5 @@ scoop install {{- range $packages }} {{ . }} {{- end }}
 # Install nightly toolchain
 rustup toolchain install nightly
 
+dprint config update --global
 {{- end }}
