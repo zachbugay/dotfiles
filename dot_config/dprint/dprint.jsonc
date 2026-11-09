@@ -28,6 +28,10 @@
     "npm:dprint-plugin-yaml@0.6.0",
     "npm:@dprint/roslyn@0.24.0",
     "npm:@dprint/dockerfile@0.8.0",
-    "npm:@dprint/sql@0.5.0"
+    "npm:@dprint/sql@0.5.0",
+    "npm:@jakebailey/dprint-plugin-gofumpt@0.0.20",
+    "npm:@dprint/shfmt@0.2.0",
+    "npm:@dprint/terraform@0.2.0",
+    "https://plugins.dprint.dev/jolars/badness-v1.4.1.wasm"
   ],
 }
