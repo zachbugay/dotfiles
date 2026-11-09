@@ -4,13 +4,8 @@
 {{-   $data = fromJson .chezmoi.stdin }}
 {{- end -}}
 {{- if eq .chezmoi.os "windows" }}
-{{-   $data = $data | setValueAtPath "shim" "kiennq" }}
-{{-   if eq .chezmoi.arch "amd64" }}
-{{-     $data = $data | setValueAtPath "scoop_repo" "git@github.com:ScoopInstaller/Scoop.git" }}
-{{-   else }}
-{{-     $data = $data | setValueAtPath "scoop_repo" "git@github.com:zachbugay/Scoop.git" }}
-{{-     $data = $data | setValueAtPath "default_architecture" "arm64" }}
-{{-   end }}
-{{-   $data = $data | setValueAtPath "scoop_branch" "develop" }}
+{{-   $virusTotalApiKey := azureKeyVault "virustotal-apikey" }}
+{{-   $scoopConfig := dict "scoop_branch" "develop" "shim" "scoop-shim-rust" "use_sqlite_cache" "true" "virustotal_apikey" $virusTotalApiKey }}
+{{-   $data := merge $data $scoopConfig}}
 {{- end -}}
 {{ toPrettyJson $data }}

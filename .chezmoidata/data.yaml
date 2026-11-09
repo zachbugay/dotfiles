@@ -66,6 +66,7 @@ distributions:
       - "rustup-msvc"
       - "scons"
       - "sed"
+      - "scoop-shim-rust"
       - "sqlite"
       - "terraform"
       - "tilt"
