@@ -19,7 +19,7 @@
   "yaml": {},
   "excludes": ["**/node_modules", "**/*-lock.json"],
   "plugins": [
-    "npm:@dprint/typescript@0.98.0",
+    "npm:@dprint/typescript@0.99.1",
     "npm:@dprint/json@0.26.0",
     "npm:@dprint/markdown@0.29.0",
     "npm:@dprint/toml@0.10.0",
@@ -32,6 +32,7 @@
     "npm:@jakebailey/dprint-plugin-gofumpt@0.0.20",
     "npm:@dprint/shfmt@0.2.0",
     "npm:@dprint/terraform@0.2.0",
-    "https://plugins.dprint.dev/jolars/badness-v1.4.1.wasm"
+    "https://plugins.dprint.dev/jolars/badness-v1.4.1.wasm",
+    "npm:@dprint/stylua@0.2.0"
   ],
 }
