@@ -1,23 +1,20 @@
 {
-  "typescript": {
-    "useTabs": false,
-    "quoteStyle": "preferDouble",
-    "semicolons": "always",
+  "excludes": ["**/node_modules", "**/*-lock.json"],
+  "indentWidth": 2,
+  "lineWidth": 160,
+  "newLineKind": "lf",
+  "quoteStyle": "preferDouble",
+  "semicolons": "always",
+  "useTabs": false,
+  "shebangs": {
+    "#!/bin/sh": "sh",
+    "#!/usr/bin/env bash": "sh",
+    "#!/usr/bin/env zsh": "zsh",
+    "#!/usr/bin/env deno run": "ts",
   },
   "json": {
-    "useTabs": false,
-    "indentWidth": 2,
     "trailingCommas": "jsonc",
   },
-  "markdown": {},
-  "toml": {
-    "useTabs": false,
-    "indentWidth": 2,
-  },
-  "malva": {},
-  "markup": {},
-  "yaml": {},
-  "excludes": ["**/node_modules", "**/*-lock.json"],
   "plugins": [
     "npm:@dprint/typescript@0.99.1",
     "npm:@dprint/json@0.26.0",
@@ -33,6 +30,6 @@
     "npm:@dprint/shfmt@0.2.0",
     "npm:@dprint/terraform@0.2.0",
     "https://plugins.dprint.dev/jolars/badness-v1.4.1.wasm",
-    "npm:@dprint/stylua@0.2.0"
+    "npm:@dprint/stylua@0.2.0",
   ],
 }
