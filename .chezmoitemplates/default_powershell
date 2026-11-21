@@ -53,6 +53,7 @@ $myEnvironmentVariables = @(
   [EnvironmentVariablePathEntry]::new('STARSHIP_CACHE', [System.IO.Path]::Combine($userProfile, '.cache', 'starship'), [PathType]::Directory)
   [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'starship', 'starship.toml'), [PathType]::File)
   [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'starship'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('WHKD_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config', 'whkd'), [PathType]::Directory)
   [EnvironmentVariablePathEntry]::new('XDG_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache'), [PathType]::Directory)
   [EnvironmentVariablePathEntry]::new('XDG_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config'), [PathType]::Directory)
   [EnvironmentVariablePathEntry]::new('XDG_DATA_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'share'), [PathType]::Directory)
@@ -202,10 +203,14 @@ function Remove-TempFiles {
 
 function Update-AzureCredentials {
   param([string] $TenantId)
+  if ([string]::IsNullOrWhiteSpace($TenantId)) {
+    throw 'Enter a valid TenantId!'
+  }
+
   az logout
-  az auth logout
+  azd auth logout
   az login --tenant $TenantId
-  az auth login --tenant-id $TenantId
+  azd auth login --tenant-id $TenantId
   return $null
 }
 
