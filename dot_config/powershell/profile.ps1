@@ -1,4 +1,3 @@
-{{- if eq .chezmoi.os "windows" }}
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 enum PathType{
@@ -308,4 +307,4 @@ Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
 # There was an issue where shim.exe was coming back as a x86, and not ARM.
 # https://github.com/ScoopInstaller/Shim/issues/9
 
-{{- end }}
+
