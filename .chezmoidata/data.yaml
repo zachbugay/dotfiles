@@ -67,6 +67,7 @@ distributions:
       - "harper"
       - "innounp"
       - "kustomize"
+      - "komorebi"
       - "lua"
       - "minikube"
       - "neovim-nightly"
@@ -88,6 +89,7 @@ distributions:
       - "uv"
       - "vcredist2022"
       - "wget"
+      - "whkd"
     gitConfig:
       core:
         fileMode: false
