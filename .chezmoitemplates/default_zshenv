@@ -51,10 +51,9 @@ export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"
   {{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
 if [ -d "/mnt/d/${USER}" ]; then
   export NUGET_PACKAGES="/mnt/d/${USER}/.nuget/packages"
-
+fi
+  {{- end }}
 # Only on WSL is this needed.
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-fi
-  {{- end -}}
 {{- end }}
 
