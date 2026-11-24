@@ -1,7 +1,6 @@
 distributions:
   shared:
     packages:
-      - "azure-cli"
       - "bind"
       - "chezmoi"
       - "diff-so-fancy"
@@ -47,6 +46,7 @@ distributions:
     scoops:
       - "7zip"
       - "Terminal-Icons"
+      - "azure-cli"
       - "azure-developer-cli"
       - "azure-functions-core-tools"
       - "azure-kubelogin"
@@ -115,6 +115,7 @@ distributions:
       - "neovim"
       - "rustup"
     casks:
+      - "azure-cli"
       - "font-fira-code-nerd-font"
       - "font-iosevka"
       - "nikitabobko/tap/aerospace"
@@ -145,6 +146,8 @@ distributions:
       - "sk"
       - "tree-sitter-cli"
       - "xclip"
+    casks:
+      - "azure-cli"
     headbrews:
       - "neovim"
       - "rustup"
