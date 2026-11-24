@@ -137,6 +137,7 @@ distributions:
       - "copa"
       - "cri-tools"
       - "dotnet"
+      - "docker-engine"
       - "eza"
       - "hashicorp/tap/terraform"
       - "ripgrep"

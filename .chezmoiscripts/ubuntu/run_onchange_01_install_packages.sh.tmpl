@@ -32,6 +32,10 @@ brew {{ . | quote }}
 {{- range .distributions.ubuntu.headbrews }}
 brew {{ . | quote }}, args: ["HEAD"]
 {{- end }}
+{{- range .distributions.ubuntu.casks }}
+cask {{ . | quote -}}
+{{- end }}
+
 EOF
 
 # For anything that cannot be installed via apt, or brew
