@@ -1,21 +1,26 @@
-{{- if eq .chezmoi.os "windows" }}
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-class EnvironmentVariablePathEntry {
-  [string]$EnvironmentVariableValue
-  [string]$Value
-  [bool]$IsDirectory
+enum PathType{
+  File      = 0
+  Directory = 1
+  Other     = 2
+}
 
-  EnvironmentVariablePathEntry([string]$EnvironmentVariableValue, [string]$Value, [bool]$IsDirectory) {
-    $this.EnvironmentVariableValue = $EnvironmentVariableValue
-    $this.Value = $Value
-    $this.IsDirectory = $IsDirectory
+class EnvironmentVariablePathEntry {
+  [string]$Key
+  [string]$Value
+  [PathType[]]$PathType
+
+  EnvironmentVariablePathEntry([string]$Key, [string]$Value, [PathType[]]$PathType) {
+    $this.Key      = $Key
+    $this.Value    = $Value
+    $this.PathType = $PathType
   }
 
-  # Sets the environment variable. A directory is created if IsDirectory is true and it doesn't exist.
+  # Sets the environment variable
   [void] Apply() {
-    [System.Environment]::SetEnvironmentVariable($this.EnvironmentVariableValue, $this.Value)
-    if ($this.IsDirectory -and -not [System.IO.Directory]::Exists($this.Value)) {
+    [System.Environment]::SetEnvironmentVariable($this.Key, $this.Value)
+    if ($this.PathType -eq [PathType]::Directory -and -not [System.IO.Directory]::Exists($this.Value)) {
       $null = [System.IO.Directory]::CreateDirectory($this.Value)
     }
   }
@@ -25,6 +30,7 @@ $userProfile = $Env:USERPROFILE
 $userName = $Env:USERNAME
 
 # Set my user path ahead of my system path. By default, the system path takes precedence over the user path.
+# I want my local binaries to be read on the path before anything on the system.
 $env:PATH = @(
   (Get-ItemPropertyValue 'HKCU:\Environment' -Name Path),
   (Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path))
@@ -32,32 +38,34 @@ $env:PATH = @(
 
 $env:USER = $userName
 
-$envValues = @(
-  [EnvironmentVariablePathEntry]::new('AZD_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azd'), $true)
-  [EnvironmentVariablePathEntry]::new('AZURE_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azure'), $true)
-  [EnvironmentVariablePathEntry]::new('COPILOT_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache', 'copilot'), $true)
-  [EnvironmentVariablePathEntry]::new('COPILOT_HOME', [System.IO.Path]::Combine($userProfile, '.config', 'copilot'), $true)
-  [EnvironmentVariablePathEntry]::new('DOCKER_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'docker'), $true)
-  [EnvironmentVariablePathEntry]::new('DPRINT_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'dprint'), $true)
-  [EnvironmentVariablePathEntry]::new('EDITOR', 'nvim', $false)
-  [EnvironmentVariablePathEntry]::new('KUBE_EDITOR', 'nvim', $false)
-  [EnvironmentVariablePathEntry]::new('NVIM_LOG_FILE', [System.IO.Path]::Combine($userProfile, '.cache', 'nvim', 'nvim.log'), $false)
-  [EnvironmentVariablePathEntry]::new('STARSHIP_CACHE', [System.IO.Path]::Combine($userProfile, '.cache', 'starship'), $true)
-  [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'starship', 'starship.toml'), $false)
-  [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'starship'), $true)
-  [EnvironmentVariablePathEntry]::new('XDG_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache'), $true)
-  [EnvironmentVariablePathEntry]::new('XDG_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config'), $true)
-  [EnvironmentVariablePathEntry]::new('XDG_DATA_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'share'), $true)
-  [EnvironmentVariablePathEntry]::new('XDG_STATE_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'state'), $true)
+$myEnvironmentVariables = @(
+  [EnvironmentVariablePathEntry]::new('AZD_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azd'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('AZURE_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'azure'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('COPILOT_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache', 'copilot'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('COPILOT_HOME', [System.IO.Path]::Combine($userProfile, '.config', 'copilot'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('DOCKER_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'docker'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('DPRINT_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'dprint'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('EDITOR', 'nvim', [PathType]::File)
+  [EnvironmentVariablePathEntry]::new('KUBE_EDITOR', 'nvim', [PathType]::File)
+  [EnvironmentVariablePathEntry]::new('KOMOREBI_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config', 'komorebi'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('NVIM_LOG_FILE', [System.IO.Path]::Combine($userProfile, '.cache', 'nvim', 'nvim.log'), [PathType]::File)
+  [EnvironmentVariablePathEntry]::new('STARSHIP_CACHE', [System.IO.Path]::Combine($userProfile, '.cache', 'starship'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG', [System.IO.Path]::Combine($userProfile, '.config', 'starship', 'starship.toml'), [PathType]::File)
+  [EnvironmentVariablePathEntry]::new('STARSHIP_CONFIG_DIR', [System.IO.Path]::Combine($userProfile, '.config', 'starship'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('WHKD_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config', 'whkd'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('XDG_CACHE_HOME', [System.IO.Path]::Combine($userProfile, '.cache'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('XDG_CONFIG_HOME', [System.IO.Path]::Combine($userProfile, '.config'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('XDG_DATA_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'share'), [PathType]::Directory)
+  [EnvironmentVariablePathEntry]::new('XDG_STATE_HOME', [System.IO.Path]::Combine($userProfile, '.local', 'state'), [PathType]::Directory)
 
   # Disable metrics collection.
-  [EnvironmentVariablePathEntry]::new('DOTNET_CLI_TELEMETRY_OPTOUT', 'true', $false)
-  [EnvironmentVariablePathEntry]::new('FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT', 'true', $false)
-  [EnvironmentVariablePathEntry]::new('TESTINGPLATFORM_TELEMETRY_OPTOUT ', 'true', $false)
+  [EnvironmentVariablePathEntry]::new('DOTNET_CLI_TELEMETRY_OPTOUT', 'true', [PathType]::File)
+  [EnvironmentVariablePathEntry]::new('FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT', 'true', [PathType]::File)
+  [EnvironmentVariablePathEntry]::new('TESTINGPLATFORM_TELEMETRY_OPTOUT ', 'true', [PathType]::File)
 )
 
-foreach ($envPath in $envValues) {
-  $envValues.Apply()
+foreach ($envPath in $myEnvironmentVariables) {
+  $myEnvironmentVariables.Apply()
 }
 
 # Functions
@@ -190,15 +198,18 @@ function Remove-TempFiles {
       Remove-Item -Recurse -Force $path
     }
   }
-
 }
 
 function Update-AzureCredentials {
   param([string] $TenantId)
+  if ([string]::IsNullOrWhiteSpace($TenantId)) {
+    throw 'Enter a valid TenantId!'
+  }
+
   az logout
-  az auth logout
+  azd auth logout
   az login --tenant $TenantId
-  az auth login --tenant-id $TenantId
+  azd auth login --tenant-id $TenantId
   return $null
 }
 
@@ -296,4 +307,4 @@ Write-Host "Ticks: $($stopwatch.ElapsedTicks)"
 # There was an issue where shim.exe was coming back as a x86, and not ARM.
 # https://github.com/ScoopInstaller/Shim/issues/9
 
-{{- end }}
+

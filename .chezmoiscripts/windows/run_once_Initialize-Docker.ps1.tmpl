@@ -2,80 +2,12 @@
 #Requires -Version 7
 
 param (
-  [switch]$InstallDocker,
   [switch]$BuildBugayInitializeDocker,
   [switch]$InitializeLocalDockerContext
 )
 
 function Test-IsElevated {
   return (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
-# TODO: I am building releases for my Bugay.Intiialize.Docker. No longer need to build here. Just get the latest artifact version
-function Install-Docker {
-  param (
-    [switch]$InstallDocker
-  )
-
-  if (!$InstallDocker) {
-    return
-  }
-
-  Write-Host 'Installing Docker...'
-  $installDirectory = [System.IO.Path]::Combine($Env:LOCALAPPDATA, 'bugay-docker-installer')
-  $destinationDirectory = [System.IO.Path]::Combine($Env:USERPROFILE, 'scoop', 'shims')
-
-  if ((Test-Path -Path $installDirectory) -eq $False) {
-    New-Item -ItemType Directory -Path $installDirectory
-  }
-
-  $git = Get-Command git -ErrorAction SilentlyContinue
-  $go = Get-Command go -ErrorAction SilentlyContinue
-
-  if ($null -eq $git || $null -eq $go) {
-    Write-Error 'Git and Go are both required to install Docker.'
-    Write-Error "Git: ${git}"
-    Write-Error "Go:  ${go}"
-    return
-  }
-
-  $dockerRepoPath = [System.IO.Path]::Combine($installDirectory, 'cli')
-
-  if ((Test-Path -Path $dockerRepoPath) -eq $False) {
-    git -C $installDirectory clone git@github.com:docker/cli.git
-  }
-
-  # Ensure we've got the latest updates
-  git -C $dockerRepoPath fetch origin
-
-  # Pin to the latest commit SHA on the default branch
-  $commit = (git -C $dockerRepoPath rev-parse origin/master).Trim()
-  $shortSha = $commit.Substring(0, 12)
-  $commitDate = (git -C $dockerRepoPath log -1 --format=%cd --date=format:%Y%m%d $commit).Trim()
-  $version = "$commitDate-$shortSha"
-
-  Write-Host "Building Docker CLI $version ($commit)..."
-  git -C $dockerRepoPath checkout $commit
-
-  # Create a temporary go.mod from vendor.mod
-  $src = [System.IO.Path]::Combine($dockerRepoPath, 'vendor.mod')
-  $dest = [System.IO.Path]::Combine($dockerRepoPath, 'go.mod')
-  Copy-Item $src $dest
-
-  # Build with modules on, using the vendor directory
-  $env:GO111MODULE = 'on'
-  $env:GOTOOLCHAIN = 'local'
-
-  # https://github.com/docker/cli
-  $dockerExe = [System.IO.Path]::Combine($dockerRepoPath, 'build', 'docker.exe')
-  go build -C $dockerRepoPath -mod=vendor -o $dockerExe -ldflags "-X github.com/docker/cli/cli/version.Version=$version -X github.com/docker/cli/cli/version.GitCommit=$commit" github.com/docker/cli/cmd/docker
-
-  # Clean up
-  Remove-Item $dest
-
-  Copy-Item -Path $dockerExe -Destination $destinationDirectory -Force
-
-  Write-Host "Docker CLI $version installed."
 }
 
 function Install-BugayInitializeDocker {
@@ -109,6 +41,7 @@ function Install-BugayInitializeDocker {
 
     Start-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\'
   }
+  # TODO: Try and create my own private scoop manifest that installs from my GitHub release instead.
 
   $gitRepo = 'git@github.com:zachbugay/Bugay.Initialize.Docker.git'
   $gitRoot = ''
@@ -189,22 +122,22 @@ function Initialize-LocalDockerContext {
   }
 
   Write-Host 'Creating the wsl ssh Docker context...'
-  # dprint-ignore
-  docker context create --docker host=ssh://wsl --description 'WSL Engine (SSH)' {{ .distributions.windows.docker_context }}
+
+  docker context create {{ .distributions.windows.docker_context }} docker 'host=ssh://wsl' --description 'WSL Engine (SSH)' {{ .distributions.windows.docker_context }}
 
   Write-Host 'Create the ssh key, add it to ~/.ssh/authorized users in the WSL instance.'
   Write-Host 'Create a .ssh/config'
   Write-Host 'Make sure that the WSL instance has installed openssh-server, docker, and the systemd services are setup'
 
   $wslIp = ((wsl hostname -I) -split ' ')[0]
-
   $sshConfigPath = [System.IO.Path]::Combine($Env:USERPROFILE, '.ssh', 'config')
-  # TODO: This is different now.
+  $username="$Env:USERNAME".ToLower()
+
   if (![System.IO.File]::Exists($sshConfigPath)) {
     $content = @"
 Host wsl
     HostName $wslIp
-    User zacharybugay
+    User $username
     IdentityFile ~/.ssh/local_wsl
     Port 2222
 "@
@@ -246,8 +179,7 @@ function Initialize-DockerFirewallRules {
   }
 }
 
-Install-Docker -InstallDocker:$InstallDocker
-
+# TODO: Remove this, use a private scoop manifest, install from a GitHub release instead.
 Install-BugayInitializeDocker -Build:$BuildBugayInitializeDocker
 
 Initialize-LocalDockerContext -InitializeLocalDockerContext:$InitializeLocalDockerContext

@@ -1,23 +1,31 @@
 {{- if eq .chezmoi.os "windows" }}
-# Skip Linux and macOS configs on Windows.
+# Skip macOS.
 .chezmoiscripts/darwin-install-packages.sh
 .config/aerospace/
 .config/eza/
 .config/ghostty/
+# Skip Linux.
 .config/systemd/
+# Skip Linux and macOS.
 .config/zsh/
 .zshenv
 {{- else if eq .chezmoi.os "darwin" }}
-# Skip Windows, and Linux on macOS.
+# Skip Linux.
+.config/systemd/
+# Skip Windows.
 .config/powershell/
 .config/scoop/
-.config/systemd/
+.config/komorebi/
+.config/whkd/
 {{- else }}
-# Skip Windows, and macOS configs on Linux.
+# Skip macOS.
 .config/aerospace/
+# Skip Windows.
 .config/docker/
 .config/powershell/
 .config/scoop/
+.config/komorebi/
+.config/whkd/
 {{- end }}
 # Always ignore.
 .DS_Store
