@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 function up() {
-  brew update && brew upgrade && brew cleanup --scrub --prune=all
+  brew update --verbose && brew upgrade --verbose --yes && brew cleanup --scrub --prune=all
 }
 
 up "$@"
