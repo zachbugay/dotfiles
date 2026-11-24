@@ -41,8 +41,8 @@ function Install-BugayInitializeDocker {
 
     Start-ScheduledTask -TaskName $TaskName -TaskPath '\Bugay\'
   }
-  # TODO: Try and create my own private scoop manifest that installs from my GitHub release instead.
 
+  # TODO: Try and create my own private scoop manifest that installs from my GitHub release instead.
   $gitRepo = 'git@github.com:zachbugay/Bugay.Initialize.Docker.git'
   $gitRoot = ''
   if ((Test-Path 'D:')) {
