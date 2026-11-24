@@ -1,9 +1,12 @@
 {
   "trustedformulae": [
+    "azure/functions/azure-functions-core-tools@4",
+    "azure/kubelogin/kubelogin",
     "fluxcd/tap/flux",
     "hashicorp/tap/terraform"
   ],
   "trustedcasks": [
+    "azure/azure-cli/azure-cli",
     "nikitabobko/tap/aerospace"
   ]
 }
