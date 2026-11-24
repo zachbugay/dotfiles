@@ -7,6 +7,7 @@
 # Skip Linux.
 .config/systemd/
 # Skip Linux and macOS.
+.config/homebrew/
 .config/zsh/
 .zshenv
 {{- else if eq .chezmoi.os "darwin" }}
