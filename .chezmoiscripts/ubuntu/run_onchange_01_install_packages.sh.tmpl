@@ -41,7 +41,7 @@ if ! which {{ $binary }} >/dev/null 2>&1; then
 else
         echo "'{{ $binary }}' already installed! Skipping ..."
 fi
-
+{{- end }}
 zshPath=$(which zsh)
 if [[ $SHELL != $zshPath ]]; then
         chsh --shell $(which zsh)
@@ -49,6 +49,8 @@ fi
 
 dprint config update --global
 
-{{- end }}
+if ! systemctl is-active --user --quiet docker.service; then
+        dockerd-rootless-setuptool.sh install
+fi
 
 {{- end }}
