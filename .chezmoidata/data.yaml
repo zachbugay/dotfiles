@@ -56,7 +56,6 @@ distributions:
       - "dark"
       - "dos2unix"
       - "fd"
-      - "firefox-developer"
       - "gawk"
       - "gh"
       - "git-credential-manager"
