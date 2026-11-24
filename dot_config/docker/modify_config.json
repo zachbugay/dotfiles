@@ -5,5 +5,8 @@
 {{- end -}}
 {{- if eq .chezmoi.os "windows" }}
 {{-   $data = $data | setValueAtPath "currentContext" .distributions.windows.docker_context }}
+{{-   $scoopDir := joinPath .chezmoi.homeDir "scoop" "shims" }}
+{{-   $data = $data | setValueAtPath "cliPluginsExtraDirs" (list $scoopDir) }}
 {{- end -}}
 {{ toPrettyJson $data }}
+
