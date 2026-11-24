@@ -1,0 +1,9 @@
+{
+  "trustedformulae": [
+    "fluxcd/tap/flux",
+    "hashicorp/tap/terraform"
+  ],
+  "trustedcasks": [
+    "nikitabobko/tap/aerospace"
+  ]
+}
